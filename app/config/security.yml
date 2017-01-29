@@ -1,0 +1,45 @@
+security:
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER
+    encoders:
+        AppBundle\Entity\User: 
+            algorithm: bcrypt
+            cost: 12
+    providers:
+        in_memory:
+            memory: 
+                users:
+                    usertest:
+                        password: userpass
+                        roles: 'ROLE_USER'
+                    admin:
+                        password: admin
+                        roles: 'ROLE_ADMIN'
+        db_provider:
+            entity:
+                class: AppBundle:User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt|error)|css|images|js)/
+            security: false
+
+        main:
+            pattern: ^/
+            anonymous: true    # anonymous allowed
+            #provider: in_memory
+            provider: db_provider
+            form_login:
+                login_path: login
+                check_path: login_check
+                
+                username_parameter: form[_username]
+                password_parameter: form[_password]
+            logout:
+                path: logout
+                target: /
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/user, roles: ROLE_USER }
+        - { path: ^/play, roles: ROLE_USER }

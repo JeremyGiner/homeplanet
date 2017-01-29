@@ -1,0 +1,41 @@
+{% extends 'bootstrap/panel.html.twig' %}
+
+{% set x = gameview.location.getX() %}
+{% set y = gameview.location.getY() %}
+{% block header %}
+	Location detail ({{ gameview.location  }})
+{% endblock %}
+
+{% block content %}
+	{% set oTile = gameview.map.getTile( x, y ) %}
+<div class="row">
+<div class="col-xs-12 col-sm-6">
+	<h4>Terrain</h4>
+	<ul>
+		<li>Elevation : {{ oTile.elevation }}</li>
+		<li>Temperature : {{ oTile.temperature }}</li>
+		<li>Humidity : {{ oTile.humidity }}</li>
+	</ul>
+</div>
+<div class="col-xs-12 col-sm-6">
+	<h4>Ressources</h4>
+	{% for iRessId, iRessQuantity in oTile.getRessNatQuantityAr() %}
+	{#
+		{{ iRessId }} {{ iRessQuantity }}
+	#}
+		{% include 'homeplanet/text/ressource.html.twig' 
+			with {ressource: gameview.game.getRessource(iRessId) } only 
+		%}
+		{% set overcrowd = gameview.overcrowd[iRessId].quantity|default(0) %}
+		{{ max(0,iRessQuantity - overcrowd) }}
+		{%  if (gameview.overcrowd[iRessId] is defined) %}
+			<span class="text-muted small">
+				( {{ iRessQuantity }} - {{ overcrowd }} )
+			</span>
+		{% endif %}
+		<br>
+	{% endfor %}
+</div>
+</div>
+	
+{% endblock %}

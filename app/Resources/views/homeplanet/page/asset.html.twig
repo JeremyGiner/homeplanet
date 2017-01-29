@@ -1,0 +1,22 @@
+{% extends 'page/index.html.twig' %}
+
+{# Index by location #}
+{% set aEntityByloc = gameview.game.getEntityAr_byUser_indexLocation( user ) %}
+
+{% block page_content %}
+<div class="row">
+{% for sLocation, aEntity in aEntityByloc %}
+<div class="col-xs-12 col-sm-6">
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		Location {{ sLocation }}
+	{% endblock %}
+	{% block content %}
+		{% include 'homeplanet/element/entity_list.html.twig' 
+			with { aEntity: aEntity } %}
+	{% endblock %}
+	{% endembed %}
+</div>
+{% endfor %}
+</div>
+{% endblock %}

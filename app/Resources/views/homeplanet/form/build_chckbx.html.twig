@@ -1,0 +1,21 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+<input class="form-build-radio" type="radio" 
+	{% include 'homeplanet/form/widget_attributes.html.twig' %}
+	{% if value is defined %} value="{{ value }}"{% endif %}
+	{% if checked %} checked="checked"{% endif %}
+ />
+<label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} 
+	for="{{ id }}"
+>
+	<div class="col-xs-6">
+		<img class="img-responsive" src="{{ commun.icon_entitytype(data) }}">
+	</div>
+	<div class="col-xs-6">
+		{{ label|trans({}, translation_domain)|capitalize }}<br>
+		{% for oProdType in data.getProdTypeAr() %}
+			{% include 'homeplanet/text/prodtype.html.twig' with {prodtype: oProdType} %}
+		{% endfor %}
+		Cost : {{ commun.credit( data.value ) }}
+		
+	</div>
+</label>

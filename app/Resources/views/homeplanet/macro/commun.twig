@@ -1,0 +1,54 @@
+{% macro icon_entitytype( entitytype ) %}
+	{% set a = {
+		'wood cutter': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/c/cd/Pinewood_Cutter_Level_3.png/revision/latest?cb=20131116153726',
+		'sawmill': 'http://vignette4.wikia.nocookie.net/thesettlersonline/images/6/63/Pinewood_Sawmill_Level_3.png/revision/latest?cb=20131116160112',
+		'quarry': 'http://vignette3.wikia.nocookie.net/thesettlersonline/images/7/73/Mason_Level_1.png/revision/latest?cb=20131116163221',
+		'farm': 'http://vignette3.wikia.nocookie.net/thesettlersonline/images/9/99/Farm_Level_3.png/revision/latest?cb=20131116202901',
+		'well': 'http://vignette3.wikia.nocookie.net/thesettlersonline/images/8/84/Wellx.png/revision/latest?cb=20120809120227',
+		'blacksmith': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/0/00/Toolmaker_Level_3.png/revision/latest?cb=20131116195552',
+		'windmill': 'http://vignette1.wikia.nocookie.net/thesettlersonline/images/b/b9/Mill_Level_5.png/revision/latest?cb=20131122201006',
+		'bakery': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/c/c8/Bakery_lv2.png/revision/latest?cb=20130327171946',
+		'mine': 'http://vignette1.wikia.nocookie.net/thesettlersonline/images/e/e6/Iron_Mine_Level_1.png/revision/latest?cb=20120809131321',
+		'hunter cabin': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/c/c0/Hunter_Level_3.png/revision/latest?cb=20131123165057',
+		'workshop': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/f/fe/B_cannonforge-1_0-.png/revision/latest?cb=20120808142903',
+	} %}
+	{{ a[entitytype.getLabel()] is defined ? 
+		a[entitytype.getLabel()] : 
+		'http://scmapdb.wdfiles.com/local--resized-images/wad:developer-textures/dev_256_gr_032x.jpg/small.jpg' 
+	}}
+
+{% endmacro  %}
+
+{% macro sprite_ressource( oRessource ) %}
+	{% set a = {
+		'forest': 'ress-sprite ress-sprite-4-6',
+		'stone deposit': 'ress-sprite ress-sprite-8-6',
+		'stone block': 'ress-sprite ress-sprite-0-2',
+		'fish': 'ress-sprite ress-sprite-0-3',
+		'copper ore': 'ress-sprite ress-sprite-0-11',
+		'copper bar': 'ress-sprite ress-sprite-1-0',
+		'pinewood': 'ress-sprite ress-sprite-0-0',
+		'pinewood plank': 'ress-sprite ress-sprite-1-0',
+		'stone': 'ress-sprite ress-sprite-2-0',
+		'tool': 'ress-sprite ress-sprite-1-1',
+		'field': 'ress-sprite ress-sprite-7-6',
+		'wheat': 'ress-sprite ress-sprite-3-1',
+		'floor': 'ress-sprite ress-sprite-5-1',
+		'bread': 'ress-sprite ress-sprite-6-1',
+	} %}
+	{{ a[oRessource.getLabel()] is defined ? 
+		a[oRessource.getLabel()] : 
+		'ress-sprite-0 '~oRessource.getLabel()
+	}}
+
+{% endmacro  %}
+
+
+{% macro credit( i ) %}
+	{% set a = i|trim|reverse|split('',3) %}
+	{% for key,s in a|reverse %}
+		{{ s|reverse|number_format }}
+		<span class="icon icon-credit-{{ a|length-key-1 }}"></span>
+	{% endfor %}
+
+{% endmacro  %}

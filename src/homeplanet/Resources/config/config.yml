@@ -1,0 +1,10 @@
+# Doctrine Configuration
+doctrine:
+    orm:
+        mappings:
+            homeplanet:
+                type: annotation
+                dir: "%kernel.root_dir%/../src/homeplanet"
+                is_bundle: false
+                prefix: homeplanet
+                alias: homeplanet

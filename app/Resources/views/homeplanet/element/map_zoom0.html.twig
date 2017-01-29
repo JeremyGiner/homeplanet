@@ -1,0 +1,31 @@
+
+<table class="map hajust-square">
+<tbody>
+	{# Print Region #}
+	{% for y in (gameview.location.getRegionY()+1)*13-1..(gameview.location.getRegionY())*13 %}
+	<tr>
+		{% for x in (gameview.location.getRegionX())*13..(gameview.location.getRegionX()+1)*13-1 %}
+			{% set oTile = gameview.map.getTile( x, y ) %}
+			<td class="" style="background-color: #{{ oTile.getColorHex() }}">
+				{# draw city #}
+				{% set aEntity = gameview.game.getEntityAr_byLocation( oTile.getLocation() ) %}
+				
+				{% for oEntity in aEntity %}
+					{% if oEntity.getType().getLabel() == 'city' %}
+						<div class="map-cell sprite sprite-city"></div>
+					{% endif %}
+					{% if oEntity.getType().getLabel() != 'city' %}
+						<div class="map-cell sprite">P</div>
+					{% endif %}
+				{% endfor %}
+				
+				{% block map_cell %}
+					<a class="map-cell" href="?location={{ oTile.getLocation() }}">
+					</a>
+				{% endblock %}
+			</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</tbody>
+</table>

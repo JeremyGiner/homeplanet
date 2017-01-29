@@ -1,0 +1,15 @@
+{% extends 'page/index.html.twig' %}
+
+
+{% block page_content %}
+
+	{% embed 'main/panel.html.twig' %}
+		{% block header %}
+			{{ alert.header }}
+		{% endblock %}
+		{% block content %}
+			{{ alert.content }}
+		{% endblock %}
+	{% endembed %}
+	
+{% endblock %}

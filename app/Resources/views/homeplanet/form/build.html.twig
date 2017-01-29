@@ -1,0 +1,17 @@
+{%- block choice_widget_expanded -%}
+<div class="row">
+{%- for i in form.children|keys %}
+	<div class="col-xs-6 col-md-4 small" style="height: 100px">
+	    {#
+		{{- form_widget(child) -}}
+		{{- form_label(child) -}}
+    #}
+    	{% include 'homeplanet/form/build_chckbx.html.twig' 
+    	with form.children[i].vars|merge({
+    		'data':form.vars.choices[i].data
+		}) only %}
+    	
+	</div>
+{% endfor -%}
+</div>
+{%- endblock choice_widget_expanded -%}

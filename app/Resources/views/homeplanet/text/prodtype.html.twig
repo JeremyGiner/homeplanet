@@ -1,0 +1,22 @@
+{# require prodtype var #}
+				
+{% if( prodtype.getRessource().getId() == 1 ) %}
+	Sell : 
+	{% for oProdInputType in prodtype.getProdInputTypeAr() %}
+		{% include 'homeplanet/text/ressource.html.twig' 
+			with {ressource: oProdInputType.getRessource() } only %}
+		x{{ oProdInputType.getQuantity() }}
+	{% endfor %}
+	<br>
+{% else %}
+	+ {{ prodtype.getQuantity() }} 
+	{% include 'homeplanet/text/ressource.html.twig' 
+		with {ressource: prodtype.getRessource() } only %}
+	<br>
+	{% for oProdInputType in prodtype.getProdInputTypeAr() %}
+		- {{ oProdInputType.getQuantity() }} 
+		{% include 'homeplanet/text/ressource.html.twig' 
+			with {ressource: oProdInputType.getRessource() } only %}
+		<br>
+	{% endfor %}
+{% endif %}

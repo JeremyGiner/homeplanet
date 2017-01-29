@@ -1,0 +1,63 @@
+{% extends 'bootstrap/page.html.twig' %}
+
+{# ____________________________________________________________________________
+	VAR #}
+{% set navbar = [
+	{ 'route': 'index', 'label': 'HOME' },
+	{ 'route': 'login', 'label': 'FEATURE' },
+	{ 'route': '', 'label': 'DOWNLOAD' },
+	{ 'route': '', 'label': 'FORUM' },
+	{ 'route': '', 'label': 'ABOUT' }
+	]
+%}
+{% set user = (user is defined)? user : null %}
+{% if user is defined and user is not null %}
+	
+	{% set navbar = navbar|merge( [
+		{'route': 'play', 'label': 'Play', 'CSSClass': 'hightlighted' }
+		])
+	%}
+{% else %}
+	
+{% endif %}
+{% set route_current = route_current|default('index') %}
+
+{# ____________________________________________________________________________
+	CONTENT #}
+
+{% block body %}
+	<div id="header-main" class="bg-dark text-center" style="font-size: 72px">
+    	<a href="{{ url('index') }}">LOGO</a>
+	</div>
+	{% include 'bootstrap/navbar.html.twig' with {navbar: navbar, user: user} only %}
+	<div id="content" class="container fadeIn">
+		{% block page_content %}
+			{% embed 'bootstrap/panel.html.twig' %}		
+				{% block header %}Home{% endblock %}
+				{% block content %}
+   					Homepage. date : {{ "now"|date("m/d/Y") }}
+				{% endblock %}
+    		{% endembed %}
+		{% endblock %}
+	</div>
+{% endblock %}
+
+
+{# ____________________________________________________________________________
+	SCRIPT #}
+{#
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+
+	</script>
+{% endblock %}
+#}
+{# ____________________________________________________________________________
+	STYLE #}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href="css/planet.css" rel="stylesheet" type="text/css" />
+<link href="css/ressource_atlas.css" rel="stylesheet" type="text/css" />
+{% endblock %}

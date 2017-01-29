@@ -1,0 +1,31 @@
+{#
+required var:
+	@var string atlas_label 
+	@var string atlas_path 
+	@var int atlas_res_x 
+	@var int atlas_res_y
+#}
+
+@CHARSET "UTF-8";
+
+.{{ atlas_label|raw }} {
+	background-image: url('{{ atlas_path|raw }}');
+	background-size: {{ atlas_res_x }}00% {{ atlas_res_y }}00%;
+}
+
+.{{ atlas_label|raw }}-0 {
+	background-image: none;
+}
+
+{% set qx = 100/(atlas_res_x-1) %}
+{% set qy = 100/(atlas_res_y-1) %}
+
+{% for x in 0..(atlas_res_x-1) %}
+{% for y in 0..(atlas_res_y-1) %}
+.{{ atlas_label|raw }}-{{ x }}-{{ y }} {
+	background-position: {{ qx*x }}% {{ qy*y }}%;
+}
+{% endfor %}
+{% endfor %}
+
+	

@@ -1,0 +1,26 @@
+{% extends 'page/index.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+	<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		Merchant
+	{% endblock %}
+	{% block content %}
+		{{ gameview.location }}
+	{% endblock %}
+	{% endembed %}
+	</div>
+	<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		Hire a merchant
+	{% endblock %}
+	{% block content %}
+		{{ form(form_create) }}
+	{% endblock %}
+	{% endembed %}
+	</div>
+</div>
+{% endblock %}

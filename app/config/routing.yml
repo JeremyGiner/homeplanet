@@ -1,0 +1,17 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+# app/config/routing.yml
+homeplanet:
+    resource: "@HomeplanetBundle/Resources/config/routing.yml"
+    #prefix:   /game
+
+#______________________________________________________________________________
+# LOGIN User auth
+
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout

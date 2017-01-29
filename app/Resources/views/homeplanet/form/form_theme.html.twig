@@ -1,0 +1,56 @@
+{% block location_widget %}
+	<input id="{{ id }}" name="{{ full_name }}" type="text" value="{{ value }}">
+	<button class="btn btn-default" type="button" onclick="$('#{{ id }}_modal').modal('show')">Select</button>
+	{% embed 'bootstrap/modal.html.twig' 
+		with {id: id~'_modal', iTargetInputId: id}
+	 %}
+	{% block modal_body %}
+		<div class="row">
+		<div class="col-xs-6" style="padding-right:0;">
+			{% embed 'homeplanet/element/map_zoom1.html.twig' with {location: data}%}
+			{% block map_cell %}
+					<div class="map-cell" onclick="$('#{{ id }}.map')"
+						data-ajaxupd-url="{{ path('ajax_map_z0') }}" 
+						data-ajaxupd-param="TODO"
+					></div>
+			{% endblock %}
+			{% endembed %}
+		</div>
+		<div class="col-xs-6" style="padding-left:0;">
+			{% embed 'homeplanet/element/map_zoom0.html.twig' %}
+			{% block map_cell %}
+					<div class="map-cell" 
+						onclick="
+							$('#{{ iTargetInputId }}').val('{{ oTile.getLocation() }}');
+							$('#{{ id }}').modal('hide');
+						"
+					>
+					</div>
+			{% endblock %}
+			{% endembed %}
+		</div>
+		</div>
+	{% endblock %}
+	{% endembed %}
+{% endblock %}
+				
+{% block production_type_widget %}
+<div class="row">
+{%- for i in form.children|keys %}
+{% set child = form.children[i] %}
+{% set oProductionType = form.vars.choices[i].data %}
+<div class="col-xs-6 col-md-4 small" style="height: 100px">
+	<input type="radio" 
+		{% include 'homeplanet/form/widget_attributes.html.twig' with child.vars %}
+		{% if child.vars.value is defined %} value="{{ child.vars.value }}"{% endif %}
+		{% if child.vars.checked %} checked="checked"{% endif %}
+	/>
+	<label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} 
+		for="{{ child.vars.id }}"
+	>
+		{% include 'homeplanet/text/prodtype.html.twig' with {prodtype: oProductionType} %}
+	</label>
+</div>
+{% endfor -%}
+</div>
+{% endblock %}

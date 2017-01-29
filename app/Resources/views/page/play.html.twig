@@ -1,0 +1,109 @@
+{% extends 'page/index.html.twig' %}
+{% import 'homeplanet/macro/commun.twig' as commun %}
+
+{% block stylesheets %}
+<link href="css/planet.css" rel="stylesheet" type="text/css" />
+<link href="css/ressource_atlas.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block page_content %}
+<div class="row">
+	<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		{{ gameview.player.getName() }}
+		<form><button type="submit" name="game_run" value="ok">End turn</button></form>
+		<a href="{{ url('merchant') }}">Hire merchant</a>
+	{% endblock %}
+	{% block content %}
+		{{ commun.credit( gameview.player.credit() ) }}
+		(+ {{ commun.credit( gameview.player.income() ) }} )
+	{% endblock %}
+	
+	{% endembed %}
+	{% embed 'bootstrap/panel.html.twig' %}
+	
+	{% block header %}
+		Asset
+	{% endblock %}
+	
+	{% block content %}
+		<a href="{{ url('trade_route') }}">Create trade route</a>
+		<ul class="list-group">
+		{% for oEntity in gameview.game.getEntityAr_byUser( user ) %}
+			<li class="list-group-item">
+				<div class="row">
+				<div class="col-xs-2">
+					<img class="img-responsive" src="{{ 
+						commun.icon_entitytype(oEntity.getType()) }}">
+				</div>
+				<div class="col-xs-8">
+					<a href="entity/{{ oEntity.getId() }}">
+		    			#{{ oEntity.getId() }} {{ oEntity.getType().getLabel() }} ({{ oEntity.getLocationAr()|join(';') }})<br>
+					</a>
+					{% for oProduction in oEntity.getProductionAr() %}
+						{% include 'homeplanet/text/prodtype.html.twig' with {prodtype: oProduction.getType()} %}
+						{% if( oProduction.getType().getRessource().getId() == 1 ) %}
+							Sell : 
+							{% for oProdInput in oProduction.getProdInputAr() %}
+								{{ oProdInput.getType().getRessource().getLabel() }}
+								x{{ oProdInput.getType().getQuantity() }} ({{ (oProduction.getRatioMax()*100)|round }}%)
+							{% endfor %}
+							<br>
+						{% else %}
+							+ {{ oProduction.getType().getQuantity() }} 
+							{{ oProduction.getType().getRessource().getLabel() }} 
+							({{ oProduction.getLocation() }}) 
+							({{ (oProduction.getRatioMax()*100)|round }}%)
+							{#
+							({{ oProduction.getLocation() }})
+							#}
+							<br>
+							{% for oProdInput in oProduction.getProdInputAr() %}
+								- {{ oProdInput.getType().getQuantity() }} 
+								{{ oProdInput.getType().getRessource().getLabel() }} 
+								({{ oProdInput.getLocation() }})<br>
+							{% endfor %}
+						{% endif %}
+					{% endfor %}
+					{{ form(form_entity_delete_ar[oEntity.getId()]) }}
+				</div>
+				</div>
+			</li>
+    	{% endfor %}
+    	</ul>
+	{% endblock %}
+	
+	{% endembed %}
+	</div>
+	<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+    	
+	{% block header %}
+		World map ( {{ gameview.location }} )
+	{% endblock %}
+    
+	{% block content %}
+		{% embed 'homeplanet/element/map.html.twig' 
+			with {location: gameview.location}
+		 %}{% endembed %}
+	{% endblock %}
+	
+	{% endembed %}
+	</div>
+	<div class="col-xs-12">
+	{% include 'homeplanet/panel/location_detail.html.twig' %}
+	{% include 'homeplanet/panel/city_detail.html.twig' %}
+	
+	{% embed 'bootstrap/panel.html.twig' %}
+	
+	{% block header %}Build{% endblock %}
+	{% block content %}
+		{% form_theme form_build 'homeplanet/form/build.html.twig' %}
+		{{ form(form_build) }}
+	{% endblock %}
+	
+	{% endembed %}
+	</div>
+</div>
+{% endblock %}

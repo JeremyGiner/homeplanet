@@ -1,0 +1,153 @@
+@CHARSET "UTF-8";
+/*___________________________
+	GENERIC style*/
+
+body {
+	background-image: url('/gigablaster/img/square_bg.png');
+	/*background-image: url('/gigablaster/img/images.png');*/
+	
+	/*animation-name: body-bg-slow;
+	animation-timing-function: linear;
+	animation-duration: 30s;
+	animation-iteration-count: infinite;
+*/
+}
+
+@keyframes body-bg-slow {
+    0%   { background-position: 0% 0%; }
+    100% { background-position: 252px 0%; }
+}
+
+/*___________________________
+	UTILS style*/
+
+.hightlighted {
+	background-color: rgb(230, 230, 230);
+	border: 2px solid rgb(255, 171, 171);
+}
+
+.bg-light {
+	color: black;
+	background-color: #F0F0F0;
+}
+
+.bg-dark {
+	color: white;
+	background-color: rgb(38, 38, 38);
+}
+
+.title {
+	font-weight: bold;
+}
+.red {
+	color: #CC0000;
+}
+.shadow-red {
+	box-shadow: 2px 0px 0px #BC0000;
+}
+
+.btn-action {
+	border: 2px solid black;
+	border-radius: 5px;
+	background-color: red;
+	color: black;
+}
+
+.bg-red {
+	background-color: red;
+}
+.bg-lgrey {
+	background-color: #EEE;
+}
+
+.box-nav {
+	border-top: 3px solid rgb(38, 38, 38);
+	background-color: silver;
+	box-shadow: 0px 4px rgba(189, 189, 189, 0.46);
+}
+.box-white {
+	border: 1px solid silver;
+	background-color: white;
+}
+
+.fadeIn {
+	animation-name: fadeIn;
+	animation-timing-function: linear;
+	animation-duration: 1s;
+	animation-iteration-count: 1; 
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/*___________________________
+	THEME style*/
+
+.menu-h>ul>li>a:hover {
+	background-color: grey;
+	color: white;
+}
+/*
+.btn {
+	transition: 0.2s;
+	
+	box-shadow: 3px 3px 0px black;
+	
+	color: white;
+	font-weight: bold;
+	
+	cursor: pointer;
+	
+	background-color: blue;
+}
+.btn:hover {
+	box-shadow: none;
+	background-color: lightblue;
+}*/
+
+.panel {
+	border-style: solid;
+	border-color: black;
+}
+.panel>.panel-header {
+	font-size: 1.5em;
+	font-weight: bold;
+	
+	/*bg-dark*/
+	color: white;
+	background-color: rgb(38, 38, 38);
+}
+
+.panel>.panel-content {
+	
+	background-color: white;
+}
+
+h4 {
+	border-bottom: 1px solid grey;
+}
+
+.panel-heading {
+	background-color: #262626;
+	color: white;
+	font-weight: bold;
+}
+
+
+/*___________________________
+	SPECIFIC */
+
+.radio-char {
+	display: none;
+}
+.radio-char+label {
+	padding: 11px;
+	cursor: pointer;
+}
+.radio-char:checked+label {
+	color: red;
+	border:1px solid;
+	border-radius: 3px;
+	padding: 10px;
+}

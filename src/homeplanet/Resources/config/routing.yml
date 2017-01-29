@@ -1,0 +1,3 @@
+homeplanet:
+    resource: "@HomeplanetBundle/Controller/"
+    type:     annotation

@@ -1,0 +1,41 @@
+{% extends 'page/index.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+	<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+		{% block header %}
+			#{{ gameview.entity.getId() }} 
+			{{ gameview.entity.getType().getLabel() }} 
+			({{ gameview.entity.getLocationAr()|join(';') }})
+		{% endblock %}
+		{% block content %}
+			{% for oProduction in gameview.entity.getProductionAr() %}
+		
+				{% if( oProduction.getType().getRessource().getId() == 1 ) %}
+					Sell : 
+					{% for oProdInput in oProduction.getProdInputAr() %}
+						{{ oProdInput.getType().getRessource().getLabel() }}
+						x{{ oProdInput.getType().getQuantity() }} ({{ (oProduction.getRatioMax()*100)|round }}%)
+					{% endfor %}
+					<br>
+				{% else %}
+					+ {{ oProduction.getType().getQuantity() }} 
+					{{ oProduction.getType().getRessource().getLabel() }} 
+					({{ (oProduction.getRatioMax()*100)|round }}%)
+					{#
+					({{ oProduction.getLocation() }})
+					#}
+					<br>
+					{% for oProdInput in oProduction.getProdInputAr() %}
+						- {{ oProdInput.getType().getQuantity() }} 
+						{{ oProdInput.getType().getRessource().getLabel() }} 
+						({{ oProdInput.getLocation() }})<br>
+					{% endfor %}
+				{% endif %}
+			{% endfor %}
+		{% endblock %}
+	{% endembed %}
+	</div>
+</div>
+{% endblock %}

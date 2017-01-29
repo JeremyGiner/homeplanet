@@ -1,0 +1,21 @@
+<ul class="list-group">
+{% for oEntity in aEntity %}
+<li class="list-group-item">
+	<a href="entity/{{ oEntity.getId() }}">
+		#{{ oEntity.getId() }} {{ oEntity.getType().getLabel() }} ({{ oEntity.getLocationAr()|join(';') }})<br>
+	</a>
+	{% for oProduction in oEntity.getProductionAr() %}
+		{% include 'homeplanet/text/prodtype.html.twig' with {prodtype: oProduction.getType()} %}
+		{% if( oProduction.getType().getRessource().getId() == 1 ) %}
+			Sell : 
+			{% for oProdInput in oProduction.getProdInputAr() %}
+				{{ oProdInput.getType().getRessource().getLabel() }}
+				x{{ oProdInput.getType().getQuantity() }} ({{ (oProduction.getRatioMax()*100)|round }}%)
+			{% endfor %}
+			<br>
+		{% endif %}
+	{% endfor %}
+	{#{{ form(form_entity_delete_ar[oEntity.getId()]) }}#}
+</li>
+{% endfor %}
+</ul>

@@ -1,0 +1,41 @@
+{% extends 'bootstrap/panel.html.twig' %}
+
+{% block header %}Location detail ({{ gameview.location  }}){% endblock %}
+{% block content %}
+
+	
+	{% set city = gameview.game.getCity_byLocation( gameview.location ) %}
+	{% if city != null %}
+		City (population : {{ city.getPopulation().getQuantity() }})<br>
+		<table class="table">
+		<thead>
+			<tr>
+				<th>Ressource</th>
+				<th>Price modifier</th>
+				<th>Price</th>
+			</tr>
+		</thead>
+		<tbody>
+		{% for oDemand in city.getDemandAr() %}
+			<tr>
+				<td>
+					{% include 'homeplanet/text/ressource.html.twig' 
+						with { ressource: oDemand.getRessource() } only %}
+				</td>
+				<td>
+					{{ oDemand.getPriceModifier()*100 }} %
+				</td>
+				<td>
+					{{ oDemand.getPrice() }}
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+		</table>
+	{% endif %}
+	
+	{% if city == null %}
+		<a class="btn btn-default" href="?location={{ gameview.location }}&amp;action=city_create">Create city</a>
+	{% endif %}
+	
+{% endblock %}

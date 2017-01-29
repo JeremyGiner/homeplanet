@@ -1,0 +1,6 @@
+{# require ressource var #}
+{% import 'homeplanet/macro/commun.twig' as commun %}
+<span title="{{ ressource.getLabel() }}">
+	<span class="icon {{ commun.sprite_ressource(ressource) }}"></span> 
+	{{ ressource.getLabel() }}
+</span>

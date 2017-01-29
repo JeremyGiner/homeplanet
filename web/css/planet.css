@@ -1,0 +1,86 @@
+@CHARSET "UTF-8";
+
+.map {
+	width: 100%;
+}
+
+.map td {
+	position: relative;
+}
+.map .map-cell {
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.map .map-cell:hover {
+	background-color: red;
+}
+/*
+.map .terrain-0-0 {
+	background-color: green;
+}
+
+.map .terrain-0-1 {
+	background-color: green;
+}
+
+.map .terrain-0-2 {
+	background-color: green;
+}
+
+.map .terrain-0-3 {
+	background-color: green;
+}*/
+
+.map .sprite {
+	width: 100%;
+	height: 100%;
+	/*background-size: 800% 6400%; case atlas*/
+	background-size: 100%;
+	box-sizing: border-box;
+	z-index: 1;
+	display: block;
+}
+
+.map .sprite-city {
+	background-image: url('http://vignette2.wikia.nocookie.net/thesettlersonline/images/3/38/Icon_settlers2hq.png/revision/latest?cb=20131120213525');
+}
+
+.icon {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+}
+
+[class*='icon-credit-']:before {
+	content:'$';
+	vertical-align: super;
+	font-size: 0.75em;
+	color: white;
+}
+[class*='icon-credit-']{
+	vertical-align: sub;
+	text-align: center;
+}
+.icon-credit-0 {
+	background-color: #B87333;
+	color: #DDBC9E;
+	border-radius: 50%;
+}
+.icon-credit-1 {
+	background-color: silver;
+	border-radius: 50%;
+}
+.icon-credit-2 {
+	background-color: gold;
+	border-radius: 50%;
+}
+.icon-credit-3 {
+	background-color: #00A86B;
+	border-radius: 50%;
+}
