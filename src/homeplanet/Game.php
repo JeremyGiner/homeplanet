@@ -4,6 +4,7 @@ namespace homeplanet;
 use homeplanet\entity\Map;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\entity\City;
+use homeplanet\Entity\WorldmapChunk;
 use AppBundle\Entity\User;
 use homeplanet\event\Event;
 use homeplanet\entity\Entity;
