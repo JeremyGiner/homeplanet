@@ -77,4 +77,8 @@ class ProductionInput {
 		return $this->_oProdInputType;
 	}
 	
+	public function getQuantity() {
+		return $this->getType()->getQuantity();
+	}
+	
 }

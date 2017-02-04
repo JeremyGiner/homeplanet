@@ -140,8 +140,11 @@ class Entity {
 		return $a;
 	}
 	
+	/**
+	 * @return Production[]
+	 */
 	public function getProductionAr() {
-		return $this->_aProduction;
+		return $this->_aProduction->toArray();
 	}
 	
 	public function getDemandAr() {

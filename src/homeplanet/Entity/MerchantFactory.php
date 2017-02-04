@@ -68,9 +68,7 @@ class MerchantFactory extends Entity {
 		$o->setUser( $this->user );
 		
 		// Location
-		if( isset($oLocation) ) {
-			$o->getLocationAr()->add( $this->location );
-		}
+		$o->addLocation( $this->location );
 		
 		// Addon
 		$aAddOn = [];

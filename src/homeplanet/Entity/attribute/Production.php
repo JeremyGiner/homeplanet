@@ -104,6 +104,10 @@ class Production {
 		return $this->_aProdInput;
 	}
 	
+	public function getQuantity() {
+		return $this->getType()->getQuantity()*$this->getRatioMax();
+	}
+	
 //______________________________________________________________________________
 //	Modifier
 	
