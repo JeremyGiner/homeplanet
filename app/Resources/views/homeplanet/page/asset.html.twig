@@ -12,12 +12,18 @@
 		Location {{ sLocation }}
 		<br>
 		{% for iRessId, iQuantity in aFluxByLocation[sLocation]|default([]) %}
-			{{ iRessId }}: {{ iQuantity }}
+			{{iQuantity>0?'+'}}{{ iQuantity }}
+			{{ printo(gameview.game.getRessource(iRessId)) }}<br>
 		{% endfor %}
 	{% endblock %}
 	{% block content %}
-		{% include 'homeplanet/element/entity_list.html.twig' 
-			with { aEntity: aEntity } %}
+		<ul class="list-group">
+		{% for oEntity in aEntity %}
+		<li class="list-group-item">
+			{{ printo(oEntity) }}
+		</li>
+		{% endfor %}
+		</ul>
 	{% endblock %}
 	{% endembed %}
 </div>

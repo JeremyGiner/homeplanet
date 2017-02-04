@@ -1,0 +1,34 @@
+<a href="entity/{{ o.getId() }}">
+	#{{ o.getId() }} {{ o.getType().getLabel() }} 
+	({{ o.getLocationAr()|join(';') }})<br>
+</a>
+{% for oProduction in o.getProductionAr() %}
+	{% if( oProduction.getType().getRessource().getId() == 1 ) %}
+		{% if oProduction.getRatioMax() < 1 %}
+			<p class="bg-danger">
+				Working at 
+				{{ (oProduction.getRatioMax()*100)|round }}%
+				efficiency.<br>
+				Require ressources or buyer.
+			</p>
+		{% endif %}
+		Sell : 
+		{% for oProdInput in oProduction.getProdInputAr() %}
+			{{ oProdInput.getType().getRessource().getLabel() }}
+			x{{ oProdInput.getType().getQuantity() }} 
+			({{ (oProduction.getRatioMax()*100)|round }}%)
+		{% endfor %}
+		<br>
+	{% else %}
+		{% if oProduction.getRatioMax() < 1 %}
+			<p class="bg-danger">
+				Working at 
+				{{ (oProduction.getRatioMax()*100)|round }}%
+				efficiency.<br>
+				Require ressources.
+			</p>
+		{% endif %}
+		{% include 'homeplanet/text/prodtype.html.twig' 
+			with {prodtype: oProduction.getType()} %}
+	{% endif %}
+{% endfor %}

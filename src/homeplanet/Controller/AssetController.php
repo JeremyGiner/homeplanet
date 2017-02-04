@@ -64,32 +64,74 @@ class AssetController extends BaseController {
 		$oGame = $this->_oGame;
 		
 		//_____________________________
-		// Render game
-		//$oGameViewFactory = $this->_gameViewFactory_get( $oGame, $oContext );
+		// Render
 		
 		$aEntityByLocation = $this->_oGame->getEntityAr_byUser_indexLocation($oUser);
 		
+		// Get ressource flux by location
+		//TODO: remove code repetition
 		$aFluxByLocation = [];
-		foreach( $aEntityByLocation as $sLocation => $aEntity )
-		foreach( $aEntity as $oEntity ) {
-			if( !isset($aFluxByLocation[$sLocation]) )
-				$aFluxByLocation[$sLocation] = [];
+		foreach( $this->_oGame->getEntityAr_byUser($oUser) as $oEntity ) {
 			foreach ( $oEntity->getProductionAr() as $oProd ) {
-				$iRessId = $oProd->getType()->getRessource()->getId();
-				if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) ) 
-					$aFluxByLocation[$sLocation][$iRessId] = 0;
-				
-				$aFluxByLocation[$sLocation][$iRessId] += $oProd->getQuantity();
 				
 				foreach( $oProd->getProdInputAr() as $oProdInput ) {
-					$iRessId = $oProdInput->getType()->getRessource()->getId();
+					
+					$sLocation = (string)$oProdInput->getLocation();
+					
+					// init location
+					if( !isset($aFluxByLocation[$sLocation]) )
+						$aFluxByLocation[$sLocation] = [];
+					
+					$oRessource = $oProdInput->getType()->getRessource();
+					
+					if( $oRessource->isNatural() )
+						continue;
+					
+					// Get ressrouce id
+					$iRessId = $oRessource->getId();
+					
+					// Filter credit (sell/buy)
+					if( $iRessId == 1 )
+						continue;
+					
+					// Init flux at location
 					if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) )
 						$aFluxByLocation[$sLocation][$iRessId] = 0;
 					
+					// Substract prod input value
 					$aFluxByLocation[$sLocation][$iRessId] -= $oProdInput->getQuantity();
 				}
+				
+				$sLocation = (string)$oProd->getLocation();
+				
+				// init location
+				if( !isset($aFluxByLocation[$sLocation]) )
+					$aFluxByLocation[$sLocation] = [];
+				
+				// Get ressrouce id
+				$iRessId = $oProd->getType()->getRessource()->getId();
+				
+				// Filter credit (sell/buy)
+				if( $iRessId == 1 )
+					continue;
+				
+				// Init flux at location
+				if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) ) 
+					$aFluxByLocation[$sLocation][$iRessId] = 0;
+				
+				// Add prod value
+				$aFluxByLocation[$sLocation][$iRessId] += $oProd->getQuantity();
 			}
 		}
+		
+
+		// Filter flux null
+		foreach ( $aFluxByLocation as $sLocation => $aFlux )
+		foreach ( $aFlux as $iRessId => $iValue ) {
+			if( $aFluxByLocation[$sLocation][$iRessId] == 0 )
+				unset($aFluxByLocation[$sLocation][$iRessId]);
+		}
+		
 		
 		return $this->render( 
 			'homeplanet/page/asset.html.twig', 
