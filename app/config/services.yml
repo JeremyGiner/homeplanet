@@ -9,6 +9,10 @@ services:
         tags:
             - { name: form.type_guesser }
         arguments: ["@doctrine"]
+    app.twig.printo:
+        class: AppBundle\Twig\Printo
+        tags:
+            - { name: twig.extension }
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName

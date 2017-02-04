@@ -1,0 +1,23 @@
+{% extends 'page/index.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+<div class="col-xs-12 col-sm-6">
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		Ressource
+	{% endblock %}
+	{% block content %}
+		<ul class="list-group">
+			{% for oRessource in aRessource %}
+			<li class="list-group-item">
+				{{ printo(oRessource) }}
+				#{{ oRessource.getId() }}
+			</li>
+			{% endfor %}
+		</ul>
+	{% endblock %}
+	{% endembed %}
+</div>
+</div>
+{% endblock %}

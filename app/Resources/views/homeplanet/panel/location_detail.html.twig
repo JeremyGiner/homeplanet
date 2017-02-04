@@ -23,9 +23,7 @@
 	{#
 		{{ iRessId }} {{ iRessQuantity }}
 	#}
-		{% include 'homeplanet/text/ressource.html.twig' 
-			with {ressource: gameview.game.getRessource(iRessId) } only 
-		%}
+		{{ printo(gameview.game.getRessource(iRessId)) }}
 		{% set overcrowd = gameview.overcrowd[iRessId].quantity|default(0) %}
 		{{ max(0,iRessQuantity - overcrowd) }}
 		{%  if (gameview.overcrowd[iRessId] is defined) %}

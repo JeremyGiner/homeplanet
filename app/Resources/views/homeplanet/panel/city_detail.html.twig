@@ -19,8 +19,7 @@
 		{% for oDemand in city.getDemandAr() %}
 			<tr>
 				<td>
-					{% include 'homeplanet/text/ressource.html.twig' 
-						with { ressource: oDemand.getRessource() } only %}
+					{{ printo(oDemand.getRessource()) }}
 				</td>
 				<td>
 					{{ oDemand.getPriceModifier()*100 }} %

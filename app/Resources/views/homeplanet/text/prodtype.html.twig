@@ -3,20 +3,17 @@
 {% if( prodtype.getRessource().getId() == 1 ) %}
 	Sell : 
 	{% for oProdInputType in prodtype.getProdInputTypeAr() %}
-		{% include 'homeplanet/text/ressource.html.twig' 
-			with {ressource: oProdInputType.getRessource() } only %}
+		{{ printo(oProdInputType.getRessource()) }}
 		x{{ oProdInputType.getQuantity() }}
 	{% endfor %}
 	<br>
 {% else %}
 	+ {{ prodtype.getQuantity() }} 
-	{% include 'homeplanet/text/ressource.html.twig' 
-		with {ressource: prodtype.getRessource() } only %}
+	{{ printo(prodtype.getRessource()) }}
 	<br>
 	{% for oProdInputType in prodtype.getProdInputTypeAr() %}
 		- {{ oProdInputType.getQuantity() }} 
-		{% include 'homeplanet/text/ressource.html.twig' 
-			with {ressource: oProdInputType.getRessource() } only %}
+		{{ printo(oProdInputType.getRessource()) }}
 		<br>
 	{% endfor %}
 {% endif %}
