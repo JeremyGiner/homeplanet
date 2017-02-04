@@ -10,6 +10,10 @@
 	{% embed 'bootstrap/panel.html.twig' %}
 	{% block header %}
 		Location {{ sLocation }}
+		<br>
+		{% for iRessId, iQuantity in aFluxByLocation[sLocation]|default([]) %}
+			{{ iRessId }}: {{ iQuantity }}
+		{% endfor %}
 	{% endblock %}
 	{% block content %}
 		{% include 'homeplanet/element/entity_list.html.twig' 

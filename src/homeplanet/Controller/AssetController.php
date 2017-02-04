@@ -67,12 +67,37 @@ class AssetController extends BaseController {
 		// Render game
 		//$oGameViewFactory = $this->_gameViewFactory_get( $oGame, $oContext );
 		
+		$aEntityByLocation = $this->_oGame->getEntityAr_byUser_indexLocation($oUser);
+		
+		$aFluxByLocation = [];
+		foreach( $aEntityByLocation as $sLocation => $aEntity )
+		foreach( $aEntity as $oEntity ) {
+			if( !isset($aFluxByLocation[$sLocation]) )
+				$aFluxByLocation[$sLocation] = [];
+			foreach ( $oEntity->getProductionAr() as $oProd ) {
+				$iRessId = $oProd->getType()->getRessource()->getId();
+				if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) ) 
+					$aFluxByLocation[$sLocation][$iRessId] = 0;
+				
+				$aFluxByLocation[$sLocation][$iRessId] += $oProd->getQuantity();
+				
+				foreach( $oProd->getProdInputAr() as $oProdInput ) {
+					$iRessId = $oProdInput->getType()->getRessource()->getId();
+					if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) )
+						$aFluxByLocation[$sLocation][$iRessId] = 0;
+					
+					$aFluxByLocation[$sLocation][$iRessId] -= $oProdInput->getQuantity();
+				}
+			}
+		}
+		
 		return $this->render( 
 			'homeplanet/page/asset.html.twig', 
 			[
 				'user' => $this->getUser(),
 				'gameview' => $this->_createView($oGame, $oLocation),
-				'test' => $this->_oGame->getEntityAr_byUser_indexLocation($oUser),
+				'test' => $aEntityByLocation,
+				'aFluxByLocation' => $aFluxByLocation,
 			]
 		);
 	}
