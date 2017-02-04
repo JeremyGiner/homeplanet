@@ -24,11 +24,22 @@ class Tile {
 	protected $_aRessourceSource;
 	protected $_iTerrainType;
 	
+	/**
+	 * @var Tile
+	 */
+	protected $_oSouthTile;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
 	public function __construct( 
-			$oLocation, $fElevation, $fHumidity, $fTemp, $aRessource ) {
+			$oLocation, 
+			$fElevation, 
+			$fHumidity, 
+			$fTemp, 
+			$aRessource,
+			$oTileSouth
+	) {
 		$this->_oLocation = $oLocation;
 		
 		$this->_fElevation = $fElevation;
@@ -37,6 +48,7 @@ class Tile {
 		$this->_fTemperature = $fTemp;
 		$this->_aRessourceSource = $aRessource;
 		
+		$this->_oSouthTile = $oTileSouth;
 	}
 	
 //_____________________________________________________________________________
@@ -68,17 +80,44 @@ class Tile {
 	
 	public function getColorRGB() {
 		
+		
+		// TEST
+		/*
+		$i = 37;
+		$f = isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
+		$aColor = $this->_interpolateColor(
+				[0,0,0],
+				[255,255,255],
+				$f/100
+		);
+		return $aColor;
+		*/
+		
 		$fTemp = $this->_fTemperature;
 		$fElevation = $this->_fElevation;
 		$fHumi = $this->_fHumidity;
 		
 		// Case : sea
-		if( $fElevation < 0 )
-			return $this->_interpolateColor( 
-					[34,86,107], // Light blue
-					[19,64,85], // Deep blue
-					-$fElevation
+		if( $fElevation <= 0 ) {
+			
+			$aColor = $this->_interpolateColor( 
+				[34,86,107], // Light blue
+				[19,64,85], // Deep blue
+				-$fElevation
 			);
+			
+			// Shadow
+			if( $this->_oSouthTile != null )
+				$aColor = $this->_interpolateColor(
+					$aColor,
+					[0, 0, 0],
+					max( 0, 
+						$this->_oSouthTile->_fElevation - $this->_fElevation 
+					) * 0.8
+				);
+			
+			return $aColor;
+		}
 		
 		//$fElevation = ($fElevation-0.5) * 2;
 		//$fElevation = $fElevation * 10;
@@ -86,6 +125,15 @@ class Tile {
 		
 		// Filter function x=0.5 top
 		$fVegetation = $this->_getVegetation();
+		$i = 33;
+		$fVegetation = isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
+		$fVegetation /= 50;
+		
+		$i = 34;
+		$fForest =  isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
+		$fForest /= 100;
+		
+		
 		//$fVegetation = $fVegetation *$fHumi;
 		
 		// Elevation
@@ -98,8 +146,17 @@ class Tile {
 		// Vegetation
 		$aColor = $this->_interpolateColor(
 			$aColor, 
-			[112,141,59], 
+			//[112,141,59], 
+			[94, 121, 66], 
 			$fVegetation
+		);
+		
+		//forest
+		
+		$aColor = $this->_interpolateColor(
+				$aColor,
+				[65, 98, 51],
+				$fForest
 		);
 		
 		// Snow
@@ -109,6 +166,14 @@ class Tile {
 				$aColor, 
 				max(0.0, ($this->_fTemperature-0.125)*8)
 			);
+		
+		// Shadow
+		if( $this->_oSouthTile != null )
+		$aColor = $this->_interpolateColor(
+			$aColor,
+			[0, 0, 0],
+			max( 0, $this->_oSouthTile->_fElevation - $this->_fElevation ) * 2.5
+		);
 		
 		return $aColor;
 	}

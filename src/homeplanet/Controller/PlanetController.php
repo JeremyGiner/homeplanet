@@ -255,9 +255,11 @@ class PlanetController extends BaseController {
 		
 		// HTTP Caching
 		$oResponse->setPublic();
-		//		$oResponse->setEtag('map'.(0).':'.(0));
+		//$oResponse->setEtag('map'.(0).':'.(0));
 		$oResponse->setEtag('map');
-		$oResponse->setLastModified(new \DateTime('2000-02-30'));
+		//$oResponse->setLastModified(new \DateTime('2000-02-30'));
+		$oResponse->setLastModified(new \DateTime('2017-02-30'));
+		
 		
 		if( $oResponse->isNotModified($oRequest) ) {
 			return $oResponse;

@@ -88,23 +88,71 @@ class Worldmap {
 			if( $fElevation > 0);
 			$fElevation *= $f*$f*$f/ (1/2.5)+0.1;*/
 			
+			$fTemperature = -$fElevation+1;	// using elevation as temperature
 			$fHumidity = ($aPerlinHumidity[$x][$y]/2+0.5);
-			$fVegetation = ( $fHumidity < 0.5 ) ? 
-				$fHumidity * 2 : 
-				2.0 - ($fHumidity*2 );
+			$fVegetation = $this->_getVegetation($fTemperature, $fHumidity);
 			
+			// Ressource
+			$aRessource = [];
+			if( $fElevation > 0 ) {
+				// Field
+				$aRessource[33] = (int)(
+						$fVegetation * 
+						$this->_filterLow($fVegetation, 0.5, 0.75)
+						* 100
+				);
+				//$aRessource[34] = (int)($fVegetation*100);
+				// Forest
+				$aRessource[34] = (int)(
+						$fVegetation *
+						$this->_filterHigh($fVegetation, 0.5, 0.75)
+						* 100
+				);;
+//				$aRessource[37] = (int)($oPerlin->lerp($x, $y,0)*100);
+				$aRessource[37] = (int)(($oPerlin->random2D($x, $y)+1)*50)
+					- $aRessource[34];
+			}
+			
+			
+			$oTileSouth = isset($this->_aTile[$x][$y-1])?
+						$this->_aTile[$x][$y-1]:
+						null;
 			$this->_aTile[$x][$y] = new Tile(
 					new Location( $x, $y ), 
 					$fElevation,
 					$fHumidity, 
-					-$fElevation+1,	// using elevation as temperature
-					[
-						34 => (int)($fVegetation*100),
-						//37 => (int)($oPerlin->random2D($x, $y)*100),
-					]
+					$fTemperature,	
+					$aRessource,
+					$oTileSouth
 			);
 		}
 	}
+	
+	private function _spike( $f ) {
+		return $f;
+		return $f > 0.5 ? 
+			($f-0.5)*(-2)+1 : 
+			$f;
+	}
+	
+	private function _filterLow( $f, $fThreshold0, $fThreshold1 ) {
+		if( $f > $fThreshold1 )
+			 return 0;
+		if( $f < $fThreshold0 )
+			return 1;
+		$fSlope = (0-1) / ($fThreshold1 - $fThreshold0);
+		return $f * $fSlope - $fSlope*$fThreshold1;
+	}
+	
+	private function _filterHigh( $f, $fThreshold0, $fThreshold1 ) {
+		if( $f > $fThreshold1 )
+			return 1;
+		if( $f < $fThreshold0 )
+			return 0;
+		$fSlope = (1-0) / ($fThreshold1 - $fThreshold0);
+		return $f * $fSlope - $fSlope*$fThreshold0;
+	}
+	
 	/**
 	 * @source http://devmag.org.za/2011/04/05/bzier-curves-a-tutorial/
 	 */
@@ -133,6 +181,28 @@ class Worldmap {
 		]; //fourth term
  
 		return $p;
+	}
+	
+	
+	private function _getVegetation( $fTemp, $fHumi ) {
+		//return 0;
+		$max = 0.65;
+		$max = 0.65;
+	
+		// Too cold
+		if( $fTemp < 0.5 )
+			return 0;
+		/*$f = 0.05;
+			if( $this->_fElevation < $f )
+				$fHumi*=$this->_fElevation*(1/$f)+0.5;*/
+
+
+		$fVegetation = ( $fHumi < 0.5 ) ? $fHumi * 2 : $fHumi*-2 + 2;
+
+
+		if( $fTemp < 0.75)
+			$fVegetation*=min(1.0,($fTemp-0.5)*4);
+		return $fVegetation;
 	}
 	
 	private function loadPerlinSectorResult( Perlin $oPerlin, $iSectorX, $iSectorY, $z ) {

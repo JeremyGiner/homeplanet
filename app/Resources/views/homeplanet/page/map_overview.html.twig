@@ -1,0 +1,23 @@
+{% extends 'page/index.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+    	
+	{% block header %}
+		World map ( {{ gameview.location }} )
+	{% endblock %}
+    
+	{% block content %}
+		{% embed 'homeplanet/element/map.html.twig' 
+			with {location: gameview.location}
+		 %}{% endembed %}
+	{% endblock %}
+	
+	{% endembed %}
+	
+	{% include 'homeplanet/panel/location_detail.html.twig' %}
+</div>
+</div>
+{% endblock %}
