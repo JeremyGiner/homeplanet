@@ -3,6 +3,7 @@ namespace homeplanet\Entity;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\tool\Perlin;
 use homeplanet\Entity\WorldmapChunk;
+use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
 
 /**
  * Sector(169x169)>Region(13x13)>Location(1x1)
@@ -11,26 +12,26 @@ class Worldmap {
 	
 	/**
 	 * Index by x then y
-	 * @var Tile[][]
+	 * @var Tile[]
 	 */
 	protected $_aTile;
 	
-	/**
-	 * Indexed by concatenated offset ( 'x:y' )
-	 * @var WorldmapChunk[]
-	 */
-	protected $_aChunk;
+	protected $_iSeedElevation = 2586;
+	protected $_iSeedHumidity = 2543;
 	
-	protected $_iSeed = 2586;
+	//_________________________________
+	// Cache
+	
+	/**
+	 * Indexed by concatened sector coordonate ('x:y')
+	 * @var float[]
+	 */
+	protected $_aPerlinElevation;
 	
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( $iSectorX, $iSectorY ) {
-		
-		$this->_aChunk = [];
-		// Load tile sector 0:0
-		$this->_load();
+	public function __construct() {
 	}
 	
 //_____________________________________________________________________________
@@ -40,92 +41,146 @@ class Worldmap {
 	 * @return Tile
 	 */
 	public function getTile( $x, $y ) {
-		return $this->_aTile[ $x ][ $y ];
+		$sKey = $x.':'.$y;
+		if( !isset($this->_aTile[ $sKey ] ) )
+			$this->_loadTile( $x, $y );
+		return $this->_aTile[ $sKey ];
 	}
 	
-	public function getChunk( $iOffsetX, $iOffsetY ) {
-		$s = $iOffsetX.':'.$iOffsetY;
-		if( !isset( $this->_aChunk[ $s ] ) )
-			$this->_aChunk[ $s ] = new WorldmapChunk($this, $iOffsetX, $iOffsetX+13, $iOffsetY, $iOffsetY+13);
-		return $this->_aChunk[ $s ];
+	public function loadRegion( $iRegionX, $iRegionY ) {
+		//TODO : load only region
+		$oLoc = new Location( $iRegionX*13, $iRegionY*13 );
+		$aPerlinElevation = $this->_getPerlinElevation($oLoc->getSectorX(), $oLoc->getSectorY());
+		$aPerlinHumidity = $this->_getPerlinHumidity($oLoc->getSectorX(), $oLoc->getSectorY());
+		//$this->loadSector($oLoc->getSectorX(), $oLoc->getSectorY());
+	
+		// Generate Tiles
+		for ($x = $iRegionX*13; $x < ($iRegionX+1)*13; $x++)
+		for ($y = $iRegionY*13; $y < ($iRegionY+1)*13; $y++) {
+			$this->_aTile[ $x.':'.$y ] = $this->_createTile(
+				$x, $y,
+				$aPerlinElevation[$x][$y],
+				$aPerlinHumidity[$x][$y],
+				(new Perlin($this->_iSeedElevation))->random2D($x, $y)
+			);
+		}
+	}
+	public function loadSector( $iSectorX, $iSectorY ) {
+		$aPerlinElevation = $this->_getPerlinElevation($iSectorX, $iSectorY);
+		$aPerlinHumidity = $this->_getPerlinHumidity($iSectorX, $iSectorY);
+		
+		// Generate Tiles
+		for ($x = $iSectorX*169; $x < ($iSectorX+1)*169; $x++)
+		for ($y = $iSectorY*169; $y < ($iSectorY+1)*169; $y++) {
+			$this->_aTile[ $x.':'.$y ] = $this->_createTile(
+					$x, $y,
+					$aPerlinElevation[$x][$y],
+					$aPerlinHumidity[$x][$y],
+					(new Perlin($this->_iSeedElevation))->random2D($x, $y)
+			);
+		}
+	}
+	
+	//_________________________________
+	
+	protected function _getPerlinElevation( $iSectorX, $iSectorY ) {
+		$sKey = $iSectorX.':'.$iSectorY;
+		if( !isset($this->_aPerlinElevation[$sKey]) )
+			$this->_aPerlinElevation[$sKey] = $this->loadPerlinSectorResult(
+				new Perlin($this->_iSeedElevation), 
+				$iSectorX, 
+				$iSectorY, 
+				0 
+			);
+		return $this->_aPerlinElevation[$sKey];
+	}
+	
+	protected function _getPerlinHumidity( $iSectorX, $iSectorY ) {
+		$sKey = $iSectorX.':'.$iSectorY;
+		if( !isset($this->_aPerlinHumidity[$sKey]) )
+			$this->_aPerlinHumidity[$sKey] = $this->loadPerlinSectorResult(
+				new Perlin($this->_iSeedHumidity),
+				$iSectorX,
+				$iSectorY,
+				0
+			);
+		return $this->_aPerlinHumidity[$sKey];
 	}
 	
 //_____________________________________________________________________________
 //	Sub-routine
 	
-	protected function _load() {
+	protected function _loadTile( $x, $y ) {
 		
-		$iSectorX = 0;
-		$iSectorY = 0;
+		$oPerlin = (new Perlin($this->_iSeedElevation));
 		
-		$oPerlin = new Perlin( $this->_iSeed );
-		
-		$aPerlinElevation = $this->loadPerlinSectorResult(
-				$oPerlin, 
-				$iSectorX, 
-				$iSectorY, 
-				0 
+		$this->_aTile[ $x.':'.$y ] = $this->_createTile(
+			$x, $y,
+			$oPerlin->noise($x, $y, 0, 50), 
+			(new Perlin($this->_iSeedHumidity))->noise($x, $y, 0, 50), 
+			$oPerlin->random2D($x, $y)
 		);
-		$aPerlinHumidity = $this->loadPerlinSectorResult(new Perlin(2543), $iSectorX, $iSectorY, 0 );
 		
-		// Generate Tiles
-		$this->_aTile = [];
-		for ($x = $iSectorX*169; $x < ($iSectorX+1)*169; $x++)
-		for ($y = $iSectorY*169; $y < ($iSectorY+1)*169; $y++) {
-			if( !isset($this->_aTile[$x]) ) $this->_aTile[$x] = [];
+	}
+	
+	protected function _createTile(
+		$x,
+		$y,
+		$fPerlinElevation,
+		$fPerlinHumidity,
+		$fPerlinSoil
+	) {
+		$fElevation = $fPerlinElevation;
 			
-			$fElevation = $aPerlinElevation[$x][$y];
+		// Convertion [~-0.7;~0.7] -> [-1.0;1.0]
+		$fElevation = $fElevation*1.42;
 			
-			// Convertion [~-0.7;~0.7] -> [-1.0;1.0]
-			$fElevation = $fElevation*1.42;
+		// Trim
+		$fElevation = ($fElevation>1)?1-($fElevation-1):$fElevation;
+		$fElevation = ($fElevation<-1)?-1-($fElevation+1):$fElevation;
 			
-			// Trim
-			$fElevation = ($fElevation>1)?1-($fElevation-1):$fElevation;
-			$fElevation = ($fElevation<-1)?-1-($fElevation+1):$fElevation;
+		// Erosion
+		/*$f = $fElevation-0.3;
+		 if( $fElevation > 0);
+		 $fElevation *= $f*$f*$f/ (1/2.5)+0.1;*/
 			
-			// Erosion
-			/*$f = $fElevation-0.3;
-			if( $fElevation > 0);
-			$fElevation *= $f*$f*$f/ (1/2.5)+0.1;*/
+		$fTemperature = -$fElevation+1;	// using elevation as temperature
+		$fHumidity = ($fPerlinHumidity/2+0.5);
+		$fVegetation = $this->_getVegetation($fTemperature, $fHumidity);
 			
-			$fTemperature = -$fElevation+1;	// using elevation as temperature
-			$fHumidity = ($aPerlinHumidity[$x][$y]/2+0.5);
-			$fVegetation = $this->_getVegetation($fTemperature, $fHumidity);
-			
-			// Ressource
-			$aRessource = [];
-			if( $fElevation > 0 ) {
-				// Field
-				$aRessource[33] = (int)(
-						$fVegetation * 
-						$this->_filterLow($fVegetation, 0.5, 0.75)
-						* 100
-				);
-				//$aRessource[34] = (int)($fVegetation*100);
-				// Forest
-				$aRessource[34] = (int)(
-						$fVegetation *
-						$this->_filterHigh($fVegetation, 0.5, 0.75)
-						* 100
-				);;
-//				$aRessource[37] = (int)($oPerlin->lerp($x, $y,0)*100);
-				$aRessource[37] = (int)(($oPerlin->random2D($x, $y)+1)*50)
-					- $aRessource[34];
-			}
-			
-			
-			$oTileSouth = isset($this->_aTile[$x][$y-1])?
-						$this->_aTile[$x][$y-1]:
-						null;
-			$this->_aTile[$x][$y] = new Tile(
-					new Location( $x, $y ), 
-					$fElevation,
-					$fHumidity, 
-					$fTemperature,	
-					$aRessource,
-					$oTileSouth
+		// Ressource
+		$aRessource = [];
+		if( $fElevation > 0 ) {
+			// Field
+			$aRessource[33] = (int)(
+					$fVegetation *
+					$this->_filterLow($fVegetation, 0.5, 0.75)
+					* 100
 			);
+			//$aRessource[34] = (int)($fVegetation*100);
+			// Forest
+			$aRessource[34] = (int)(
+					$fVegetation *
+					$this->_filterHigh($fVegetation, 0.5, 0.75)
+					* 100
+			);;
+			//				$aRessource[37] = (int)($oPerlin->lerp($x, $y,0)*100);
+			$aRessource[37] = (int)(($fPerlinSoil+1)*50)
+			- $aRessource[34];
 		}
+			
+			
+		$oTileSouth = isset($this->_aTile[$x.':'.($y-1)])?
+			$this->_aTile[$x.':'.($y-1)]:
+			null;
+		return new Tile(
+				new Location( $x, $y ),
+				$fElevation,
+				$fHumidity,
+				$fTemperature,
+				$aRessource,
+				$oTileSouth
+		);
 	}
 	
 	private function _spike( $f ) {

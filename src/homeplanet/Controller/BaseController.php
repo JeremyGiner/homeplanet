@@ -74,7 +74,6 @@ class BaseController extends Controller {
     
     	return [
     			'player' => $oGame->getContextPlayer(),
-    			'chunk' => $oGame->getWorldmap()->getChunk(0, 0),
     			'location' => $oLocation,
     			'zoom' => 0,
     			'game' => $oGame,

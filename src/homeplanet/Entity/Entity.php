@@ -168,5 +168,8 @@ class Entity {
 		$this->_aPosition->add( new EntityLocation($this, $oLoc));
 	}
 	
+	public function addProduction( Production $oProd ) {
+		$this->_aProduction->add( $oProd );
+	}
 
 }

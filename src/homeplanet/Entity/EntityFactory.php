@@ -54,7 +54,7 @@ class EntityFactory extends Entity {
 			
 			foreach( $this->_oType->getProdTypeAr() as $oProdType ) {
 				$oProd = new Production($o, $oLocation, $oProdType );
-				$o->getProductionAr()->add( $oProd );
+				$o->addProduction( $oProd );
 				
 				foreach( $oProdType->getProdInputTypeAr() as $oProdInputType ) {
 					// Case: natural ressource as input -> set prod ratio 

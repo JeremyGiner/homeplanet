@@ -54,7 +54,7 @@ class Game {
 		
 		$this->_oGameState = $this->_oEntityManager->getRepository('homeplanet\Entity\GameState')->find(1);
 		
-		$this->_oWorldmap = new Worldmap(0, 0); 
+		$this->_oWorldmap = new Worldmap(); 
 		
 		$this->_aEntityByLoc = [];
 		$a = $this->getEntityAr_byArea( $iCenterY-6, $iCenterY+6, $iCenterX-6, $iCenterX+6 );
