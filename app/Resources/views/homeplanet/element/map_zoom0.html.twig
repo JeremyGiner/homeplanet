@@ -8,12 +8,14 @@
 			{% set oTile = gameview.map.getTile( x, y ) %}
 			<td class="" style="background-color: #{{ oTile.getColorHex() }}">
 				{# draw city #}
+				{% set city = gameview.city[ x~':'~y ]|default(null) %}
+				{% if city != null %}
+					<div class="map-cell sprite sprite-city"></div>
+				{% endif %}
 				{% set aEntity = gameview.game.getEntityAr_byLocation( oTile.getLocation() ) %}
 				
 				{% for oEntity in aEntity %}
-					{% if oEntity.getType().getLabel() == 'city' %}
-						<div class="map-cell sprite sprite-city"></div>
-					{% endif %}
+					
 					{% if oEntity.getType().getLabel() != 'city' %}
 						<div class="map-cell sprite">P</div>
 					{% endif %}

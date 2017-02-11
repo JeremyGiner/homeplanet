@@ -71,6 +71,20 @@ class BaseController extends Controller {
     	foreach( $aOvercrowd as $o )
     		$a[ $o->getRessourceId() ] = $o;
     	$aOvercrowd = &$a;
+    	
+    	// Get cities
+    	$aCity = $oGame->getCityRepo()->findByArea(
+    			$oLocation->getRegionY()*13, //Bottom
+    			($oLocation->getRegionY()+1)*13, //Top
+    			$oLocation->getRegionX()*13, //Left
+    			($oLocation->getRegionX()+1)*13	//Right
+    	);
+    	// Index by location
+    	$a = [];
+    	foreach ( $aCity as $oCity ) {
+    		$a[ (string)$oCity->getLocation() ] = $oCity;
+    	}
+    	$aCity = &$a;
     
     	return [
     			'player' => $oGame->getContextPlayer(),
@@ -80,6 +94,7 @@ class BaseController extends Controller {
     			'map' => $oGame->getWorldmap(),
     			'entityAr' => $oGame->getEntityAr_byLocation($oLocation),
     			'overcrowd' => $aOvercrowd,
+    			'city' => $aCity,
     	];
     }
 }

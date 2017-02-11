@@ -15,6 +15,7 @@ use homeplanet\entity\EntityType;
 use homeplanet\Entity\Ressource;
 use homeplanet\Entity\Overcrowd;
 use homeplanet\Entity\attribute\Production;
+use homeplanet\Repository\CityRepository;
 
 class Game {
 	/**
@@ -72,6 +73,13 @@ JOIN entitytype._aProdType prodtype
 	
 //_____________________________________________________________________________
 //	Accessor
+	
+	/**
+	 * @return CityRepository
+	 */
+	public function getCityRepo() {
+		return $this->_oEntityManager->getRepository(City::class);
+	}
 	
 	public function getEntity( $iEntityId ) {
 		return $this->_oEntityManager->getRepository('homeplanet\entity\Entity')->find($iEntityId);
@@ -171,10 +179,9 @@ WHERE pos._x = :pos_x
 	private function getEntityAr_byArea( $iBot, $iTop, $iLeft, $iRight ) {
 		
 		$oQuery = $this->_oEntityManager->createQuery('
-SELECT entity, pop, pos
+SELECT entity, pos
 FROM homeplanet\entity\Entity entity
 JOIN entity._aPosition pos
-LEFT JOIN entity._oPopulation pop
 WHERE pos._x BETWEEN :left AND :right
 	AND pos._y BETWEEN :bot AND :top
 		');

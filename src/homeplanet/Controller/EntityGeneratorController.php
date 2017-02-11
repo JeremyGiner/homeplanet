@@ -36,28 +36,22 @@ use homeplanet\Form\EntityTypeChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Entity\ResCategory;
 
 /**
  *
  */
-class EncyclopediaController extends BaseController {
+class AssetController extends BaseController {
 	
 	
 //_____________________________________________________________________________
 //	Action	
 	
 	/**
-	 * @Route("/ressource", name="ressource")
+	 * @Route("/generate", name="generate")
 	 */
-	public function ressourceAction( Request $oRequest ) {
+	public function mainAction( Request $oRequest ) {
 		
 		$this->_handleRequest( $oRequest );
-
-		// Case : no player associated
-		$oPlayer = $this->_oGame->getPlayer( $this->getUser()->getId() );
-		if( $oPlayer == null )
-			return $this->redirect( $this->generateUrl('player_create') );
 		
 		$oEntityManager = $this->getDoctrine()->getManager();
 		
@@ -74,15 +68,11 @@ class EncyclopediaController extends BaseController {
 		//$oGameViewFactory = $this->_gameViewFactory_get( $oGame, $oContext );
 		
 		return $this->render( 
-			'homeplanet/page/ressource.html.twig', 
+			'homeplanet/page/asset.html.twig', 
 			[
 				'user' => $this->getUser(),
-				'aRessource' => $this->_oGame->getRessourceAr(),
-				'aRessCat' => $this->_oGame
-					->getEntityManager()
-					->getRepository(ResCategory::class)
-					->findAll(),
-				//'gameview' => $this->_createView($oGame, $oLocation),
+				'gameview' => $this->_createView($oGame, $oLocation),
+				'test' => $this->_oGame->getEntityAr_byUser_indexLocation($oUser),
 			]
 		);
 	}
@@ -92,7 +82,6 @@ class EncyclopediaController extends BaseController {
 //_____________________________________________________________________________
 //	Accessor
 
-	
 	
 //_____________________________________________________________________________
 //	Sub-routine

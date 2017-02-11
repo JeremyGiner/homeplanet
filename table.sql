@@ -10,14 +10,29 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for table gigablaster.city
+CREATE TABLE IF NOT EXISTS `city` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL DEFAULT '',
+  `location_x` int(10) NOT NULL,
+  `location_y` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `location_x_location_y_unique` (`location_x`,`location_y`),
+  KEY `location_x_location_y` (`location_x`,`location_y`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table gigablaster.demand
 CREATE TABLE IF NOT EXISTS `demand` (
-  `entity_id` int(10) unsigned NOT NULL,
+  `city_id` int(10) unsigned NOT NULL,
   `ressource_id` int(10) unsigned NOT NULL,
   `percent` float unsigned NOT NULL,
   `sold` int(10) unsigned NOT NULL DEFAULT '0',
   `price_modifier` float unsigned NOT NULL DEFAULT '0' COMMENT 'calc by proc demand_update',
-  PRIMARY KEY (`entity_id`,`ressource_id`)
+  PRIMARY KEY (`city_id`,`ressource_id`),
+  CONSTRAINT `FK_demand_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -63,8 +78,8 @@ CREATE TABLE IF NOT EXISTS `entitytype_prodtype_assoc` (
 -- Dumping structure for table gigablaster.entity_location_assoc
 CREATE TABLE IF NOT EXISTS `entity_location_assoc` (
   `entity_id` int(10) unsigned NOT NULL,
-  `location_x` int(10) unsigned NOT NULL,
-  `location_y` int(10) unsigned NOT NULL,
+  `location_x` int(10) NOT NULL,
+  `location_y` int(10) NOT NULL,
   PRIMARY KEY (`entity_id`,`location_x`,`location_y`),
   CONSTRAINT `FK_entity_location_assoc_entity` FOREIGN KEY (`entity_id`) REFERENCES `entity` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -98,11 +113,11 @@ CREATE TABLE IF NOT EXISTS `player` (
 
 -- Dumping structure for table gigablaster.population
 CREATE TABLE IF NOT EXISTS `population` (
-  `entity_id` int(10) unsigned NOT NULL,
-  `quantity` int(10) unsigned NOT NULL DEFAULT '10',
-  `growth` float unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`entity_id`),
-  CONSTRAINT `FK_population_entity` FOREIGN KEY (`entity_id`) REFERENCES `entity` (`id`) ON DELETE CASCADE
+  `city_id` int(10) unsigned NOT NULL,
+  `quantity` int(10) unsigned NOT NULL,
+  `growth` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`city_id`),
+  CONSTRAINT `FK_population_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -146,7 +161,7 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
 -- Dumping structure for table gigablaster.prodinputtype
 CREATE TABLE IF NOT EXISTS `prodinputtype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `ressource_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `ressource_id` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `comment` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -222,6 +237,23 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table gigablaster._view_note
+CREATE TABLE IF NOT EXISTS `_view_note` (
+  `formated` text
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='view query properly formated';
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for view gigablaster.city_distance
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `city_distance` (
+	`entity0_id` INT(10) UNSIGNED NOT NULL,
+	`entity1_id` INT(10) UNSIGNED NULL,
+	`dist` BIGINT(13) NOT NULL
+) ENGINE=MyISAM;
+
+
 -- Dumping structure for view gigablaster.overcrowd
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `overcrowd` (
@@ -256,9 +288,9 @@ CREATE TABLE `prod_sum` (
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `sold` (
 	`seller_id` INT(10) UNSIGNED NOT NULL,
+	`buyer_id` INT(10) UNSIGNED NOT NULL,
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` INT(10) UNSIGNED NOT NULL,
-	`buyer_id` INT(10) UNSIGNED NOT NULL
+	`quantity` INT(10) UNSIGNED NOT NULL
 ) ENGINE=MyISAM;
 
 
@@ -269,7 +301,7 @@ BEGIN
 
 		DECLARE bDone INT;
 
-		DECLARE entity_id INT;
+		DECLARE city_id INT;
 		DECLARE location_x INT;    -- or approriate type
 		DECLARE location_y INT;
 		
@@ -279,16 +311,7 @@ BEGIN
 				prod.location_x, 
 				prod.location_y
 			FROM prod
-			
-			LEFT JOIN (
-				SELECT 
-					entity.id,
-					entity_location_assoc.location_x,
-					entity_location_assoc.location_y
-				FROM entity
-				JOIN entity_location_assoc ON entity_location_assoc.entity_id = entity.id
-				WHERE entity.type_id = 1 #City
-			) AS city_location 
+			LEFT JOIN city AS city_location 
 				ON city_location.location_x = prod.location_x
 				AND city_location.location_y = prod.location_y
 			WHERE city_location.id IS NULL
@@ -304,20 +327,18 @@ BEGIN
 			IF bDone = 1 THEN LEAVE loopy; END IF;
 			
 			START TRANSACTION;
-				INSERT INTO entity(type_id)
-				VALUES (1);
+				INSERT INTO city(location_x,location_y)
+				VALUES (location_x,location_y);
 				
-				SET entity_id = LAST_INSERT_ID();
-				INSERT INTO entity_location_assoc(entity_id,location_x,location_y)
-				VALUES (entity_id,location_x,location_y);
+				SET city_id = LAST_INSERT_ID();
 				
-				INSERT INTO population(entity_id)
-				VALUES (entity_id);
+				INSERT INTO population(city_id,quantity)
+				VALUES (city_id,10);
 				
-				INSERT INTO demand(entity_id,ressource_id,percent)
-				VALUES (entity_id,4,1.0),
-					(entity_id,14,1.0),
-					(entity_id,13,1.0);
+				INSERT INTO demand(city_id,ressource_id,percent)
+				VALUES (city_id,4,1.0),
+					(city_id,14,1.0),
+					(city_id,13,1.0);
 			COMMIT;
 		
 		END LOOP loopy;
@@ -331,6 +352,7 @@ DELIMITER ;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `cleanup`()
 BEGIN
+/*
 	DELETE prod
 	FROM prod 
 	LEFT JOIN entity ON entity.id = prod.entity_id
@@ -340,6 +362,7 @@ BEGIN
 	FROM prodinput 
 	LEFT JOIN prod ON prod.id = prodinput.prod_id
 	WHERE prod.id IS NULL;
+	*/
 END//
 DELIMITER ;
 
@@ -362,36 +385,36 @@ BEGIN
 	JOIN
 	(
 		SELECT 
-			demand.entity_id,
+			demand.city_id,
 			demand.ressource_id,
 			SUM(sold.quantity) AS sold_new,
 			((population.quantity * demand.percent) /
 			GREATEST(1,SUM(sold.quantity))) AS price_modifier_new
 		FROM sold
 		JOIN demand 
-			ON demand.entity_id = sold.buyer_id 
+			ON demand.city_id = sold.buyer_id 
 			AND demand.ressource_id = sold.ressource_id
-		JOIN population ON population.entity_id = sold.buyer_id
+		JOIN population ON population.city_id = sold.buyer_id
 		JOIN ressource ON ressource.id = sold.ressource_id
 		
 		GROUP BY buyer_id, ressource.id
-	) as t ON t.entity_id = demand.entity_id AND t.ressource_id = demand.ressource_id
+	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
 	SET demand.sold = t.sold_new, demand.price_modifier = t.price_modifier_new;
 	
 	UPDATE demand
 	JOIN
 	(
 		SELECT 
-			demand.entity_id,
+			demand.city_id,
 			demand.ressource_id,
 			0 AS sold_new,
 			5 AS price_modifier_new
 		FROM demand
 		LEFT JOIN sold 
-			ON demand.entity_id = sold.buyer_id 
+			ON demand.city_id = sold.buyer_id 
 			AND demand.ressource_id = sold.ressource_id
-			AND demand.entity_id = NULL
-	) as t ON t.entity_id = demand.entity_id AND t.ressource_id = demand.ressource_id
+			AND demand.city_id = NULL
+	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
 	SET demand.sold = t.sold_new, demand.price_modifier = t.price_modifier_new;
 END//
 DELIMITER ;
@@ -404,14 +427,17 @@ BEGIN
 	UPDATE player
 	JOIN (
 		SELECT 
-			entity.user_id,
-			SUM(demand.price_modifier * ressource.baseprice * sold.quantity ) AS income
-		FROM sold
-		JOIN entity on entity.id = sold.seller_id
-		JOIN demand ON demand.entity_id = sold.buyer_id
-		JOIN ressource ON ressource.id = sold.ressource_id
-		
-		GROUP BY entity.user_id
+			player.user_id,
+			IFNULL(
+				SUM(demand.price_modifier * ressource.baseprice * sold.quantity ),
+				0
+			) AS income
+		FROM player
+		LEFT JOIN entity ON entity.user_id = player.user_id
+		LEFT JOIN sold ON sold.seller_id = entity.id
+		LEFT JOIN demand ON demand.city_id = sold.buyer_id
+		LEFT JOIN ressource ON ressource.id = sold.ressource_id
+		GROUP BY player.user_id
 	) AS t ON t.user_id = player.user_id
 	SET player.income = t.income;
 END//
@@ -450,12 +476,12 @@ BEGIN
 		JOIN prodinput ON prodinput.prod_id = prod.id
 		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
 		LEFT JOIN prod_sum 
-			ON prod_sum.location_x = prod.location_x
-			AND prod_sum.location_y = prod.location_y
+			ON prod_sum.location_x = prodinput.location_x
+			AND prod_sum.location_y = prodinput.location_y
 			AND prod_sum.ressource_id = prodinputtype.ressource_id
 		LEFT JOIN prodinput_sum
-			ON prodinput_sum.location_x = prod.location_x
-			AND prodinput_sum.location_y = prod.location_y
+			ON prodinput_sum.location_x = prodinput.location_x
+			AND prodinput_sum.location_y = prodinput.location_y
 			AND prodinput_sum.ressource_id = prodinputtype.ressource_id
 		JOIN ressource 
 			ON ressource.id = prodinputtype.ressource_id
@@ -485,17 +511,6 @@ END//
 DELIMITER ;
 
 
--- Dumping structure for procedure gigablaster.test
-DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `test`()
-BEGIN
-	INSERT INTO entity(type_id)
-	SELECT 3;
-	SELECT LAST_INSERT_ID();
-END//
-DELIMITER ;
-
-
 -- Dumping structure for procedure gigablaster.turn
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `turn`()
@@ -510,6 +525,12 @@ BEGIN
 	CALL `credit_update`();
 END//
 DELIMITER ;
+
+
+-- Dumping structure for view gigablaster.city_distance
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `city_distance`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_distance` AS select `et0`.`id` AS `entity0_id`,`et1`.`id` AS `entity1_id`,(abs((`loc0`.`location_x` - `loc1`.`location_x`)) + abs((`loc0`.`location_y` - `loc1`.`location_y`))) AS `dist` from (((`entity` `et0` join `entity_location_assoc` `loc0` on((`loc0`.`entity_id` = `et0`.`id`))) left join `entity` `et1` on((`et0`.`id` <> `et1`.`id`))) join `entity_location_assoc` `loc1` on((`loc1`.`entity_id` = `et1`.`id`))) where ((`et0`.`type_id` = 1) and (`et1`.`type_id` = 1));
 
 
 -- Dumping structure for view gigablaster.overcrowd
@@ -533,7 +554,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view gigablaster.sold
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `sold`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,`prodinputtype`.`quantity` AS `quantity`,`buyer`.`id` AS `buyer_id` from (((((((`player` join `entity` `seller` on((`seller`.`user_id` = `player`.`user_id`))) join `prod` on((`prod`.`entity_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `entity` `buyer` on((`buyer`.`type_id` = 1))) join `entity_location_assoc` on(((`entity_location_assoc`.`entity_id` = `buyer`.`id`) and (`entity_location_assoc`.`location_x` = `prod`.`location_x`) and (`entity_location_assoc`.`location_y` = `prod`.`location_y`))));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,`prodinputtype`.`quantity` AS `quantity` from ((((((`player` join `entity` `seller` on((`seller`.`user_id` = `player`.`user_id`))) join `prod` on((`prod`.`entity_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`))));
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

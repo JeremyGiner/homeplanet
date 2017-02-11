@@ -75,7 +75,7 @@ class MerchantFactory extends Entity {
 		
 		// Prod
 		$oProd = new Production($o, $this->location, $this->productionType );
-		$o->getProductionAr()->add( $oProd );
+		$o->addProduction( $oProd );
 		
 		foreach( $this->productionType->getProdInputTypeAr() as $oProdInputType ) {
 			$oProd->getProdInputAr()->add( 

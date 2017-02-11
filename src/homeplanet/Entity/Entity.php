@@ -69,27 +69,6 @@ class Entity {
 	 */
 	protected $_aProduction;
 	
-	
-	/**
-	 * @ORM\OneToMany(
-	 *     targetEntity="\homeplanet\Entity\attribute\Demand",
-	 *     mappedBy="_oEntity",
-	 *     cascade={"persist"}
-	 * )
-	 * @var ArrayCollection
-	 */
-	protected $_aDemand;
-	
-	/**
-	 * @ORM\OneToOne(
-	 *     targetEntity="\homeplanet\Entity\attribute\Population", 
-	 *     mappedBy="_oEntity",
-	 *     cascade={"persist"}
-	 * )
-	 * @var Population
-	 */
-	protected $_oPopulation;
-	
 //_____________________________________________________________________________
 //	Constructor
 	

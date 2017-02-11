@@ -1,4 +1,5 @@
 {% extends 'page/index.html.twig' %}
+{% import 'homeplanet/macro/commun.twig' as commun %}
 
 {% block page_content %}
 <div class="row">
@@ -13,11 +14,34 @@
 			<li class="list-group-item">
 				{{ printo(oRessource) }}
 				#{{ oRessource.getId() }}
+				<span class="pull-right" title="minimum price">
+					{{ commun.credit( oRessource.priceBase ) }}
+				</span>
 			</li>
 			{% endfor %}
 		</ul>
 	{% endblock %}
 	{% endembed %}
+{% for oRessCat in aRessCat %}
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		{{ oRessCat.label }}
+	{% endblock %}
+	{% block content %}
+		<ul class="list-group">
+			{% for oRessource in oRessCat.ressourceAr %}
+			<li class="list-group-item">
+				{{ printo(oRessource) }}
+				#{{ oRessource.getId() }}
+				<span class="pull-right" title="minimum price">
+					{{ commun.credit( oRessource.priceBase ) }}
+				</span>
+			</li>
+			{% endfor %}
+		</ul>
+	{% endblock %}
+	{% endembed %}
+{% endfor %}
 </div>
 </div>
 {% endblock %}

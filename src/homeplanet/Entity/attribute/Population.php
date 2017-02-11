@@ -4,6 +4,7 @@ namespace homeplanet\Entity\attribute;
 use Doctrine\ORM\Mapping as ORM;
 use homeplanet\Entity\Ressource;
 use homeplanet\entity\Entity;
+use homeplanet\Entity\City;
 /**
  * @ORM\Entity
  * @ORM\Table(name="population")
@@ -12,11 +13,11 @@ class Population {
 	
 	/**
 	 * @ORM\Id
-	 * @ORM\OneToOne(targetEntity="\homeplanet\Entity\Entity")
-     * @ORM\JoinColumn(name="entity_id", referencedColumnName="id")
-	 * @var Entity
+	 * @ORM\OneToOne(targetEntity="\homeplanet\Entity\City")
+     * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+	 * @var City
 	 */
-	protected $_oEntity;
+	protected $_oCity;
 	
 	/**
 	 * @ORM\Column(type="integer", name="quantity")
@@ -35,10 +36,10 @@ class Population {
 //	Cosntructor
 	
 	public function __construct( 
-			Entity $oEntity, 
+			Entity $oCity, 
 			$iQuantity
 	) {
-		$this->_oEntity = $oEntity;
+		$this->_oCity = $oCity;
 		$this->_iQuantity = $iQuantity;
 		$this->_fGrowth = 0;
 	}

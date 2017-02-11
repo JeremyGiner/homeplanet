@@ -4,6 +4,7 @@ namespace homeplanet\Entity\attribute;
 use Doctrine\ORM\Mapping as ORM;
 use homeplanet\Entity\Ressource;
 use homeplanet\entity\Entity;
+use homeplanet\Entity\City;
 /**
  * @ORM\Entity
  * @ORM\Table(name="demand")
@@ -12,11 +13,11 @@ class Demand {
 	
 	/**
 	 * @ORM\Id
-	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Entity")
-	 * @ORM\JoinColumn(name="entity_id", referencedColumnName="id")
-	 * @var Entity
+	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\City")
+	 * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+	 * @var City
 	 */
-	protected $_oEntity;
+	protected $_oCity;
 	
 	/**
 	 * @ORM\Id
@@ -43,12 +44,12 @@ class Demand {
 //	Cosntructor
 	
 	public function __construct( 
-			Entity $oEntity, 
+			Entity $oCity, 
 			Ressource $oRessource, 
 			$fPercent 
 	) {
 		$this->_fPercent = $fPercent;
-		$this->_oEntity = $oEntity;
+		$this->_oCity = $oCity;
 		$this->_oRessource = $oRessource;
 		$this->_iPriceModifier = 0;
 	}
