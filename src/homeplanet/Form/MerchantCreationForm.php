@@ -61,7 +61,7 @@ class MerchantCreationForm extends AbstractType {
 	
 	function _getRessourceChoice( Game $oGame ) {
 		$a = [];
-		foreach( $oGame->getEntityType(4/*Merchant*/)->getProdTypeAr() as $oProdType ) {
+		foreach( $oGame->getPawnType(4/*Merchant*/)->getProdTypeAr() as $oProdType ) {
 			$oRessource = $oProdType->getRessource();
 	
 			//$a[ $oEntityType->getLabel() ] = $oEntityType->getId();

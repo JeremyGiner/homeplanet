@@ -10,11 +10,10 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\Entity;
+use homeplanet\Entity\Pawn;
 use homeplanet\Game;
-use homeplanet\Entity\EntityFactory;
+use homeplanet\Entity\PawnFactory;
 use homeplanet\tool\Perlin;
-use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
 use homeplanet\Entity\TradeRouteFactory;
 use homeplanet\Entity\Ressource;
 use homeplanet\Entity\Player;
@@ -31,6 +30,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Tests\ButtonTest;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use homeplanet\tool\TileValidatorResolver;
 
 /**
  *
@@ -50,6 +50,7 @@ class PlanetController extends BaseController {
 
 
 		// Case : no player associated
+		// TODO : use firewall
 		$oPlayer = $this->_oGame->getPlayer( $this->getUser()->getId() );
 		if( $oPlayer == null )
 			return $this->redirect( $this->generateUrl('player_create') );
@@ -63,44 +64,6 @@ class PlanetController extends BaseController {
 		
 		// Check game
 		$oGame = $this->_oGame;
-		//_____________________________
-		// Form join Build
-			
-		$oData = new BuildingBuy(
-			$oLocation->getX(),
-			$oLocation->getY(),
-			$oGame->getEntityType(2),
-			$oGame->getPlayer($oUser->getId())
-		);
-		$oFormBuild = $this->createForm(BuildingBuyForm::class, $oData, ['game' => $oGame, 'location' => $oLocation ] );
-		$oFormBuild->handleRequest( $oRequest );
-		
-		if( $oFormBuild->isSubmitted() && $oFormBuild->isValid() ) {
-				
-			// User join room
-			//var_dump( $oFormBuild->getData() );
-			/* @var $oData BuildingBuy */
-			$oData = $oFormBuild->getData();
-			
-			// Pay
-			$oData->getPlayer()->setCredit(
-				$oData->getPlayerCreditNew()
-			);
-			
-			// Build entity
-			$oFactory = new EntityFactory(
-				$oData->getEntityType(),
-				[
-					'oUser' => $oUser,
-					'oLocation' => $oData->getLocation(),
-				]
-			);
-			
-			$a = $oFactory->create();
-			$oGame->addEntity( $a['entity'], $a['addOn'] );
-			
-			//return $this->redirect( $this->generateUrl('play',['location'=>(string)$oLocation]) );
-		}
 		
 		//_____________________________
 		// Delete entity
@@ -117,39 +80,13 @@ class PlanetController extends BaseController {
 		}
 		
 		//_____________________________
-		//DEV
-		if( $oRequest->get('action') == 'city_create' ) {
-			
-			// Build city
-			$oFactory = new EntityFactory(
-			 	$oGame->getEntityType(1),
-				[
-					'oUser' => null,
-					'iPopulation' => 1,
-					'oLocation' => $oLocation,
-					'aDemandDesc' => [
-						['ressource' => $oGame->getRessource(4), 'percent' => 1.0],
-						['ressource' => $oGame->getRessource(14), 'percent' => 1.0],
-						['ressource' => $oGame->getRessource(13), 'percent' => 1.0],
-					],
-				]
-			);
-			
-			// Add city to game
-			$a = $oFactory->create();
-			$oGame->addEntity( $a['entity'], $a['addOn'] );
-			 
-			
-			return $this->redirect( $this->generateUrl('play',['location'=>(string)$oLocation]) );
-		}
-		
-		//_____________________________
 		// Process
 		if( $oRequest->get('game_run') != null ) {
 			$oGame->process();
 		}
 		
-		
+		//test
+		//$oGame->getWorldmap()->loadSector(0, 0);
 		
 		// Render game
 		//$oGameViewFactory = $this->_gameViewFactory_get( $oGame, $oContext );
@@ -159,9 +96,10 @@ class PlanetController extends BaseController {
 			[
 				'date' => \date('d/m/Y H:i:s'),
 				'user' => $this->getUser(),
-				'form_build' => $oFormBuild->createView(),
 				'form_entity_delete_ar' => $this->_getFormViewEntityDeleteAr($oGame, $oUser),//$oFormEntityDelete->createView(),
 				'gameview' => $this->_createView($oGame, $oLocation),
+				'city' => $oGame->getCityRepo()->getFull($oLocation),
+				'pawnAr' => $oGame->getPawnRepo()->getPawnAr_byPlayer( $oGame->getPlayer() ),
 			]
 		);
 	}
@@ -232,7 +170,7 @@ class PlanetController extends BaseController {
 			$iEntityId = $oForm->getData()['entity_id'];
 			
 			// Fast delete
-			$oEntityRef = $oEntManager->getReference( Entity::class, $iEntityId );
+			$oEntityRef = $oEntManager->getReference( Pawn::class, $iEntityId );
 			$oEntManager->remove( $oEntityRef );
 			
 			// Commit
@@ -278,6 +216,7 @@ class PlanetController extends BaseController {
 		$oGame = new Game( $this->getUser(), $this->getDoctrine()->getManager(), 0, 0 );
 		
 		$oMap = $oGame->getWorldmap();
+		$oMap->loadSector(0, 0);
 		
 		$iWidth = 169;
 		$iHeight = 169;
@@ -330,6 +269,17 @@ class PlanetController extends BaseController {
 	 */
 	function mapAction( Request $oRequest ) {
 		$this->_handleRequest($oRequest);
+		
+		$oValidator = (new TileValidatorResolver())->resolve(
+				$oRequest->query->get('validator'), 
+				$oRequest->query->get('param')+[
+					'worldmap' => $this->_oGame->getWorldmap(),
+				]
+		);
+		
+		//var_dump($oValidator);
+		//exit();
+		
 		return $this->render( 
 			'homeplanet/element/map_zoom0.html.twig', 
 			[
@@ -338,6 +288,8 @@ class PlanetController extends BaseController {
 					'game' => $this->_oGame,
 					'map' => $this->_oGame->getWorldmap(),
 				],
+				'map_mod' => true,
+				'validator' => $oValidator,
 			]
 		);
 	}
@@ -345,34 +297,7 @@ class PlanetController extends BaseController {
 //_____________________________________________________________________________
 	
 	
-	/**
-	 * @Route("/entity/{iEntityId}", name="entity", requirements={"iEntityId": "\d+"})
-	 */
-	public function entityViewAction( $iEntityId, Request $oRequest  ) {
-		$this->_handleRequest($oRequest);
-		$oEntityManager = $this->getDoctrine()->getManager();
-		
-		$oUser = $this->getUser();
-		$oGame = $this->getGame();
-		$oEntity = $oGame->getEntity( $iEntityId );
-		
-		if( $oEntity == null )
-			throw('invalid entity id');
-		
-		return $this->render(
-				'homeplanet/page/entityView.html.twig',
-				[
-						'date' => \date('d/m/Y H:i:s'),
-						'user' => $this->getUser(),
-						'gameview' => [
-								'entity' => $oEntity,
-								'player' => $oGame->getContextPlayer(),
-								'game' => $oGame,
-						],
-				]
-		);
-	
-	}
+
 	
 	
 //_____________________________________________________________________________
@@ -406,7 +331,7 @@ class PlanetController extends BaseController {
 	 */
 	function _getFormEntityDeleteAr( Game $oGame, User $oUser ) {
 		$a = [];
-		foreach( $oGame->getEntityAr_byUser($oUser) as $oEntity ) {
+		foreach( $oGame->getPawnRepo()->getPawnAr_byPlayer($oGame->getPlayer()) as $oEntity ) {
 			$a[$oEntity->getId()] = $this->_getFormEntityDelete( $oEntity->getId() );
 		}
 		return $a;

@@ -12,13 +12,13 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Population;
 use Doctrine\Common\Collections\Doctrine\Common\Collections;
-use homeplanet\Entity\attribute\EntityLocation;
+use homeplanet\Entity\attribute\PawnLocation;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="entity")
+ * @ORM\Entity(repositoryClass="homeplanet\Repository\PawnRepository")
+ * @ORM\Table(name="pawn")
  */
-class Entity {
+class Pawn {
 	
 	/**
 	 * @ORM\Id
@@ -33,14 +33,14 @@ class Entity {
 	protected $_sLabel;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 * @var User
+	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Player")
+	 * @ORM\JoinColumn(name="player_id", referencedColumnName="id")
+	 * @var Player
 	 */
-	protected $_oUser;
+	protected $_oPlayer;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\EntityType")
+	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\PawnType")
 	 * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
 	 * @var EntityType
 	 */
@@ -51,8 +51,8 @@ class Entity {
 	
 	/**
 	 * @ORM\OneToMany(
-	 *     targetEntity="\homeplanet\Entity\attribute\EntityLocation",
-	 *     mappedBy="_oEntity",
+	 *     targetEntity="homeplanet\Entity\attribute\PawnLocation",
+	 *     mappedBy="_oPawn",
 	 *     cascade={"persist"}
 	 * )
 	 * @var ArrayCollection
@@ -61,8 +61,8 @@ class Entity {
 	
 	/**
 	 * @ORM\OneToMany(
-	 *     targetEntity="\homeplanet\Entity\attribute\Production",
-	 *     mappedBy="_oEntity",
+	 *     targetEntity="homeplanet\Entity\attribute\Production",
+	 *     mappedBy="_oPawn",
 	 *     cascade={"persist"}
 	 * )
 	 * @var ArrayCollection
@@ -72,7 +72,7 @@ class Entity {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( EntityType $oType ) {
+	public function __construct( PawnType $oType ) {
 		//$this->_iId 
 		$this->_oType = $oType;
 		$this->_aPosition = new ArrayCollection();
@@ -99,13 +99,13 @@ class Entity {
 		return $this->_oType;
 	}
 	
-	public function getUser() {
-		return $this->_oUser;
+	public function getPlayer() {
+		return $this->_oPlayer;
 	}
 	/**
 	 * @return EntityLocation[]
 	 */
-	public function getEntityLocationAr() {
+	public function getPawnLocationAr() {
 		return $this->_aPosition->toArray();
 	}
 	/**
@@ -113,8 +113,8 @@ class Entity {
 	 */
 	public function getLocationAr() {
 		$a = [];
-		foreach ( $this->getEntityLocationAr() as $oEntityLocation ) {
-			$a[] = $oEntityLocation->getLocation();
+		foreach ( $this->getPawnLocationAr() as $oPawnLocation ) {
+			$a[] = $oPawnLocation->getLocation();
 		}
 		return $a;
 	}
@@ -138,13 +138,13 @@ class Entity {
 //_____________________________________________________________________________
 //	Modifier
 
-	public function setUser( User $oUser = null ) {
-		$this->_oUser = $oUser;
+	public function setPlayer( Player $oPlayer = null ) {
+		$this->_oPlayer = $oPlayer;
 		return $this;
 	}
 	
 	public function addLocation( Location $oLoc ) {
-		$this->_aPosition->add( new EntityLocation($this, $oLoc));
+		$this->_aPosition->add( new PawnLocation($this, $oLoc));
 	}
 	
 	public function addProduction( Production $oProd ) {

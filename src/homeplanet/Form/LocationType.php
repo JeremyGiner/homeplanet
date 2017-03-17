@@ -1,7 +1,6 @@
 <?php
 namespace homeplanet\Form;
 
-use homeplanet\entity\EntityType;
 use homeplanet\Form\DataTransformer\LocationTransformer;
 use homeplanet\Entity\attribute\Location;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -28,6 +27,7 @@ class LocationType extends AbstractType {
 		$oResolver->setDefaults([
 			'gameview' => null,	//todo : find proper way to do that
 			'data_class' => null, // string
+			'validator' => null,
 		]);
 	}
 	
@@ -38,17 +38,21 @@ class LocationType extends AbstractType {
 		FormBuilderInterface $oBuilder,
 		array $aOption 
 	) {
-		parent::buildForm($oBuilder, $aOption);
+		
 		$oBuilder->addModelTransformer( new LocationTransformer() );
 	}
 	
 //_____________________________________________________________________________
 //	View
 	
-	
 	public function buildView(FormView $oView, FormInterface $oForm, array $aOptions) {
 		$oView->vars['gameview'] = $aOptions['gameview'];
 		$oView->vars['data'] = $oForm->getData();
+		if( isset($aOptions['validator']) ) {
+			$oView->vars['validator'] = $aOptions['validator'];
+			$oView->vars['validator_serialized'] = serialize($aOptions['validator']);
+		}
+		
 	}
 	
 }

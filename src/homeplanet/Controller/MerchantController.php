@@ -17,8 +17,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Game;
-use homeplanet\entity\EntityFactory;
-use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
+use homeplanet\Entity\PawnFactory;
 use homeplanet\Form\TradeRouteCreationForm;
 use homeplanet\entity\TradeRouteFactory;
 use homeplanet\Entity\MerchantFactory;
@@ -58,7 +57,7 @@ class MerchantController extends BaseController {
 					'zoom' => 0,
 					'game' => $oGame,
 					'map' => $oGame->getWorldmap(),
-					'entityAr' => $oGame->getEntityAr_byLocation($oLocation),
+					'entityAr' => $oGame->getPawnAr_byLocation($oLocation),
 				]  ]
 		);*/
 		
@@ -75,7 +74,7 @@ class MerchantController extends BaseController {
 					'choice_label' => 'ProdInputTypeAr[0].ressource.label',
 					'query_builder' => function (EntityRepository $er) {
 				        return $er->createQueryBuilder('prodtype')
-				        	->join('prodtype._aEntityType', 'entitytype')
+				        	->join('prodtype._aPawnType', 'entitytype')
 				        	->join('prodtype._aProdInputType', 'prodinputtype')
 				        	->join('prodinputtype._oRessource', 'ressource')
 							->where('entitytype._iId = 4'/* merchant */);
@@ -132,7 +131,7 @@ class MerchantController extends BaseController {
 			$iEntityId = $oForm->getData()['entity_id'];
 			
 			// Fast delete
-			$oEntityRef = $oEntManager->getReference( Entity::class, $iEntityId );
+			$oEntityRef = $oEntManager->getReference( Pawn::class, $iEntityId );
 			$oEntManager->remove( $oEntityRef );
 			
 			// Commit

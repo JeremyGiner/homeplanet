@@ -73,6 +73,9 @@ class Printo extends \Twig_Extension {
 		if( $object == null )
 			return null;
 		
+		if( !is_object($object))
+			throw new \Exception('this is not an object');
+		
 		$oReflexion = new \ReflectionClass($object);
 		//$aName = explode('\\', $oReflexion->getName());
 		

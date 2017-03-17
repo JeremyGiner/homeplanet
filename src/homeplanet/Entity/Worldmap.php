@@ -2,8 +2,9 @@
 namespace homeplanet\Entity;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\tool\Perlin;
-use homeplanet\Entity\WorldmapChunk;
-use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
+use homeplanet\tool\OpenSimplexNoise;
+use homeplanet\tool\F;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
  * Sector(169x169)>Region(13x13)>Location(1x1)
@@ -16,7 +17,7 @@ class Worldmap {
 	 */
 	protected $_aTile;
 	
-	protected $_iSeedElevation = 2586;
+	protected $_iSeedElevation = 2581;
 	protected $_iSeedHumidity = 2543;
 	
 	//_________________________________
@@ -32,6 +33,7 @@ class Worldmap {
 //	Constructor
 	
 	public function __construct() {
+		$this->_aTile = [];
 	}
 	
 //_____________________________________________________________________________
@@ -42,69 +44,187 @@ class Worldmap {
 	 */
 	public function getTile( $x, $y ) {
 		$sKey = $x.':'.$y;
-		if( !isset($this->_aTile[ $sKey ] ) )
-			$this->_loadTile( $x, $y );
+		
+		if( !isset($this->_aTile[ $sKey ] ) ) {
+			$oLoc = new Location($x,$y);
+			$this->loadRegion($oLoc->getRegionX(), $oLoc->getRegionY());
+		}
 		return $this->_aTile[ $sKey ];
 	}
 	
 	public function loadRegion( $iRegionX, $iRegionY ) {
+		
+		// Cache config
+		$cache = new FilesystemAdapter();
+		$sKey = 'worldmap.region.'.$iRegionX.'_'.$iRegionY;
+		
+		// remove the cache item
+		//$cache->deleteItem($sKey);
+		
+		// Attempt to get from cache
+		$oItem = $cache->getItem($sKey);
+		if ($oItem->isHit()) {
+			$this->_aTile = array_replace( $this->_aTile, $oItem->get());
+			return;
+		}
+		
 		//TODO : load only region
 		$oLoc = new Location( $iRegionX*13, $iRegionY*13 );
-		$aPerlinElevation = $this->_getPerlinElevation($oLoc->getSectorX(), $oLoc->getSectorY());
-		$aPerlinHumidity = $this->_getPerlinHumidity($oLoc->getSectorX(), $oLoc->getSectorY());
-		//$this->loadSector($oLoc->getSectorX(), $oLoc->getSectorY());
+		
+		$iSectorX = $oLoc->getSectorX();
+		$iSectorY = $oLoc->getSectorY();
+		
+		$this->_generateSector($iSectorX, $iSectorY);
+		
+	}
 	
-		// Generate Tiles
-		for ($x = $iRegionX*13; $x < ($iRegionX+1)*13; $x++)
-		for ($y = $iRegionY*13; $y < ($iRegionY+1)*13; $y++) {
-			$this->_aTile[ $x.':'.$y ] = $this->_createTile(
-				$x, $y,
-				$aPerlinElevation[$x][$y],
-				$aPerlinHumidity[$x][$y],
-				(new Perlin($this->_iSeedElevation))->random2D($x, $y)
-			);
+	
+	
+	public function loadSector( $iSectorX, $iSectorY ) {
+		
+		// Load each region of the sector
+		for ($iRegionX = $iSectorX*13; $iRegionX < ($iSectorX+1)*13; $iRegionX++)
+		for ($iRegionY = $iSectorY*13; $iRegionY < ($iSectorY+1)*13; $iRegionY++) {
+			$this->loadRegion($iRegionX, $iRegionY);
 		}
 	}
-	public function loadSector( $iSectorX, $iSectorY ) {
-		$aPerlinElevation = $this->_getPerlinElevation($iSectorX, $iSectorY);
-		$aPerlinHumidity = $this->_getPerlinHumidity($iSectorX, $iSectorY);
+	protected function _generateSector( $iSectorX, $iSectorY ) {
+		
+		// Generate noise
+		$aElevation = $this->_getSectorElevation($iSectorX, $iSectorY);
+		$aHumidity = $this->_getSectorHumidity($iSectorX, $iSectorY);
+		$aNoiseSoil = $this->_getSectorSoil($iSectorX, $iSectorY);
 		
 		// Generate Tiles
 		for ($x = $iSectorX*169; $x < ($iSectorX+1)*169; $x++)
 		for ($y = $iSectorY*169; $y < ($iSectorY+1)*169; $y++) {
 			$this->_aTile[ $x.':'.$y ] = $this->_createTile(
 					$x, $y,
-					$aPerlinElevation[$x][$y],
-					$aPerlinHumidity[$x][$y],
-					(new Perlin($this->_iSeedElevation))->random2D($x, $y)
+					$aElevation[$x.':'.$y],
+					$aHumidity[$x.':'.$y],
+					$aNoiseSoil[$x.':'.$y]
 			);
 		}
+		
+		// Cache each region
+		for ($iRegionX = $iSectorX*13; $iRegionX < ($iSectorX+1)*13; $iRegionX++)
+		for ($iRegionY = $iSectorY*13; $iRegionY < ($iSectorY+1)*13; $iRegionY++) {
+			
+			$a = $this->_getRegion($iRegionX, $iRegionY);
+			
+			// Update cache
+			$cache = new FilesystemAdapter();
+			$sKey = 'worldmap.region.'.$iRegionX.'_'.$iRegionY;
+			$oItem = $cache->getItem($sKey);
+			$oItem->set($a);
+			$b = $cache->save($oItem);
+		}
+	}
+	
+	
+	function _getRegion( $iRegionX, $iRegionY ) {
+		$a = [];
+		for ($x = $iRegionX*13; $x < ($iRegionX+1)*13; $x++)
+		for ($y = $iRegionY*13; $y < ($iRegionY+1)*13; $y++) {
+			$a[ $x.':'.$y ] = $this->_aTile[ $x.':'.$y ];
+		}
+		return $a;
 	}
 	
 	//_________________________________
 	
-	protected function _getPerlinElevation( $iSectorX, $iSectorY ) {
-		$sKey = $iSectorX.':'.$iSectorY;
-		if( !isset($this->_aPerlinElevation[$sKey]) )
-			$this->_aPerlinElevation[$sKey] = $this->loadPerlinSectorResult(
-				new Perlin($this->_iSeedElevation), 
-				$iSectorX, 
-				$iSectorY, 
-				0 
-			);
-		return $this->_aPerlinElevation[$sKey];
+	protected function _getSectorElevation( $iSectorX, $iSectorY ) {
+		
+		// Cache config
+		$cache = new FilesystemAdapter();
+		$sKey = 'worldmap.elevation';
+		
+		// remove the cache item
+		//$cache->deleteItem($sKey);
+		
+		// Attempt to get from cache
+		$oItem = $cache->getItem($sKey);
+		if ($oItem->isHit()) {
+			return $oItem->get();		
+		}
+		
+		$a = $this->_getNoise(
+			$this->_iSeedElevation,
+			5,
+			0.025,
+			169,
+			169,
+			$iSectorX*169,
+			$iSectorY*169
+		);
+		
+		// assign a value to the item and save it
+		$oItem->set($a);
+		$cache->save($oItem);
+		
+		return $a;
 	}
 	
-	protected function _getPerlinHumidity( $iSectorX, $iSectorY ) {
-		$sKey = $iSectorX.':'.$iSectorY;
-		if( !isset($this->_aPerlinHumidity[$sKey]) )
-			$this->_aPerlinHumidity[$sKey] = $this->loadPerlinSectorResult(
-				new Perlin($this->_iSeedHumidity),
-				$iSectorX,
-				$iSectorY,
-				0
-			);
-		return $this->_aPerlinHumidity[$sKey];
+	protected function _getSectorHumidity( $iSectorX, $iSectorY ) {
+		// Cache config
+		$cache = new FilesystemAdapter();
+		$sKey = 'worldmap.humidity';
+		
+		// remove the cache item
+		//$cache->deleteItem($sKey);
+		
+		// Attempt to get from cache
+		$oItem = $cache->getItem($sKey);
+		if ($oItem->isHit()) {
+			return $oItem->get();
+		}
+		
+		$a = $this->_getNoise(
+				$this->_iSeedHumidity,
+				6,
+				0.025,
+				169,
+				169,
+				$iSectorX*169,
+				$iSectorY*169
+		);
+		
+		// assign a value to the item and save it
+		$oItem->set($a);
+		$cache->save($oItem);
+		
+		return $a;
+	}
+	
+	protected function _getSectorSoil( $iSectorX, $iSectorY ) {
+		// Cache config
+		$cache = new FilesystemAdapter();
+		$sKey = 'worldmap.soil';
+		
+		// remove the cache item
+		//$cache->deleteItem($sKey);
+		
+		// Attempt to get from cache
+		$oItem = $cache->getItem($sKey);
+		if ($oItem->isHit()) {
+			return $oItem->get();
+		}
+		
+		$a = $this->_getNoise(
+				0,
+				1,
+				0.5,
+				169,
+				169,
+				$iSectorX*169,
+				$iSectorY*169
+		);
+		
+		// assign a value to the item and save it
+		$oItem->set($a);
+		$cache->save($oItem);
+		
+		return $a;
 	}
 	
 //_____________________________________________________________________________
@@ -133,40 +253,61 @@ class Worldmap {
 		$fElevation = $fPerlinElevation;
 			
 		// Convertion [~-0.7;~0.7] -> [-1.0;1.0]
-		$fElevation = $fElevation*1.42;
+		$fElevation = $fElevation*2;
 			
 		// Trim
 		$fElevation = ($fElevation>1)?1-($fElevation-1):$fElevation;
 		$fElevation = ($fElevation<-1)?-1-($fElevation+1):$fElevation;
 			
 		// Erosion
+		if( $fElevation > 0)
+		$fElevation = pow($fElevation,2);
 		/*$f = $fElevation-0.3;
 		 if( $fElevation > 0);
 		 $fElevation *= $f*$f*$f/ (1/2.5)+0.1;*/
 			
 		$fTemperature = -$fElevation+1;	// using elevation as temperature
-		$fHumidity = ($fPerlinHumidity/2+0.5);
+		$fHumidity = max(0,min(1.0,($fPerlinHumidity+0.4)*1.5));
+		$fPerlinSoil = abs($fPerlinSoil);
 		$fVegetation = $this->_getVegetation($fTemperature, $fHumidity);
-			
+		
+		
 		// Ressource
 		$aRessource = [];
 		if( $fElevation > 0 ) {
 			// Field
-			$aRessource[33] = (int)(
-					$fVegetation *
-					$this->_filterLow($fVegetation, 0.5, 0.75)
-					* 100
+			$aRessource[33] = (int)( 100
+					* F::filterHigh($fVegetation, 0.0, 0.30)
+					* F::filterLow($fVegetation, 0.30, 0.70)
 			);
-			//$aRessource[34] = (int)($fVegetation*100);
+			//$aRessource[33] = (int)($fVegetation*100);
+			
 			// Forest
-			$aRessource[34] = (int)(
-					$fVegetation *
-					$this->_filterHigh($fVegetation, 0.5, 0.75)
-					* 100
-			);;
-			//				$aRessource[37] = (int)($oPerlin->lerp($x, $y,0)*100);
-			$aRessource[37] = (int)(($fPerlinSoil+1)*50)
-			- $aRessource[34];
+			$aRessource[34] = (int)( 100
+					* F::filterHigh($fVegetation, 0.30, 0.70)
+			);
+			
+			// Stone deposit
+			$aRessource[37] = (int)(100
+					* F::filterLow($fVegetation, 0.0, 0.2)	// vegetation block mining
+					* $fPerlinSoil
+			);
+			// Iron deposit
+			$aRessource[44] = (int)(100
+					* F::filterLow($fVegetation, 0.0, 0.2)	// vegetation block mining
+					* F::filterLow($fPerlinSoil, 0.0, 0.2)
+			);
+			// Gold deposit
+			$aRessource[45] = (int)(100
+					* F::filterLow($fVegetation, 0.0, 0.2)	// vegetation block mining
+					* F::filterHigh($fPerlinSoil, 0.25, 0.3)
+					* F::filterLow($fPerlinSoil, 0.3, 0.35)
+			);
+		} else {
+			// Fish deposit
+			$aRessource[35] = (int)(100
+				* $fPerlinSoil
+			);
 		}
 			
 			
@@ -183,80 +324,19 @@ class Worldmap {
 		);
 	}
 	
-	private function _spike( $f ) {
-		return $f;
-		return $f > 0.5 ? 
-			($f-0.5)*(-2)+1 : 
-			$f;
-	}
-	
-	private function _filterLow( $f, $fThreshold0, $fThreshold1 ) {
-		if( $f > $fThreshold1 )
-			 return 0;
-		if( $f < $fThreshold0 )
-			return 1;
-		$fSlope = (0-1) / ($fThreshold1 - $fThreshold0);
-		return $f * $fSlope - $fSlope*$fThreshold1;
-	}
-	
-	private function _filterHigh( $f, $fThreshold0, $fThreshold1 ) {
-		if( $f > $fThreshold1 )
-			return 1;
-		if( $f < $fThreshold0 )
-			return 0;
-		$fSlope = (1-0) / ($fThreshold1 - $fThreshold0);
-		return $f * $fSlope - $fSlope*$fThreshold0;
-	}
-	
-	/**
-	 * @source http://devmag.org.za/2011/04/05/bzier-curves-a-tutorial/
-	 */
-	private function _bezierPoint(
-			$t,
-			$p0, $p1, $p2, $p3
-	) {
-		$u = 1 - $t;
-		$tt = $t*$t;
-		$uu = $u*$u;
-		$uuu = $uu * $u;
-		$ttt = $tt * $t;
- 
-		$p = [uuu * $p0[0], $uuu * $p0[0]]; //first term
-		$p += [
-			$p[0] + 3 * $uu * $t * $p1[0],
-			$p[1] + 3 * $uu * $t * $p1[1],
-		]; //second term
-		$p = [
-			$p[0] + 3 * $u * $tt * $p2[0], 
-			$p[1] + 3 * $u * $tt * $p2[1], 
-		];//third term
-		$p = [
-			$p[0] + $ttt * $p3[0],
-			$p[1] + $ttt * $p3[1],
-		]; //fourth term
- 
-		return $p;
-	}
-	
-	
 	private function _getVegetation( $fTemp, $fHumi ) {
-		//return 0;
-		$max = 0.65;
-		$max = 0.65;
-	
-		// Too cold
-		if( $fTemp < 0.5 )
-			return 0;
-		/*$f = 0.05;
-			if( $this->_fElevation < $f )
-				$fHumi*=$this->_fElevation*(1/$f)+0.5;*/
-
-
-		$fVegetation = ( $fHumi < 0.5 ) ? $fHumi * 2 : $fHumi*-2 + 2;
-
-
-		if( $fTemp < 0.75)
-			$fVegetation*=min(1.0,($fTemp-0.5)*4);
+		
+		$fVegetation =  F::filterHigh( 
+					$fHumi , 
+					0.25,
+					1.0
+			)
+			* F::filterHigh( 
+					$fTemp, 
+					0.6,
+					0.8
+			);
+		
 		return $fVegetation;
 	}
 	
@@ -281,5 +361,51 @@ class Worldmap {
 		file_put_contents($sKey, $serializedData);
 		
 		return $aResult;
+	}
+	
+	private function _getNoise(
+		$iSeed = 53317,
+		$iOctaveQ = 5,
+		$fFirtFreq = 0.025,
+		$iWidth = 128,
+		$iHeight = 128,
+		$iOffsetX = 0,
+		$iOffsetY = 0
+	) {
+		$aNoise = [];
+		$aOctave = [];
+		$aFreq = [];
+		
+		// Generate noises with their octaves and frequency
+		$fFreq = $fFirtFreq;
+		for ($i = 0; $i < $iOctaveQ; $i++) {
+			$aNoise[] = OpenSimplexNoise::createBySeed($iSeed+$i);
+			$aOctave[] = 1/($i+1);
+			$aFreq[] = $fFreq;
+		
+			$fFreq *= 2;
+		}
+		
+		// Add all the layers
+		$aNoiseValue = [];
+		for ($x = 0; $x < $iWidth; $x++)
+		for ($y = 0; $y < $iHeight; $y++) {
+			$aNoiseValue[$x.':'.$y] = 0;
+			
+			$fOctaveSum = 0;
+			foreach( $aNoise as $i => $oNoise ) {
+				$aNoiseValue[$x.':'.$y] += $oNoise->getValue3D(
+						$x*$aFreq[$i],
+						$y*$aFreq[$i],
+						169
+				)*$aOctave[$i];
+	
+				$fOctaveSum += $aOctave[$i];
+			}
+	
+			$aNoiseValue[$x.':'.$y] /= $fOctaveSum;
+		}
+		
+		return $aNoiseValue;
 	}
 }

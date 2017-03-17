@@ -1,6 +1,7 @@
 <?php
 namespace homeplanet\Entity;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -32,7 +33,10 @@ class Ressource {
 	protected $_bNatural;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="\homeplanet\Entity\ResCategory")
+	 * @ORM\ManyToMany(
+	 *     targetEntity="\homeplanet\Entity\ResCategory",
+	 *     indexBy="id"
+	 * )
 	 * @ORM\JoinTable(
 	 *     name="ressource_rescategory",
 	 *     joinColumns={@ORM\JoinColumn(name="res_id", referencedColumnName="id")},
@@ -59,6 +63,13 @@ class Ressource {
 	
 	public function isNatural() {
 		return $this->_bNatural;
+	}
+	
+	/**
+	 * @return ResCategory[]
+	 */
+	public function getCategoryAr() {
+		return $this->_aCategory->toArray();
 	}
 	
 }

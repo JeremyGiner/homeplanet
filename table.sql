@@ -38,55 +38,6 @@ CREATE TABLE IF NOT EXISTS `demand` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table gigablaster.entity
-CREATE TABLE IF NOT EXISTS `entity` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) unsigned DEFAULT NULL,
-  `type_id` int(10) unsigned NOT NULL DEFAULT '1',
-  `label` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK_entity_entitytype` (`type_id`),
-  KEY `FK_entity_user` (`user_id`),
-  CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `entitytype` (`id`),
-  CONSTRAINT `FK_entity_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.entitytype
-CREATE TABLE IF NOT EXISTS `entitytype` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `label` varchar(250) NOT NULL,
-  `value_base` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.entitytype_prodtype_assoc
-CREATE TABLE IF NOT EXISTS `entitytype_prodtype_assoc` (
-  `entitytype_id` int(11) unsigned NOT NULL,
-  `prodtype_id` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`entitytype_id`,`prodtype_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.entity_location_assoc
-CREATE TABLE IF NOT EXISTS `entity_location_assoc` (
-  `entity_id` int(10) unsigned NOT NULL,
-  `location_x` int(10) NOT NULL,
-  `location_y` int(10) NOT NULL,
-  PRIMARY KEY (`entity_id`,`location_x`,`location_y`),
-  CONSTRAINT `FK_entity_location_assoc_entity` FOREIGN KEY (`entity_id`) REFERENCES `entity` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table gigablaster.gamestate
 CREATE TABLE IF NOT EXISTS `gamestate` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -98,14 +49,96 @@ CREATE TABLE IF NOT EXISTS `gamestate` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table gigablaster.influence
+CREATE TABLE IF NOT EXISTS `influence` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sovereign_id` int(10) unsigned NOT NULL,
+  `city_id` int(10) unsigned NOT NULL,
+  `type_id` int(10) unsigned NOT NULL,
+  `value` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `sovereing_id_city_id` (`sovereign_id`,`city_id`,`type_id`),
+  KEY `FK_sovereign_city_influencetype` (`type_id`),
+  KEY `sovereing_city_type` (`sovereign_id`,`city_id`,`type_id`),
+  KEY `FK_sovereign_city_entity` (`city_id`),
+  CONSTRAINT `FK_sovereign_city_entity` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_sovereign_city_influencetype` FOREIGN KEY (`type_id`) REFERENCES `influencetype` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `FK_sovereign_city_sovereign` FOREIGN KEY (`sovereign_id`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.influencetype
+CREATE TABLE IF NOT EXISTS `influencetype` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.pawn
+CREATE TABLE IF NOT EXISTS `pawn` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned DEFAULT NULL,
+  `type_id` int(10) unsigned NOT NULL DEFAULT '1',
+  `label` varchar(200) DEFAULT NULL,
+  `level` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `FK_entity_entitytype` (`type_id`),
+  KEY `FK_entity_player` (`player_id`),
+  CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.pawntype
+CREATE TABLE IF NOT EXISTS `pawntype` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(250) NOT NULL,
+  `value_base` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.pawntype_prodtype_assoc
+CREATE TABLE IF NOT EXISTS `pawntype_prodtype_assoc` (
+  `pawntype_id` int(11) unsigned NOT NULL,
+  `prodtype_id` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`pawntype_id`,`prodtype_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.pawn_location_assoc
+CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
+  `pawn_id` int(10) unsigned NOT NULL,
+  `location_x` int(10) NOT NULL,
+  `location_y` int(10) NOT NULL,
+  PRIMARY KEY (`pawn_id`,`location_x`,`location_y`),
+  CONSTRAINT `FK_entity_location_assoc_entity` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table gigablaster.player
 CREATE TABLE IF NOT EXISTS `player` (
   `user_id` int(10) unsigned NOT NULL,
+  `id` int(10) unsigned NOT NULL DEFAULT '0',
   `name` varchar(250) NOT NULL,
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
   `income` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`user_id`),
-  CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+  `cart` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -115,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `player` (
 CREATE TABLE IF NOT EXISTS `population` (
   `city_id` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL,
-  `growth` int(10) unsigned NOT NULL DEFAULT '0',
+  `growth` int(10) NOT NULL DEFAULT '0',
   PRIMARY KEY (`city_id`),
   CONSTRAINT `FK_population_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -126,15 +159,15 @@ CREATE TABLE IF NOT EXISTS `population` (
 -- Dumping structure for table gigablaster.prod
 CREATE TABLE IF NOT EXISTS `prod` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `entity_id` int(10) unsigned NOT NULL,
+  `pawn_id` int(10) unsigned NOT NULL,
   `prodtype_id` int(10) unsigned NOT NULL,
   `location_x` int(11) NOT NULL,
   `location_y` int(11) NOT NULL,
   `percent_max` float NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_prod_prodtype` (`prodtype_id`),
-  KEY `FK_prod_entity` (`entity_id`),
-  CONSTRAINT `FK_prod_entity` FOREIGN KEY (`entity_id`) REFERENCES `entity` (`id`) ON DELETE CASCADE,
+  KEY `FK_prod_pawn` (`pawn_id`),
+  CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
@@ -225,6 +258,18 @@ CREATE TABLE IF NOT EXISTS `ressource_rescategory` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table gigablaster.sovereign
+CREATE TABLE IF NOT EXISTS `sovereign` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) DEFAULT NULL,
+  `capital` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK_sovereign_city` (`capital`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table gigablaster.user
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -239,6 +284,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- Dumping structure for table gigablaster._view_note
 CREATE TABLE IF NOT EXISTS `_view_note` (
+  `view_name` varchar(50) DEFAULT NULL,
   `formated` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='view query properly formated';
 
@@ -248,9 +294,27 @@ CREATE TABLE IF NOT EXISTS `_view_note` (
 -- Dumping structure for view gigablaster.city_distance
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `city_distance` (
-	`entity0_id` INT(10) UNSIGNED NOT NULL,
-	`entity1_id` INT(10) UNSIGNED NULL,
+	`pawn0_id` INT(10) UNSIGNED NOT NULL,
+	`pawn1_id` INT(10) UNSIGNED NULL,
 	`dist` BIGINT(13) NOT NULL
+) ENGINE=MyISAM;
+
+
+-- Dumping structure for view gigablaster.city_sovereign
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `city_sovereign` (
+	`city_id` INT(10) UNSIGNED NOT NULL,
+	`sovereign_id` INT(10) UNSIGNED NULL,
+	`sum_value` DECIMAL(32,0) NULL
+) ENGINE=MyISAM;
+
+
+-- Dumping structure for view gigablaster.influence_sum
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `influence_sum` (
+	`city_id` INT(10) UNSIGNED NOT NULL,
+	`sovereign_id` INT(10) UNSIGNED NULL,
+	`sum_value` DECIMAL(32,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -261,6 +325,14 @@ CREATE TABLE `overcrowd` (
 	`location_x` INT(10) UNSIGNED NOT NULL,
 	`location_y` INT(10) UNSIGNED NOT NULL,
 	`quantity` DECIMAL(32,0) NULL
+) ENGINE=MyISAM;
+
+
+-- Dumping structure for view gigablaster.player_ext
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `player_ext` (
+	`player_id` INT(10) UNSIGNED NULL,
+	`cart_used` DECIMAL(32,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -336,9 +408,9 @@ BEGIN
 				VALUES (city_id,10);
 				
 				INSERT INTO demand(city_id,ressource_id,percent)
-				VALUES (city_id,4,1.0),
-					(city_id,14,1.0),
-					(city_id,13,1.0);
+				SELECT city_id, res_id ,1.0
+				FROM ressource_rescategory
+				WHERE rescat_id IN (1,5,10,4,11);
 			COMMIT;
 		
 		END LOOP loopy;
@@ -381,41 +453,53 @@ DELIMITER ;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `demand_update`()
 BEGIN
+
+	# Disable full_group_only disable 
+	SET SESSION sql_mode = '';
+
+	# Upate basic food and essential price modifier
 	UPDATE demand
 	JOIN
 	(
+		# Get new price modifier
+		# Require full_group_only disabled
 		SELECT 
 			demand.city_id,
 			demand.ressource_id,
-			SUM(sold.quantity) AS sold_new,
-			((population.quantity * demand.percent) /
-			GREATEST(1,SUM(sold.quantity))) AS price_modifier_new
-		FROM sold
-		JOIN demand 
-			ON demand.city_id = sold.buyer_id 
-			AND demand.ressource_id = sold.ressource_id
-		JOIN population ON population.city_id = sold.buyer_id
-		JOIN ressource ON ressource.id = sold.ressource_id
-		
-		GROUP BY buyer_id, ressource.id
-	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
-	SET demand.sold = t.sold_new, demand.price_modifier = t.price_modifier_new;
-	
-	UPDATE demand
-	JOIN
-	(
-		SELECT 
-			demand.city_id,
-			demand.ressource_id,
-			0 AS sold_new,
-			5 AS price_modifier_new
+			IF( SUM(sold.quantity) IS NULL,
+				20,	#
+				LEAST(
+					20,
+				GREATEST(
+					1,
+					20- SUM(sold.quantity)*10
+					/ population.quantity
+					
+				))
+			) AS price_modifier_new
 		FROM demand
+		
+		# Include basic food
+		JOIN ressource ON ressource.id = demand.ressource_id
+		JOIN ressource_rescategory 
+			ON ressource_rescategory.res_id = ressource.id
+			AND (
+				ressource_rescategory.rescat_id = 5/*basic food*/
+				OR ressource_rescategory.rescat_id = 1/*essential*/
+			)
+		
+		# Get related population
+		JOIN population ON population.city_id = demand.city_id
+		
+		# Get sold if any
 		LEFT JOIN sold 
 			ON demand.city_id = sold.buyer_id 
 			AND demand.ressource_id = sold.ressource_id
-			AND demand.city_id = NULL
+			
+		GROUP BY demand.city_id, demand.ressource_id
 	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
-	SET demand.sold = t.sold_new, demand.price_modifier = t.price_modifier_new;
+	SET demand.price_modifier = t.price_modifier_new;
+	
 END//
 DELIMITER ;
 
@@ -427,19 +511,50 @@ BEGIN
 	UPDATE player
 	JOIN (
 		SELECT 
-			player.user_id,
+			player.id,
 			IFNULL(
 				SUM(demand.price_modifier * ressource.baseprice * sold.quantity ),
 				0
 			) AS income
 		FROM player
-		LEFT JOIN entity ON entity.user_id = player.user_id
-		LEFT JOIN sold ON sold.seller_id = entity.id
+		LEFT JOIN pawn ON pawn.player_id = player.id
+		LEFT JOIN sold ON sold.seller_id = pawn.id
 		LEFT JOIN demand ON demand.city_id = sold.buyer_id
 		LEFT JOIN ressource ON ressource.id = sold.ressource_id
-		GROUP BY player.user_id
-	) AS t ON t.user_id = player.user_id
+		GROUP BY player.id
+	) AS t ON t.id = player.id
 	SET player.income = t.income;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure gigablaster.population_growth_update
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `population_growth_update`()
+BEGIN
+	UPDATE population 
+	JOIN (
+		SELECT 
+			demand.city_id,
+			((-AVG(demand.price_modifier)+10)/10)*0.25 AS growth_percent
+		FROM demand
+		JOIN ressource ON ressource.id = demand.ressource_id
+		JOIN ressource_rescategory ON ressource_rescategory.res_id = ressource.id
+		WHERE ressource_rescategory.rescat_id = 5 #basic foor
+			OR ressource_rescategory.rescat_id = 1 #essential
+		GROUP BY demand.city_id
+	) t ON population.city_id = t.city_id
+	SET population.growth = FLOOR(t.growth_percent * population.quantity);
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure gigablaster.population_quantity_update
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `population_quantity_update`()
+BEGIN
+	UPDATE population
+	SET population.quantity = GREATEST(10,population.quantity + population.growth);
 END//
 DELIMITER ;
 
@@ -459,7 +574,7 @@ BEGIN
 	
 	JOIN (
 		SELECT 
-			prod.entity_id,
+			prod.pawn_id,
 			prod.id as prod_id,
 			prod.location_x,
 			prod.location_y,
@@ -517,6 +632,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `turn`()
 BEGIN
 	CALL `prod_percent_update`();
 	
+	CALL `population_growth_update`();
+	CALL `population_quantity_update`();
+	
 	CALL `city_spawn`();
 	
 	CALL `demand_update`();
@@ -530,13 +648,31 @@ DELIMITER ;
 -- Dumping structure for view gigablaster.city_distance
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `city_distance`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_distance` AS select `et0`.`id` AS `entity0_id`,`et1`.`id` AS `entity1_id`,(abs((`loc0`.`location_x` - `loc1`.`location_x`)) + abs((`loc0`.`location_y` - `loc1`.`location_y`))) AS `dist` from (((`entity` `et0` join `entity_location_assoc` `loc0` on((`loc0`.`entity_id` = `et0`.`id`))) left join `entity` `et1` on((`et0`.`id` <> `et1`.`id`))) join `entity_location_assoc` `loc1` on((`loc1`.`entity_id` = `et1`.`id`))) where ((`et0`.`type_id` = 1) and (`et1`.`type_id` = 1));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_distance` AS select `et0`.`id` AS `pawn0_id`,`et1`.`id` AS `pawn1_id`,(abs((`loc0`.`location_x` - `loc1`.`location_x`)) + abs((`loc0`.`location_y` - `loc1`.`location_y`))) AS `dist` from (((`pawn` `et0` join `pawn_location_assoc` `loc0` on((`loc0`.`pawn_id` = `et0`.`id`))) left join `pawn` `et1` on((`et0`.`id` <> `et1`.`id`))) join `pawn_location_assoc` `loc1` on((`loc1`.`pawn_id` = `et1`.`id`))) where ((`et0`.`type_id` = 1) and (`et1`.`type_id` = 1));
+
+
+-- Dumping structure for view gigablaster.city_sovereign
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `city_sovereign`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_sovereign` AS select `t`.`city_id` AS `city_id`,`t`.`sovereign_id` AS `sovereign_id`,`t`.`sum_value` AS `sum_value` from (`gigablaster`.`influence_sum` `t` join (select `influence_sum`.`city_id` AS `city_id`,max(`influence_sum`.`sum_value`) AS `max_value` from `gigablaster`.`influence_sum` group by `influence_sum`.`city_id`) `tmax` on(((`tmax`.`city_id` = `t`.`city_id`) and (`t`.`sum_value` = `tmax`.`max_value`))));
+
+
+-- Dumping structure for view gigablaster.influence_sum
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `influence_sum`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `influence_sum` AS select `city`.`id` AS `city_id`,`influence`.`sovereign_id` AS `sovereign_id`,sum(`influence`.`value`) AS `sum_value` from (`city` left join `influence` on((`influence`.`city_id` = `city`.`id`))) group by `city`.`id`,`influence`.`sovereign_id`;
 
 
 -- Dumping structure for view gigablaster.overcrowd
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `overcrowd`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `overcrowd` AS select `prodinputtype`.`ressource_id` AS `ressource_id`,`prodinput`.`location_x` AS `location_x`,`prodinput`.`location_y` AS `location_y`,sum(`prodinputtype`.`quantity`) AS `quantity` from ((`prodinput` join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `ressource` on(((`ressource`.`id` = `prodinputtype`.`ressource_id`) and (`ressource`.`natural` = 1)))) group by `prodinputtype`.`ressource_id`,`prodinput`.`location_x`,`prodinput`.`location_y`;
+
+
+-- Dumping structure for view gigablaster.player_ext
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `player_ext`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `t_cart`.`player_id` AS `player_id`,`t_cart`.`cart_used` AS `cart_used` from (select `gigablaster`.`pawn`.`player_id` AS `player_id`,sum(`gigablaster`.`pawn`.`level`) AS `cart_used` from `gigablaster`.`pawn` where (`gigablaster`.`pawn`.`type_id` = 10) group by `gigablaster`.`pawn`.`player_id`) `t_cart`;
 
 
 -- Dumping structure for view gigablaster.prodinput_sum
@@ -554,7 +690,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view gigablaster.sold
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `sold`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,`prodinputtype`.`quantity` AS `quantity` from ((((((`player` join `entity` `seller` on((`seller`.`user_id` = `player`.`user_id`))) join `prod` on((`prod`.`entity_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`))));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,`prodinputtype`.`quantity` AS `quantity` from ((((((`player` join `pawn` `seller` on((`seller`.`player_id` = `player`.`id`))) join `prod` on((`prod`.`pawn_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`))));
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

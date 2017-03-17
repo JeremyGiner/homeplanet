@@ -1,5 +1,6 @@
 <?php
 namespace homeplanet\Entity\attribute;
+
 use Doctrine\ORM\Mapping as ORM;
 use homeplanet\Entity\Ressource;
 
@@ -41,15 +42,15 @@ class ProductionType {
 	protected $_aProdInputType;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="\homeplanet\Entity\EntityType")
+	 * @ORM\ManyToMany(targetEntity="\homeplanet\Entity\PawnType")
 	 * @ORM\JoinTable(
-	 *     name="entitytype_prodtype_assoc",
+	 *     name="pawntype_prodtype_assoc",
 	 *     joinColumns={@ORM\JoinColumn(name="prodtype_id", referencedColumnName="id")},
-	 *     inverseJoinColumns={@ORM\JoinColumn(name="entitytype_id", referencedColumnName="id")}
+	 *     inverseJoinColumns={@ORM\JoinColumn(name="pawntype_id", referencedColumnName="id")}
 	 * )
 	 * @var ArrayCollection
 	 */
-	protected $_aEntityType;
+	protected $_aPawnType;
 	
 //______________________________________________________________________________
 //	Constructor

@@ -51,6 +51,17 @@
 	background-image: url('http://vignette2.wikia.nocookie.net/thesettlersonline/images/3/38/Icon_settlers2hq.png/revision/latest?cb=20131120213525');
 }
 
+.map-cell {
+	cursor: pointer;
+}
+
+.map-cell[data-valid="true"]{
+	border: 1px solid yellow;
+}
+.map-cell[data-valid="false"]{
+	cursor: not-allowed;
+}
+
 .icon {
 	display: inline-block;
 	width: 1em;

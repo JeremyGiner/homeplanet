@@ -1,27 +1,35 @@
 <?php
 namespace homeplanet;
 
-use homeplanet\entity\Map;
+use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\entity\City;
-use homeplanet\Entity\WorldmapChunk;
-use AppBundle\Entity\User;
-use homeplanet\event\Event;
-use homeplanet\entity\Entity;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Query\ResultSetMapping;
-use homeplanet\entity\Worldmap;
-use homeplanet\entity\EntityType;
+use homeplanet\Entity\Pawn;
+use homeplanet\Entity\Worldmap;
 use homeplanet\Entity\Ressource;
 use homeplanet\Entity\Overcrowd;
 use homeplanet\Entity\attribute\Production;
 use homeplanet\Repository\CityRepository;
+use homeplanet\Repository\OvercrowdRepository;
+use homeplanet\Entity\attribute\ProductionType;
+use homeplanet\Entity\Player;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\ResultSetMapping;
+use homeplanet\Entity\PawnType;
+use homeplanet\Entity\attribute\ProductionInputType;
+use homeplanet\Repository\PawnRepository;
 
 class Game {
 	/**
 	 * @var User
 	 */
 	protected $_oUser;
+	
+	/**
+	 * @var Player
+	 */
+	protected $_oPlayer;
+	
 	/**
 	 * Doctrine entity manager
 	 * @var EntityManager 
@@ -40,7 +48,7 @@ class Game {
 	 * Indexed by location (serialized) then by id
 	 * @var Entity[][]
 	 */
-	protected $_aEntityByLoc;
+	protected $_aPawnByLoc;
 	
 //_____________________________________________________________________________
 //	Constructor
@@ -49,24 +57,27 @@ class Game {
 		$this->_oUser = $oContextUser;
 		$this->_oEntityManager = $oEntityManager;
 		
-		// Preload
-		//$this->_oEntityManager->getRepository('homeplanet\entity\EntityType')->findAll();
-		$this->_oEntityManager->getRepository('homeplanet\Entity\Ressource')->findAll();
+		$this->_oPlayer = $this->_oEntityManager->getRepository(Player::class)
+		->findOneBy(['_iUserId' => $this->_oUser->getId()]);
 		
-		$this->_oGameState = $this->_oEntityManager->getRepository('homeplanet\Entity\GameState')->find(1);
+		// Preload
+		$this->_oEntityManager->getRepository(Ressource::class)->findAll();
+		
+		$this->_oGameState = null;
+		//$this->_oGameState = $this->_oEntityManager->getRepository('homeplanet\Entity\GameState')->find(1);
 		
 		$this->_oWorldmap = new Worldmap(); 
 		
-		$this->_aEntityByLoc = [];
-		$a = $this->getEntityAr_byArea( $iCenterY-6, $iCenterY+6, $iCenterX-6, $iCenterX+6 );
+		$this->_aPawnByLoc = [];
+		$a = $this->getPawnRepo()->getPawnAr_byArea( $iCenterY-6, $iCenterY+6, $iCenterX-6, $iCenterX+6 );
 		foreach( $a as $oEntity )
 			foreach( $oEntity->getLocationAr() as $oLocation )
-				$this->_aEntityByLoc[ (string)$oLocation ][ $oEntity->getId() ] = $oEntity;
+				$this->_aPawnByLoc[ (string)$oLocation ][ $oEntity->getId() ] = $oEntity;
 		
 		$oQuery = $this->_oEntityManager->createQuery('
-SELECT entitytype,prodtype
-FROM homeplanet\entity\EntityType entitytype
-JOIN entitytype._aProdType prodtype
+SELECT pawntype,prodtype
+FROM homeplanet\Entity\PawnType pawntype
+JOIN pawntype._aProdType prodtype
 		');
 		$oQuery->getResult();
 	}
@@ -81,8 +92,11 @@ JOIN entitytype._aProdType prodtype
 		return $this->_oEntityManager->getRepository(City::class);
 	}
 	
-	public function getEntity( $iEntityId ) {
-		return $this->_oEntityManager->getRepository('homeplanet\entity\Entity')->find($iEntityId);
+	/**
+	 * @return PawnRepository
+	 */
+	public function getPawnRepo() {
+		return $this->_oEntityManager->getRepository(Pawn::class);
 	}
 	
 	public function getEntityManager() {
@@ -94,7 +108,7 @@ JOIN entitytype._aProdType prodtype
 	}
 	
 	public function getCity_byLocation( Location $oLoc ) {
-		$a = $this->getEntityAr_byLocation( $oLoc );
+		$a = $this->getPawnAr_byLocation( $oLoc );
 		foreach( $a as $o ) {
 			if ( $o->getType()->getId() == 1 ) return $o;
 		}
@@ -106,11 +120,13 @@ JOIN entitytype._aProdType prodtype
 	}
 	
 	public function getUser( $iId ) {
-		return $this->_oEntityManager->getRepository('AppBundle\Entity\User')->find($iId);
+		return $this->_oEntityManager->getRepository(User::class)->find($iId);
 	}
 	
-	public function getPlayer( $iUserId ) {
-		return $this->_oEntityManager->getRepository('homeplanet\entity\Player')->find($iUserId);
+	public function getPlayer( $iUserId = null ) {
+		if( $iUserId === null )
+			return $this->_oPlayer;
+		return $this->_oEntityManager->getRepository(Player::class)->find($iUserId);
 	}
 	
 	public function getRessource( $iId ) {
@@ -127,37 +143,30 @@ JOIN entitytype._aProdType prodtype
 	 * @param int $iId
 	 * @return EntityType
 	 */
-	public function getEntityType( $iId ) {
-		return $this->_oEntityManager->getRepository(EntityType::class)->find($iId);
+	public function getPawnType( $iId ) {
+		return $this->_oEntityManager->getRepository(PawnType::class)->find($iId);
 	}
 	
-	public function getEntityTypeAr() {
-		return $this->_oEntityManager->getRepository('homeplanet\entity\EntityType')->findAll();
+	public function getPawnTypeAr() {
+		return $this->_oEntityManager->getRepository(PawnType::class)->findAll();
 	}
 	
 	public function getProdType( $iId ) {
-		return $this->_oEntityManager->getRepository('homeplanet\Entity\attribute\ProductionType')->find($iId);
+		return $this->_oEntityManager->getRepository(ProductionType::class)->find($iId);
 	}
 	
 	public function getProdInputType( $iId ) {
-		return $this->_oEntityManager->getRepository('homeplanet\Entity\attribute\ProductionInputType')->find($iId);
-	}
-	/**
-	 * Deprecated 
-	 * @return null
-	 */
-	public function getLocation( $x, $y ) {
-		return null;
+		return $this->_oEntityManager->getRepository(ProductionInputType::class)->find($iId);
 	}
 	
 	/**
 	 * @param Location $oLoc
 	 * @return Entity[]
 	 */
-	public function getEntityAr_byLocation( Location $oLoc ) {
+	public function getPawnAr_byLocation( Location $oLoc ) {
 		/*$oQuery = $this->_oEntityManager->createQuery('
 SELECT entity
-FROM homeplanet\entity\Entity entity
+FROM homeplanet\Entity\Pawn entity
 JOIN entity._aPosition pos
 WHERE pos._x = :pos_x
 	AND pos._y = :pos_y
@@ -167,63 +176,18 @@ WHERE pos._x = :pos_x
 				'pos_y' => $oLoc->getY(),
 		));*/
 		$sLoc = (string)$oLoc;
-		return isset($this->_aEntityByLoc[ $sLoc ]) ?
-			$this->_aEntityByLoc[ $sLoc ]:
+		return isset($this->_aPawnByLoc[ $sLoc ]) ?
+			$this->_aPawnByLoc[ $sLoc ]:
 			[];
 	}
 	
-	/**
-	 * @param Location $oLoc
-	 * @return Entity[]
-	 */
-	private function getEntityAr_byArea( $iBot, $iTop, $iLeft, $iRight ) {
-		
-		$oQuery = $this->_oEntityManager->createQuery('
-SELECT entity, pos
-FROM homeplanet\entity\Entity entity
-JOIN entity._aPosition pos
-WHERE pos._x BETWEEN :left AND :right
-	AND pos._y BETWEEN :bot AND :top
-		');
-		$oQuery->setParameters( array(
-				'bot' => $iBot,
-				'top' => $iTop,
-				'left' => $iLeft,
-				'right' => $iRight,
-		))
-		->useQueryCache(true)
-		->useResultCache(true)
-		;
-		return $oQuery->getResult();
-	}
+	
 	
 	/**
-	 * @param User $oUser
-	 * @return Entity[]
+	 * @return OvercrowdRepository
 	 */
-	public function getEntityAr_byUser( User $oUser ) {
-		$oQuery = $this->_oEntityManager->createQuery('
-SELECT entity
-FROM homeplanet\entity\Entity entity
-WHERE entity._oUser = :player
-		');
-		$oQuery->setParameters( array(
-				'player' => $oUser,
-		));
-		return $oQuery->getResult();
-	}
-	
-	/**
-	 * @param int $x
-	 * @param int $y
-	 * @return Overcrowd[]
-	 */
-	public function getOvercrowdAr( $x, $y ) {
-		return $this->_oEntityManager->getRepository(Overcrowd::class)
-			->findBy([
-					'_iLocationX' => $x,
-					'_iLocationY' => $y,
-			]);
+	public function getOvercrowdRepo() {
+		return $this->_oEntityManager->getRepository(Overcrowd::class);
 	}
 	
 	/**
@@ -241,9 +205,9 @@ WHERE entity._oUser = :player
 			]);
 	}
 	
-	public function getEntityAr_byUser_indexLocation( User $oUser ) {
+	public function getPawnAr_byPlayer_indexLocation( Player $oPlayer ) {
 		$a = [];
-		foreach( $this->getEntityAr_byUser($oUser) as $oEntity ) {
+		foreach( $this->getPawnRepo()->getPawnAr_byPlayer($oPlayer) as $oEntity ) {
 			foreach( $oEntity->getLocationAr() as $oLocation ) {
 				$sLocation = (string)$oLocation;
 				$a[$sLocation] = isset($a[$sLocation])?$a[$sLocation]:[];
@@ -256,46 +220,19 @@ WHERE entity._oUser = :player
 //_____________________________________________________________________________
 //	Modifier
 
-	public function addEntity( Entity $oEntity, array $aAddOn = [] ) {
+	public function addPawn( Pawn $oPawn, array $aAddOn = [] ) {
 		
-		foreach( $oEntity->getProductionAr() as $o ) {
+		foreach( $oPawn->getProductionAr() as $oProd ) {
 			
-			// Prod with natural ress
-			$x = $o->getLocation()->getX();
-			$y = $o->getLocation()->getY();
-			
-			// Get ress
-			$aInput = $o->getType()->getProdInputTypeAr();
-			$oRess = $aInput[0]->getRessource();
-			
-			// Get natural deposit
-			$oTile = $this->getWorldmap()->getTile(
-				$x, 
-				$y
-			);
-			$aRessNat = $oTile->getRessNatQuantityAr();
-			$iRessNat = isset( $aRessNat[ $oRess->getId() ] )?
-				$aRessNat[ $oRess->getId() ]:0;
-			
-			// Get overcrowd
-			$oOvercrowd = $this->getOvercrowd($oRess->getId(), $x, $y);
-			$iOvercrowd = $oOvercrowd != null ? $oOvercrowd->getQuantity() : 0;
-			
-			// Update prod ratio
-			if(
-				$oRess->isNatural() &&
-				($iRessNat - $iOvercrowd) > 0
-			) {
-				$o->setRatio(1.0);
-			}
+			$this->_updateProdNat($oProd);
 			
 		}
-		$this->_oEntityManager->persist( $oEntity );
+		$this->_oEntityManager->persist( $oPawn );
 		$this->_oEntityManager->flush();
 	}
 	
-	public function removeEntity( Entity $oEntity ) {
-		$this->_oEntityManager->remove( $oEntity );
+	public function removeEntity( Pawn $oPawn ) {
+		$this->_oEntityManager->remove( $oPawn );
 		$this->_oEntityManager->flush();
 	}
 	
@@ -320,4 +257,47 @@ WHERE entity._oUser = :player
 		$this->_oEntityManager->flush();
 	}
 	
+//_____________________________________________________________________________
+//	Sub-routine
+
+	function _updateProdNat( Production $oProduction ) {
+		// Get first prod input
+		$aInput = $oProduction->getProdInputAr();
+		
+		// Case : no input for this prod
+		if( !isset($aInput[0]) )
+			return;
+		
+		// Get resource
+		$oRess = $aInput[0]->getType()->getRessource();
+		
+		// Case : not nautral
+		if( !$oRess->isNatural() )
+			return;
+		
+		// Prod with natural ress
+		$x = $oProduction->getLocation()->getX();
+		$y = $oProduction->getLocation()->getY();
+			
+			
+		// Get natural deposit
+		$oTile = $this->getWorldmap()->getTile(
+				$x,
+				$y
+		);
+		$aRessNat = $oTile->getRessNatQuantityAr();
+		$iRessNat = isset( $aRessNat[ $oRess->getId() ] )?
+		$aRessNat[ $oRess->getId() ]:0;
+			
+		// Get overcrowd
+		$oOvercrowd = $this->getOvercrowd($oRess->getId(), $x, $y);
+		$iOvercrowd = $oOvercrowd != null ? $oOvercrowd->getQuantity() : 0;
+			
+		// Update prod ratio
+		if(
+				($iRessNat - $iOvercrowd) > 0
+		) {
+			$oProduction->setRatio(1.0);
+		}
+	}
 }

@@ -15,8 +15,8 @@ use Doctrine\Common\Collections\Doctrine\Common\Collections;
 use homeplanet\Entity\attribute\EntityLocation;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="overcrowd")
+ * @ORM\Entity(repositoryClass="homeplanet\Repository\OvercrowdRepository")
  */
 class Overcrowd {
 	

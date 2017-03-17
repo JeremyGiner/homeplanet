@@ -1,8 +1,16 @@
 {% set route_current = route_current|default('index') %}
 
-<nav id="{{ HTMLid is defined ? HTMLid }}" class="navbar navbar-default" style="">
+<nav 
+	id="{{ HTMLid|default('') }}" 
+	class="navbar navbar-default {{ HTMLclass|default('') }}"
+>
 	<div class="navbar-header">
-		<a href="#navbar" class="navbar-toggle collapsed" 
+		<ul class="nav navbar-nav">
+			<li>
+				<a href="">test</a>
+			</li>
+		</ul>
+		<a href="#{{ HTMLid|default('') }}-navbar-collapse" class="navbar-toggle collapsed" 
 			data-toggle="collapse" aria-expanded="false" 
 			aria-controls="navbar"
 		>
@@ -12,42 +20,22 @@
 			<span class="icon-bar"></span>
 		</a>
 	</div>
-	<div id="navbar" class="navbar-collapse collapse">
+	<div id="{{ HTMLid|default('') }}-navbar-collapse" class="navbar-collapse collapse">
 		<ul class="nav navbar-nav">
-{% for item in navbar %}
-			<li class="{{ item.route == route_current ? 'active' }} {{ item.CSSClass is defined ? item.CSSClass }}">
+		{% block navbar_link_list %}
+			{% for item in linkAr %}
+			<li class="{{ item.route == route_current ? 'active' }} {{ item.HTMLClass|default('') }}">
 				<a href="{{ item.route=='' ? '#' : path( item.route ) }}">
 					{{ item.label }}
 				</a>
 			</li>
-			
-{% endfor %}
+			{% endfor %}
+		{% endblock navbar_link_list %}
 		</ul>
-{% if user is defined and user is not null %}
 		<ul class="nav navbar-nav navbar-right">
-			<li>
-				<span class="navbar-text">{{ user.getUserName }}</span>
-			</li>
-			<li class="navbar-form">
-				<div class="form-group">
-					<a class="btn btn-danger" href="logout">Disconnect</a>
-				</div>
-			</li>
+		{% block navbar_right_list %}
+		{% endblock navbar_right_list %}
 		</ul>
-{% else %}
-		<ul class="nav navbar-nav navbar-right">
-			<li class="navbar-form">
-				<div class="form-group">
-					<a class="btn btn-primary" href="register">Inscription</a>
-				</div>
-			</li>
-			<li class="navbar-form">
-				<div class="form-group">
-					<a class="btn btn-primary" href="login">Connection</a>
-				</div>
-			</li>
-		</ul>
-{% endif %}
 	</div>
 </nav>
 	

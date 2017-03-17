@@ -1,26 +1,43 @@
-{% extends 'page/index.html.twig' %}
-
-{# Index by location #}
-{% set aEntityByloc = gameview.game.getEntityAr_byUser_indexLocation( user ) %}
+{% extends 'homeplanet/page/game.html.twig' %}
 
 {% block page_content %}
 <div class="row">
-{% for sLocation, aEntity in aEntityByloc %}
-<div class="col-xs-12 col-sm-6">
+<div class="col-xs-12">
 	{% embed 'bootstrap/panel.html.twig' %}
 	{% block header %}
-		Location {{ sLocation }}
-		<br>
-		{% for iRessId, iQuantity in aFluxByLocation[sLocation]|default([]) %}
-			{{iQuantity>0?'+'}}{{ iQuantity }}
-			{{ printo(gameview.game.getRessource(iRessId)) }}<br>
-		{% endfor %}
+		Buy asset
+	{% endblock %}
+	{% block content %}
+		<a class="btn btn-primary" href="{{ url('asset_create') }}">Buy building</a>
+		<a class="btn btn-warning" href="{{ url('transproute_create') }}">Create trade route</a>
+	{% endblock %}
+	{% endembed %}
+</div>
+{% for sLocation, aPawn in aPawnByloc %}
+<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		<div class="row">
+		<div class="col-xs-8">
+			Location {{ sLocation }}
+			<br>
+			{% for iRessId, iQuantity in aFluxByLocation[sLocation]|default([]) %}
+				{{iQuantity>0?'+'}}{{ iQuantity }}
+				{{ printo(gameview.game.getRessource(iRessId)) }}<br>
+			{% endfor %}
+		</div>
+		<div class="col-xs-4">
+			<a class="btn btn-small btn-primary" href="{{ url('asset_create',{location: sLocation}) }}">
+				Buy asset
+			</a>
+		</div>
+		</div>
 	{% endblock %}
 	{% block content %}
 		<ul class="list-group">
-		{% for oEntity in aEntity %}
+		{% for oPawn in aPawn %}
 		<li class="list-group-item">
-			{{ printo(oEntity) }}
+			{{ printo(oPawn) }}
 		</li>
 		{% endfor %}
 		</ul>

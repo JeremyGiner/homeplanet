@@ -9,24 +9,39 @@
 		<div class="col-xs-6" style="padding-right:0;">
 			{% embed 'homeplanet/element/map_zoom1.html.twig' with {location: data}%}
 			{% block map_cell %}
-					<div class="map-cell" onclick="$('#{{ id }}.map')"
-						data-ajaxupd-url="{{ path('ajax_map_z0') }}" 
-						data-ajaxupd-param="TODO"
+					<div class="map-cell" 
+						onclick="
+							$('#{{ id }} .mapz0-wrapper').ajaxUpdate(
+								'{{ url('ajax_map_z0',{location: (x*13)~':'~(y*13)}) }}',
+								{
+									validator: 'TileValidatorRange',
+									param: {
+										validator_serialized: '{{ validator_serialized is defined ? validator_serialized|escape('js') : null }}',
+										tile_ref: '6:3',
+										range: 3
+									}
+								}
+							);
+						"
 					></div>
 			{% endblock %}
 			{% endembed %}
 		</div>
-		<div class="col-xs-6" style="padding-left:0;">
-			{% embed 'homeplanet/element/map_zoom0.html.twig' %}
-			{% block map_cell %}
-					<div class="map-cell" 
-						onclick="
-							$('#{{ iTargetInputId }}').val('{{ oTile.getLocation() }}');
-							$('#{{ id }}').modal('hide');
-						"
-					>
-					</div>
-			{% endblock %}
+		<div class="col-xs-6 mapz0-wrapper" style="padding-left:0;"
+
+			onclick="
+				if( 
+					$(event.target).attr('data-valid') !== undefined 
+					&& $(event.target).attr('data-valid') == 'false'
+				) return false;
+				$('#{{ iTargetInputId }}').val( $(event.target).attr('data-location') );
+				$('#{{ id }}').modal('hide');
+			"
+		>
+			{% embed 'homeplanet/element/map_zoom0.html.twig' with {
+				map_mod: true,
+				validator: validator is defined? validator : null 
+			} %}
 			{% endembed %}
 		</div>
 		</div>

@@ -15,15 +15,18 @@ Number.prototype.padLeft = function (n,str) {
 };
 
 
-$.fn.ajaxUpdate = function() {
+$.fn.ajaxUpdate = function( sUrl, oParam ) {
 	
 	// Get var
+	/*
 	var sUrl = this.attr('data-ajaxupd-url');
-	if( sUrl == null ) throw('Invalid url param');
 	var oParam = this.attr('data-ajaxupd-param') | {};
+	*/
+	if( sUrl == null ) throw('Invalid url param');
 	
 	// Put loading style
 	
+	var _this = this;
 	// Send ajax request
 	$.ajax({
 		type: 'GET',
@@ -31,8 +34,8 @@ $.fn.ajaxUpdate = function() {
 		cache: false,
 		data: oParam,
 		success: function( data ){
-			
-			this.html( data );
+			$(_this).html( data );
+			$(document).trigger('ajaxUpdate.success', {target: _this});
 		},
 		error: function( XMLHttpRequest, textStatus, errorThrown ) {
 			console.log( errorThrown );
@@ -49,7 +52,8 @@ $.fn.ajaxUpdate = function() {
 //	Boot
 
 $(function() {
-	
+
+	//_________________________________
 	// HAjust
 	function hajust_update() {
 		$('.hajust-square').each(function(){
@@ -65,8 +69,17 @@ $(function() {
 		hajust_update();
 	});
 	
-	
 	hajust_update();
+	
+	//	HAjust quick fix for bootstrap modal
+	$(document).on('shown.bs.modal', function () {
+		$(document).trigger('resize');
+	});
+	$(document).on('ajaxUpdate.success', function () {
+		$(document).trigger('resize');
+	});
+
+	
 	/*
 	//TOOD update placeholder height on resize, add multiple element possible
 	var menu = $('#nav-main');
@@ -96,6 +109,9 @@ $(function() {
 		$(e.target).addClass('active');
 	});
 	
+	//_________________________________
+	// Twig js template
+	
 	// Compile all the template o/
 	$("script[type='text/template']").each(function() {
 	    var id = $(this).attr("id"),
@@ -122,7 +138,7 @@ $(function() {
 		return false;
 	})
 
-
+	
 });
 
 //_____________________________________________________________________________

@@ -2,14 +2,9 @@
 
 {% block header %}City detail ({{ gameview.location  }}){% endblock %}
 {% block content %}
-
-	
-	{% set city = gameview.city[ gameview.location~'' ]|default(null) %}
 	{% if city == null %}
 		<a class="btn btn-default" href="?location={{ gameview.location }}&amp;action=city_create">Create city</a>
 	{% else %}
 		{{ printo(city) }}
 	{% endif %}
-	
-	
 {% endblock %}

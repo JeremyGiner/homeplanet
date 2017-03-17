@@ -1,0 +1,51 @@
+{% set route_current = route_current|default('index') %}
+
+<nav id="{{ HTMLid|default('') }}" class="navbar navbar-default">
+	<div class="navbar-header">
+		<a href="#{{ HTMLid|default('') }}-navbar-collapse" class="navbar-toggle collapsed" 
+			data-toggle="collapse" aria-expanded="false" 
+			aria-controls="navbar"
+		>
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</a>
+	</div>
+	<div id="{{ HTMLid|default('') }}-navbar-collapse" class="navbar-collapse collapse">
+		<ul class="nav navbar-nav">
+{% for item in navbar %}
+			<li class="{{ item.route == route_current ? 'active' }} {{ item.CSSClass is defined ? item.CSSClass }}">
+				<a href="{{ item.route=='' ? '#' : path( item.route ) }}">
+					{{ item.label }}
+				</a>
+			</li>
+			
+{% endfor %}
+		</ul>
+		<ul class="nav navbar-nav navbar-right">
+{% if user is defined and user is not null %}
+			<li>
+				<span class="navbar-text">{{ user.getUserName }}</span>
+			</li>
+			<li class="navbar-form">
+				<div class="form-group">
+					<a class="btn btn-danger" href="logout">Disconnect</a>
+				</div>
+			</li>
+{% else %}
+			<li class="navbar-form">
+				<div class="form-group">
+					<a class="btn btn-primary" href="register">Inscription</a>
+				</div>
+			</li>
+			<li class="navbar-form">
+				<div class="form-group">
+					<a class="btn btn-primary" href="login">Connection</a>
+				</div>
+			</li>
+{% endif %}
+		</ul>
+	</div>
+</nav>
+	

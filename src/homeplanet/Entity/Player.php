@@ -18,8 +18,15 @@ use Doctrine\Common\Collections\Doctrine\Common\Collections;
  */
 class Player {
 	
+	
 	/**
 	 * @ORM\Id
+	 * @ORM\Column(type="integer", name="id")
+	 * @ORM\GeneratedValue(strategy="AUTO")
+	 */
+	protected $_iId;
+	
+	/**
 	 * @ORM\Column(type="integer", name="user_id")
 	 */
 	protected $_iUserId;
@@ -39,6 +46,17 @@ class Player {
 	 */
 	protected $_iIncome;
 	
+	/**
+	 * @ORM\Column(type="integer", name="cart")
+	 */
+	protected $_iCart;
+	
+	/**
+	 * @ORM\OneToOne(targetEntity="PlayerExt",mappedBy="_oPlayer")
+	 * @var PlayerExt
+	 */
+	protected $_oPlayerExt;
+	
 	
 //_____________________________________________________________________________
 //	Constructor
@@ -53,6 +71,10 @@ class Player {
 	
 //_____________________________________________________________________________
 //	Accessor
+	
+	public function getId() {
+		return $this->_iId;
+	}
 	
 	public function getUserId() {
 		return $this->_iUserId;
@@ -70,6 +92,18 @@ class Player {
 		return $this->_iIncome;
 	}
 	
+	public function getCart() {
+		return $this->_iCart;
+	}
+	
+	public function getExt() {
+		return $this->_oPlayerExt;
+	}
+	
+	public function getCartRemaining() {
+		return $this->_iCart - $this->_oPlayerExt->getCartUsed();
+	}
+	
 //_____________________________________________________________________________
 //	Modifier
 
@@ -80,6 +114,11 @@ class Player {
 	
 	public function setName( $s ) {
 		$this->_sName = $s;
+		return $this;
+	}
+	
+	public function setCart( $i ) {
+		$this->_iCart = $i;		
 		return $this;
 	}
 

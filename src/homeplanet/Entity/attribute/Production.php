@@ -3,7 +3,7 @@ namespace homeplanet\Entity\attribute;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Entity\Entity;
+use homeplanet\Entity\Pawn;
 use homeplanet\Entity\Tile;
 
 /**
@@ -21,11 +21,11 @@ class Production {
 	protected $_iId;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Entity")
-	 * @ORM\JoinColumn(name="entity_id", referencedColumnName="id")
+	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Pawn")
+	 * @ORM\JoinColumn(name="pawn_id", referencedColumnName="id")
 	 * @var ProductionType
 	 */
-	protected $_oEntity;
+	protected $_oPawn;
 	
 	/**
 	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\attribute\ProductionType")
@@ -65,11 +65,11 @@ class Production {
 //	Constructor
 	
 	function __construct( 
-			Entity $oEntity, 
+			Pawn $oPawn, 
 			Location $oLocation, 
 			ProductionType $oProdType
 	) {
-		$this->_oEntity = $oEntity;
+		$this->_oPawn = $oPawn;
 		$this->_iLocationX = $oLocation->getX();
 		$this->_iLocationY = $oLocation->getY();
 		$this->_oProdType = $oProdType;
@@ -88,8 +88,8 @@ class Production {
 	public function getLocation() {
 		return new Location( $this->_iLocationX, $this->_iLocationY );
 	}
-	public function getEntity() {
-		return $this->_oEntity;
+	public function getPawn() {
+		return $this->_oPawn;
 	}
 	public function getType() {
 		return $this->_oProdType;

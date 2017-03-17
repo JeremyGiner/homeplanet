@@ -12,18 +12,27 @@
 				{% if city != null %}
 					<div class="map-cell sprite sprite-city"></div>
 				{% endif %}
-				{% set aEntity = gameview.game.getEntityAr_byLocation( oTile.getLocation() ) %}
+				{% set aPawn = gameview.game.getPawnAr_byLocation( oTile.getLocation() ) %}
 				
-				{% for oEntity in aEntity %}
+				{% for oPawn in aPawn %}
 					
-					{% if oEntity.getType().getLabel() != 'city' %}
+					{% if oPawn.getType().getLabel() != 'city' %}
 						<div class="map-cell sprite">P</div>
 					{% endif %}
 				{% endfor %}
 				
 				{% block map_cell %}
-					<a class="map-cell" href="?location={{ oTile.getLocation() }}">
-					</a>
+					{% if map_mod is defined %}
+						<div class="map-cell" 
+							data-location="{{ oTile.location }}"
+							{{ (validator is defined and validator != null)? 
+							'data-valid='~((validator.validate(oTile)?'true':'false'))~'' }}
+						></div>
+					{% else %}
+						<a class="map-cell" href="?location={{ oTile.getLocation() }}">
+						</a>
+					{% endif %}
+					
 				{% endblock %}
 			</td>
 		{% endfor %}

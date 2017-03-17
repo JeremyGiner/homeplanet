@@ -6,7 +6,6 @@
 	{% for y in 12..0 %}
 	<tr>
 		{% for x in 0..12 %}
-			{% set oTile = gameview.map.getTile( x, y ) %}
 			{% set highlighted = (
 				location is not empty and   
 				(

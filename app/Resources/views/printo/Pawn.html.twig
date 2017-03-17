@@ -1,4 +1,4 @@
-<a href="entity/{{ o.getId() }}">
+<a href="{{ path('asset_view',{id:o.id}) }}">
 	#{{ o.getId() }} {{ o.getType().getLabel() }} 
 	({{ o.getLocationAr()|join(';') }})<br>
 </a>

@@ -13,6 +13,10 @@ services:
         class: AppBundle\Twig\Printo
         tags:
             - { name: twig.extension }
+    app.twig.fix:
+        class: AppBundle\Twig\Fix
+        tags:
+            - { name: twig.extension }
 
 #    service_name:
 #        class: AppBundle\Directory\ClassName

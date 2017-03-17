@@ -3,7 +3,7 @@ namespace homeplanet\Entity\attribute;
 
 use Doctrine\ORM\Mapping as ORM;
 use homeplanet\Entity\Ressource;
-use homeplanet\entity\Entity;
+use homeplanet\Entity\Pawn;
 use homeplanet\Entity\City;
 /**
  * @ORM\Entity
@@ -35,10 +35,10 @@ class Demand {
 	protected $_fPercent;
 	
 	/**
-	 * @ORM\Column(type="integer", name="price_modifier")
-	 * @var int
+	 * @ORM\Column(type="float", name="price_modifier")
+	 * @var float
 	 */
-	protected $_iPriceModifier;
+	protected $_fPriceModifier;
 	
 //_____________________________________________________________________________
 //	Cosntructor
@@ -51,7 +51,7 @@ class Demand {
 		$this->_fPercent = $fPercent;
 		$this->_oCity = $oCity;
 		$this->_oRessource = $oRessource;
-		$this->_iPriceModifier = 0;
+		$this->_fPriceModifier = 0;
 	}
 	
 //_____________________________________________________________________________
@@ -67,10 +67,10 @@ class Demand {
 	}
 	
 	public function getPriceModifier() {
-		return $this->_iPriceModifier;
+		return $this->_fPriceModifier;
 	}
 	
 	public function getPrice() {
-		return $this->_iPriceModifier * $this->_oRessource->getPriceBase();
+		return floor($this->_fPriceModifier * $this->_oRessource->getPriceBase());
 	}
 }

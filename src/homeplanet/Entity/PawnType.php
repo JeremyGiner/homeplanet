@@ -14,9 +14,9 @@ use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="entitytype")
+ * @ORM\Table(name="pawntype")
  */
-class EntityType {
+class PawnType {
 	
 	/**
 	 * @ORM\Id
@@ -39,13 +39,13 @@ class EntityType {
 	
 	/**
 	 * @ORM\ManyToMany(
-	 *     targetEntity="\homeplanet\Entity\attribute\ProductionType",
+	 *     targetEntity="homeplanet\Entity\attribute\ProductionType",
 	 *     cascade={"persist"},
 	 *     fetch="EAGER"
 	 * )
 	 * @ORM\JoinTable(
-	 *     name="entitytype_prodtype_assoc",
-	 *     joinColumns={@ORM\JoinColumn(name="entitytype_id", referencedColumnName="id")},
+	 *     name="pawntype_prodtype_assoc",
+	 *     joinColumns={@ORM\JoinColumn(name="pawntype_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="prodtype_id", referencedColumnName="id")}
 	 * )
 	 * @var ArrayCollection

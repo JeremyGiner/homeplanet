@@ -2,18 +2,20 @@
 namespace homeplanet\Entity\attribute;
 
 use Doctrine\ORM\Mapping as ORM;
+use homeplanet\Entity\Pawn;
+
 /**
  * @ORM\Entity
- * @ORM\Table(name="entity_location_assoc")
+ * @ORM\Table(name="pawn_location_assoc")
  */
-class EntityLocation {
+class PawnLocation {
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Entity")
-	 * @ORM\JoinColumn(name="entity_id", referencedColumnName="id")
-	 * @var Entity
+	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Pawn")
+	 * @ORM\JoinColumn(name="pawn_id", referencedColumnName="id")
+	 * @var Pawn
 	 */
-	protected $_oEntity;
+	protected $_oPawn;
 	
 	/**
 	 * @ORM\Id
@@ -38,8 +40,8 @@ class EntityLocation {
 //______________________________________________________________________________
 //	Constructor
 	
-	function __construct( $oEntity, Location $oLocation ) {
-		$this->_oEntity = $oEntity;
+	function __construct( $oPawn, Location $oLocation ) {
+		$this->_oPawn = $oPawn;
 		$this->_x = $oLocation->getX();
 		$this->_y = $oLocation->getY();
 		$this->_oLocation = $oLocation;

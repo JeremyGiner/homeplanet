@@ -18,7 +18,7 @@ use homeplanet\Entity\attribute\Demand;
 /**
  * Default entity factory
  */
-class EntityFactory extends Entity {
+class PawnFactory extends Pawn {
 	
 	protected $_oType;
 	
@@ -27,7 +27,7 @@ class EntityFactory extends Entity {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( EntityType $oType, array $aArg ) {
+	public function __construct( PawnType $oType, array $aArg ) {
 		$this->_oType = $oType;
 		$this->_aArg = $aArg;
 	}
@@ -38,8 +38,8 @@ class EntityFactory extends Entity {
 	public function create() {
 		extract( $this->_aArg );
 		
-		$o = new Entity( $this->_oType );
-		$o->setUser( $oUser );
+		$o = new Pawn( $this->_oType );
+		$o->setPlayer( $oPlayer );
 		
 		// Location
 		if( isset($oLocation) ) {

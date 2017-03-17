@@ -33,16 +33,16 @@
 	{% block content %}
 		<a href="{{ url('trade_route') }}">Create trade route</a>
 		<ul class="list-group">
-		{% for oEntity in gameview.game.getEntityAr_byUser( user ) %}
+		{% for oPawn in pawnAr %}
 			<li class="list-group-item">
 				<div class="row">
 				<div class="col-xs-2">
 					<img class="img-responsive" src="{{ 
-						commun.icon_entitytype(oEntity.getType()) }}">
+						commun.icon_entitytype(oPawn.getType()) }}">
 				</div>
 				<div class="col-xs-8">
-					{{ printo(oEntity) }}
-					{{ form(form_entity_delete_ar[oEntity.getId()]) }}
+					{{ printo(oPawn) }}
+					{{ form(form_entity_delete_ar[oPawn.getId()]) }}
 				</div>
 				</div>
 			</li>
@@ -71,15 +71,6 @@
 	{% include 'homeplanet/panel/location_detail.html.twig' %}
 	{% include 'homeplanet/panel/city_detail.html.twig' %}
 	
-	{% embed 'bootstrap/panel.html.twig' %}
-	
-	{% block header %}Build{% endblock %}
-	{% block content %}
-		{% form_theme form_build 'homeplanet/form/build.html.twig' %}
-		{{ form(form_build) }}
-	{% endblock %}
-	
-	{% endembed %}
 	</div>
 </div>
 {% endblock %}

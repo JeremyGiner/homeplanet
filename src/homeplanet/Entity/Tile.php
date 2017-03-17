@@ -1,8 +1,14 @@
 <?php
 namespace homeplanet\Entity;
 
+use homeplanet\tool\F;
+use homeplanet\Entity\attribute\Location;
+
 class Tile {
 	
+	/**
+	 * @var Location
+	 */
 	protected $_oLocation;
 	
 	/**
@@ -49,6 +55,9 @@ class Tile {
 		$this->_aRessourceSource = $aRessource;
 		
 		$this->_oSouthTile = $oTileSouth;
+		
+		//test
+		$this->getColorRGB();
 	}
 	
 //_____________________________________________________________________________
@@ -83,7 +92,7 @@ class Tile {
 		
 		// TEST
 		/*
-		$i = 37;
+		$i = 35;
 		$f = isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
 		$aColor = $this->_interpolateColor(
 				[0,0,0],
@@ -105,7 +114,7 @@ class Tile {
 				[19,64,85], // Deep blue
 				-$fElevation
 			);
-			
+			/*
 			// Shadow
 			if( $this->_oSouthTile != null )
 				$aColor = $this->_interpolateColor(
@@ -115,7 +124,7 @@ class Tile {
 						$this->_oSouthTile->_fElevation - $this->_fElevation 
 					) * 0.8
 				);
-			
+			*/
 			return $aColor;
 		}
 		
@@ -124,14 +133,17 @@ class Tile {
 		//$fElevation = ( $fElevation * $fElevation ) / 100;
 		
 		// Filter function x=0.5 top
-		$fVegetation = $this->_getVegetation();
 		$i = 33;
 		$fVegetation = isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
-		$fVegetation /= 50;
+		$fVegetation /= 100;
 		
 		$i = 34;
 		$fForest =  isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
 		$fForest /= 100;
+		
+		$i = 37;
+		$fStone =  isset($this->_aRessourceSource[$i])? $this->_aRessourceSource[$i]: 0;
+		$fStone /= 100;
 		
 		
 		//$fVegetation = $fVegetation *$fHumi;
@@ -139,43 +151,61 @@ class Tile {
 		// Elevation
 		$aColor = $this->_interpolateColor(
 			[233, 206, 179],
-			[108,97,79],
-			$fElevation
+			[134, 120, 100],//[108,97,79],
+			F::filterHigh($this->_fElevation, 0, 0.5)
 		);
 		
 		// Vegetation
 		$aColor = $this->_interpolateColor(
 			$aColor, 
-			//[112,141,59], 
 			[94, 121, 66], 
 			$fVegetation
 		);
 		
 		//forest
-		
 		$aColor = $this->_interpolateColor(
-				$aColor,
-				[65, 98, 51],
-				$fForest
+			$aColor,
+			[65, 98, 51],
+			$fForest
 		);
 		
 		// Snow
-		if( $this->_fTemperature < 0.25 )
-			$aColor = $this->_interpolateColor(
-				[255,255,255], 
-				$aColor, 
-				max(0.0, ($this->_fTemperature-0.125)*8)
-			);
+		$aColor = $this->_interpolateColor(
+			[255,255,255], 
+			$aColor, 
+			$this->_filterHigh(
+				$this->_fTemperature, 
+				0.1, 0.5 )
+		);
 		
 		// Shadow
 		if( $this->_oSouthTile != null )
 		$aColor = $this->_interpolateColor(
 			$aColor,
 			[0, 0, 0],
-			max( 0, $this->_oSouthTile->_fElevation - $this->_fElevation ) * 2.5
+			max( 0, $this->_oSouthTile->_fElevation - $this->_fElevation ) *1.5
 		);
 		
 		return $aColor;
+	}
+	
+	
+	private function _filterLow( $f, $fThreshold0, $fThreshold1 ) {
+		if( $f > $fThreshold1 )
+			return 0;
+		if( $f < $fThreshold0 )
+			return 1;
+		$fSlope = (0-1) / ($fThreshold1 - $fThreshold0);
+		return $f * $fSlope - $fSlope*$fThreshold1;
+	}
+	
+	private function _filterHigh( $f, $fThreshold0, $fThreshold1 ) {
+		if( $f > $fThreshold1 )
+			return 1;
+		if( $f < $fThreshold0 )
+			return 0;
+		$fSlope = (1-0) / ($fThreshold1 - $fThreshold0);
+		return $f * $fSlope - $fSlope*$fThreshold0;
 	}
 	
 	
@@ -196,6 +226,9 @@ class Tile {
 	}
 	
 	private function _interpolateColor( array $aAlpha, array $aOmega, $fPercent ) {
+		
+		if( $fPercent > 1 )
+			throw new \Exception();
 		return [
 			(int)$this->_interpolate(
 				$aAlpha[0],
@@ -214,28 +247,18 @@ class Tile {
 			)
 		];
 	}
-	
-	private function _getVegetation() {
-		//return 0;
-		$max = 0.65;
-		$max = 0.65;
-		
-		// Too cold
-		if( $this->_fTemperature < 0.5 )
-			return 0;
-		
-		$fHumi = $this->_fHumidity;
-		/*$f = 0.05;
-		if( $this->_fElevation < $f )
-			$fHumi*=$this->_fElevation*(1/$f)+0.5;*/
-		
-		
-		$fVegetation = ( $fHumi < 0.5 ) ? $fHumi * 2 : $fHumi*-2 + 2;
+//_____________________________________________________________________________
+//	Serialisation
 
+	function __sleep() {
+		$a = array_keys(get_object_vars($this));
 		
-		if( $this->_fTemperature < 0.75)
-			$fVegetation*=min(1.0,($this->_fTemperature-0.5)*4);
-		return $fVegetation;
+		// Quick fix : avoid recursive serialisation
+		$a = array_flip($a);
+		unset($a['_oSouthTile']);
+		$a = array_flip($a);
+		
+		return $a;
 	}
 	
 }

@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\Entity;
+use homeplanet\Entity\Pawn;
 use homeplanet\Game;
-use homeplanet\Entity\EntityFactory;
+use homeplanet\Entity\PawnFactory;
 use homeplanet\tool\Perlin;
 use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
 use homeplanet\Entity\TradeRouteFactory;
@@ -53,11 +53,6 @@ class EncyclopediaController extends BaseController {
 	public function ressourceAction( Request $oRequest ) {
 		
 		$this->_handleRequest( $oRequest );
-
-		// Case : no player associated
-		$oPlayer = $this->_oGame->getPlayer( $this->getUser()->getId() );
-		if( $oPlayer == null )
-			return $this->redirect( $this->generateUrl('player_create') );
 		
 		$oEntityManager = $this->getDoctrine()->getManager();
 		

@@ -3,7 +3,7 @@ namespace homeplanet\Entity\attribute;
 
 use Doctrine\ORM\Mapping as ORM;
 use homeplanet\Entity\Ressource;
-use homeplanet\entity\Entity;
+use homeplanet\Entity\Pawn;
 use homeplanet\Entity\City;
 /**
  * @ORM\Entity

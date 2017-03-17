@@ -62,7 +62,7 @@ class MerchantFactory extends Entity {
 	
 	public function create() {
 		
-		$oEntityType = $this->_oGame->getEntityType(4/*id merchant*/);
+		$oEntityType = $this->_oGame->getPawnType(4/*id merchant*/);
 		
 		$o = new Entity( $oEntityType );
 		$o->setUser( $this->user );

@@ -1,7 +1,7 @@
 <?php
 namespace homeplanet\Form;
 
-use homeplanet\entity\EntityType;
+use homeplanet\Entity\PawnType;
 use Symfony\Component\Validator\Constraints as Assert;
 use homeplanet\Entity\Player;
 use homeplanet\Entity\attribute\Location;
@@ -10,11 +10,10 @@ use homeplanet\Entity\attribute\Location;
 class BuildingBuy {
 	
 	/**
-	 * @var EntityType
+	 * @var PawnType
 	 */
-	protected $_oEntityType;
-	protected $_iLocationX;
-	protected $_iLocationY;
+	protected $_oPawnType;
+	protected $_oLocation;
 	/**
 	 * @var Player
 	 */
@@ -23,26 +22,17 @@ class BuildingBuy {
 //_____________________________________________________________________________
 //	Constructor
 	
-	function __construct( $iLocX, $iLocY, EntityType $oEntityType, Player $oPlayer ) {
-		$this->_iLocationX = $iLocX;
-		$this->_iLocationY = $iLocY;
-		$this->_oEntityType = $oEntityType;
+	public function __construct( $oLoc, PawnType $oPawnType, Player $oPlayer ) {
+		$this->_oLocation = $oLoc;
+		$this->_oPawnType = $oPawnType;
 		$this->_oPlayer = $oPlayer;
 	}
 	
 //_____________________________________________________________________________
 //	Accessor
 
-	function getEntityType() {
-		return $this->_oEntityType;
-	}
-	
-	function getLocationX() {
-		return $this->_iLocationX;
-	}
-	
-	function getLocationY() {
-		return $this->_iLocationY;
+	function getPawnType() {
+		return $this->_oPawnType;
 	}
 	
 	function getPlayer() {
@@ -50,29 +40,20 @@ class BuildingBuy {
 	}
 	
 	function getLocation() {
-		return new Location( 
-			$this->getLocationX(), 
-			$this->getLocationY() 
-		);
+		return $this->_oLocation;
 	}
 	
 //_____________________________________________________________________________
 //	Modifier
 	
-	function setEntityType( $o ) {
-		$this->_oEntityType = $o;
+	function setPawnType( $o ) {
+		$this->_oPawnType = $o;
 	}
 	
-	function setLocationX( $i ) {
-		$this->_iLocationX = $i;
+	function setLocation( $o ) {
+		$this->_oLocation = $o;
 	}
-	
-	function setLocationY( $i ) {
-		$this->_iLocationY = $i;
-	}
-	
 
-	
 //_____________________________________________________________________________
 //	Validation
 
@@ -83,6 +64,6 @@ class BuildingBuy {
 	 * )
 	 */
 	function getPlayerCreditNew() {
-		return $this->_oPlayer->getCredit() - $this->_oEntityType->getValue();
+		return $this->_oPlayer->getCredit() - $this->_oPawnType->getValue();
 	}
 }

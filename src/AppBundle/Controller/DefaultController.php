@@ -17,7 +17,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Game;
-use homeplanet\entity\EntityFactory;
 use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
 use homeplanet\Form\TradeRouteCreationForm;
 use homeplanet\entity\TradeRouteFactory;

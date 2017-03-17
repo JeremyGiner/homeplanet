@@ -40,6 +40,11 @@ class Location {
 		return floor( $this->_y / 13 );
 	}
 	
+	public function getDist( Location $oLoc ) {
+		return abs($this->_x - $oLoc->_x)+
+			abs($this->_y - $oLoc->_y);
+	}
+	
 //______________________________________________________________________________
 //	Sub-routine
 	

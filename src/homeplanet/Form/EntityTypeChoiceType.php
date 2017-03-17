@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Doctrine\ORM\EntityRepository;
-use homeplanet\Entity\EntityType as GameEntityType;
+use homeplanet\Entity\PawnType as GameEntityType;
 
 
 class EntityTypeChoiceType extends AbstractType {

@@ -1,0 +1,45 @@
+{% extends 'page/index.html.twig' %}
+{% import 'homeplanet/macro/commun.twig' as commun %}
+
+{% block post_navbar %}
+
+<div class="container-fluid">
+<nav 
+	id="{{ HTMLid|default('') }}" 
+	class="navbar navbar-default {{ HTMLclass|default('') }}"
+>
+	<div class="navbar-header pull-left">
+		<ul class="nav navbar-nav">
+			{% set linkAr = [
+				{ route: 'play', label: 'Overview' },
+				{ route: 'asset', label: 'Asset' },
+				{ route: 'map_overview', label: 'Map' },
+			] %}
+			{% for item in linkAr %}
+			<li class="{{ item.route == route_current ? 'active' }} {{ item.HTMLClass|default('') }}">
+				<a href="{{ item.route=='' ? '#' : path( item.route ) }}">
+					{{ item.label }}
+				</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div class="navbar-header pull-right">
+		<ul class="nav navbar-nav">
+			<li>
+				<p class="navbar-text">
+					Cart : {{ gameview.player.ext.cartUsed }} / {{ gameview.player.cart }}
+					<span class="icon ress-sprite ress-sprite-7-3"></span>
+				</p>
+			</li>
+			<li>
+				<p class="navbar-text">
+					Credit : {{ commun.credit( gameview.player.credit ) }}
+				</p>
+			</li>
+		</ul>
+	</div>
+</nav>
+</div>
+
+{% endblock %}
