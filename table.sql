@@ -49,13 +49,13 @@ CREATE TABLE IF NOT EXISTS `gamestate` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table gigablaster.influence
-CREATE TABLE IF NOT EXISTS `influence` (
+-- Dumping structure for table gigablaster.influencemodifier
+CREATE TABLE IF NOT EXISTS `influencemodifier` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sovereign_id` int(10) unsigned NOT NULL,
   `city_id` int(10) unsigned NOT NULL,
   `type_id` int(10) unsigned NOT NULL,
-  `value` int(10) unsigned NOT NULL,
+  `value` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `sovereing_id_city_id` (`sovereign_id`,`city_id`,`type_id`),
   KEY `FK_sovereign_city_influencetype` (`type_id`),
@@ -73,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `influence` (
 CREATE TABLE IF NOT EXISTS `influencetype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
+  `value` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -122,7 +123,7 @@ CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
   `location_x` int(10) NOT NULL,
   `location_y` int(10) NOT NULL,
   PRIMARY KEY (`pawn_id`,`location_x`,`location_y`),
-  CONSTRAINT `FK_entity_location_assoc_entity` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE
+  CONSTRAINT `FK_entity_location_assoc_entity` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -225,6 +226,35 @@ CREATE TABLE IF NOT EXISTS `prodtype_prodinputtype_assoc` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table gigablaster.relationshipmodifier
+CREATE TABLE IF NOT EXISTS `relationshipmodifier` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(10) unsigned NOT NULL,
+  `sovereign_id` int(10) unsigned NOT NULL,
+  `type_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `player_id` (`player_id`),
+  KEY `sovereign_id` (`sovereign_id`),
+  KEY `type_id` (`type_id`),
+  CONSTRAINT `FK_relationshipmodifier_player` FOREIGN KEY (`player_id`) REFERENCES `player` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_relationshipmodifier_sovereign` FOREIGN KEY (`sovereign_id`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.relationshiptype
+CREATE TABLE IF NOT EXISTS `relationshiptype` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) DEFAULT NULL,
+  `description` text NOT NULL,
+  `value` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table gigablaster.rescategory
 CREATE TABLE IF NOT EXISTS `rescategory` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -263,6 +293,8 @@ CREATE TABLE IF NOT EXISTS `sovereign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) DEFAULT NULL,
   `capital` int(10) unsigned NOT NULL,
+  `taxe_ratio` float unsigned NOT NULL DEFAULT '1',
+  `budget` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_sovereign_city` (`capital`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -294,9 +326,9 @@ CREATE TABLE IF NOT EXISTS `_view_note` (
 -- Dumping structure for view gigablaster.city_distance
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `city_distance` (
-	`pawn0_id` INT(10) UNSIGNED NOT NULL,
-	`pawn1_id` INT(10) UNSIGNED NULL,
-	`dist` BIGINT(13) NOT NULL
+	`city0_id` INT(10) UNSIGNED NOT NULL,
+	`city1_id` INT(10) UNSIGNED NULL,
+	`dist` BIGINT(13) NULL
 ) ENGINE=MyISAM;
 
 
@@ -304,8 +336,27 @@ CREATE TABLE `city_distance` (
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `city_sovereign` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
-	`sovereign_id` INT(10) UNSIGNED NULL,
-	`sum_value` DECIMAL(32,0) NULL
+	`sovereign_id` INT(11) UNSIGNED NULL,
+	`sum_value` DOUBLE(17,0) NULL
+) ENGINE=MyISAM;
+
+
+-- Dumping structure for view gigablaster.influence
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `influence` (
+	`city_id` INT(11) UNSIGNED NOT NULL,
+	`sovereign_id` INT(11) UNSIGNED NOT NULL,
+	`type_id` BIGINT(20) UNSIGNED NOT NULL,
+	`value` DOUBLE(17,0) NULL
+) ENGINE=MyISAM;
+
+
+-- Dumping structure for view gigablaster.influence_relationship
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `influence_relationship` (
+	`city_id` INT(10) UNSIGNED NOT NULL,
+	`sovereign_id` INT(10) UNSIGNED NOT NULL,
+	`value` DOUBLE(17,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -313,8 +364,8 @@ CREATE TABLE `city_sovereign` (
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `influence_sum` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
-	`sovereign_id` INT(10) UNSIGNED NULL,
-	`sum_value` DECIMAL(32,0) NULL
+	`sovereign_id` INT(11) UNSIGNED NULL,
+	`sum_value` DOUBLE(17,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -331,8 +382,8 @@ CREATE TABLE `overcrowd` (
 -- Dumping structure for view gigablaster.player_ext
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `player_ext` (
-	`player_id` INT(10) UNSIGNED NULL,
-	`cart_used` DECIMAL(32,0) NULL
+	`player_id` INT(10) UNSIGNED NOT NULL,
+	`cart_used` DECIMAL(32,0) NOT NULL
 ) ENGINE=MyISAM;
 
 
@@ -356,13 +407,23 @@ CREATE TABLE `prod_sum` (
 ) ENGINE=MyISAM;
 
 
+-- Dumping structure for view gigablaster.relationship
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `relationship` (
+	`id` INT(10) UNSIGNED NOT NULL,
+	`player_id` INT(10) UNSIGNED NOT NULL,
+	`sovereign_id` INT(10) UNSIGNED NOT NULL,
+	`type_id` INT(10) UNSIGNED NOT NULL
+) ENGINE=MyISAM;
+
+
 -- Dumping structure for view gigablaster.sold
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `sold` (
 	`seller_id` INT(10) UNSIGNED NOT NULL,
 	`buyer_id` INT(10) UNSIGNED NOT NULL,
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` INT(10) UNSIGNED NOT NULL
+	`quantity` DOUBLE(17,0) NOT NULL
 ) ENGINE=MyISAM;
 
 
@@ -528,6 +589,34 @@ END//
 DELIMITER ;
 
 
+-- Dumping structure for procedure gigablaster.influence_military_update
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `influence_military_update`()
+BEGIN
+
+	# Create military influence on city already under control
+	INSERT INTO influencemodifier ( city_id, sovereign_id, type_id, value )
+	SELECT 
+		city_sovereign.city_id,
+		city_sovereign.sovereign_id,
+		3, #military
+		sovereign.budget
+	FROM city_sovereign
+	JOIN sovereign ON sovereign.id = city_sovereign.sovereign_id
+	JOIN influence_sum ON influence_sum.sovereign_id = sovereign.id
+	ON DUPLICATE KEY UPDATE influencemodifier.value = sovereign.budget;
+	
+	# Delete military on city out of control
+	DELETE influencemodifier
+	FROM influencemodifier
+	LEFT JOIN city_sovereign ON city_sovereign.city_id = influencemodifier.city_id
+		AND city_sovereign.sovereign_id = influencemodifier.sovereign_id
+	WHERE influencemodifier.type_id = 3 #military
+		AND city_sovereign.city_id IS NULL;
+END//
+DELIMITER ;
+
+
 -- Dumping structure for procedure gigablaster.population_growth_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `population_growth_update`()
@@ -601,7 +690,48 @@ BEGIN
 		JOIN ressource 
 			ON ressource.id = prodinputtype.ressource_id
 			AND ressource.`natural` = 0
-		
+		WHERE prodtype.ressource_id != 1 # exclude sell
+		GROUP BY prod.id
+	) AS tprod_percent ON prod.id = tprod_percent.prod_id
+	SET prod.percent_max = tprod_percent.percent;
+	
+/* Update SELL prod percent depending on the availability of prodinput and the demand */
+	UPDATE prod 
+	
+	JOIN (
+				SELECT 
+			prod.id as prod_id,
+			LEAST(
+				1.0,
+				MIN(
+					( 
+						( prodinputtype.quantity / prodinput_sum.quantity ) * IFNULL(prod_sum.quantity, 0) 
+					) / prodinputtype.quantity
+				)
+			)
+			* IF(MAX(demand.price_modifier) IS NULL,0,1) as percent
+		FROM prod
+		JOIN prodtype ON prodtype.id = prod.prodtype_id
+		JOIN prodinput ON prodinput.prod_id = prod.id
+		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+		LEFT JOIN prod_sum 
+			ON prod_sum.location_x = prodinput.location_x
+			AND prod_sum.location_y = prodinput.location_y
+			AND prod_sum.ressource_id = prodinputtype.ressource_id
+		LEFT JOIN prodinput_sum
+			ON prodinput_sum.location_x = prodinput.location_x
+			AND prodinput_sum.location_y = prodinput.location_y
+			AND prodinput_sum.ressource_id = prodinputtype.ressource_id
+		JOIN ressource 
+			ON ressource.id = prodinputtype.ressource_id
+			AND ressource.`natural` = 0
+		LEFT JOIN city 
+			ON city.location_x = prod.location_x
+			AND city.location_y = prod.location_y
+		LEFT JOIN demand 
+			ON demand.city_id = city.id
+			AND demand.ressource_id = prodinputtype.ressource_id
+		WHERE prodtype.ressource_id = 1 # exclude sell
 		GROUP BY prod.id
 	) AS tprod_percent ON prod.id = tprod_percent.prod_id
 	SET prod.percent_max = tprod_percent.percent;
@@ -615,13 +745,74 @@ DELIMITER ;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `reset`()
 BEGIN
-	TRUNCATE entity;
-	TRUNCATE entity_location_assoc;
-	TRUNCATE prod;
-	TRUNCATE population;
-	TRUNCATE prodinput;
-	TRUNCATE location;
-	TRUNCATE demand;
+	DELETE FROM pawn;
+	DELETE FROM city;
+	DELETE FROM sovereign;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure gigablaster.sovereign_budget_update
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sovereign_budget_update`()
+BEGIN
+
+	UPDATE sovereign 
+	JOIN (
+		SELECT 
+			city_sovereign.sovereign_id,
+			SUM(population.quantity) as pop
+		FROM city
+		JOIN city_sovereign ON city_sovereign.city_id = city.id
+		JOIN population ON population.city_id = city.id
+		GROUP BY city_sovereign.sovereign_id
+	) t ON t.sovereign_id = sovereign.id
+	SET sovereign.budget = t.pop * sovereign.taxe_ratio;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure gigablaster.sovereign_spawn
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sovereign_spawn`()
+BEGIN
+	DECLARE bDone INT;
+
+	DECLARE city_id INT;
+	DECLARE sovereign_id INT;
+	
+	DECLARE curs CURSOR FOR
+		# Get all big city with no influence 
+		SELECT 
+			city.id as city_id 
+		FROM city
+		JOIN population ON population.city_id = city.id
+		JOIN influence_sum ON influence_sum.city_id = city.id 
+			AND influence_sum.sum_value IS NULL
+		WHERE population.quantity >= 10;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET bDone = 1;
+
+	OPEN curs;
+
+	SET bDone = 0;
+	loopy: LOOP
+		
+		FETCH curs INTO city_id;
+		IF bDone = 1 THEN LEAVE loopy; END IF;
+		
+		START TRANSACTION;
+			INSERT INTO sovereign(capital)
+			VALUES (city_id);
+			
+			SET sovereign_id = LAST_INSERT_ID();
+			
+			INSERT INTO influencemodifier(sovereign_id,city_id,type_id,value)
+			VALUES (sovereign_id,city_id,1,100);
+		COMMIT;
+	
+	END LOOP loopy;
+
+	CLOSE curs;
 END//
 DELIMITER ;
 
@@ -641,6 +832,10 @@ BEGIN
 	
 	CALL `income_update`();
 	CALL `credit_update`();
+	
+	CALL `sovereign_budget_update`();
+	CALL `influence_military_update`();
+	CALL `sovereign_spawn`();
 END//
 DELIMITER ;
 
@@ -648,13 +843,25 @@ DELIMITER ;
 -- Dumping structure for view gigablaster.city_distance
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `city_distance`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_distance` AS select `et0`.`id` AS `pawn0_id`,`et1`.`id` AS `pawn1_id`,(abs((`loc0`.`location_x` - `loc1`.`location_x`)) + abs((`loc0`.`location_y` - `loc1`.`location_y`))) AS `dist` from (((`pawn` `et0` join `pawn_location_assoc` `loc0` on((`loc0`.`pawn_id` = `et0`.`id`))) left join `pawn` `et1` on((`et0`.`id` <> `et1`.`id`))) join `pawn_location_assoc` `loc1` on((`loc1`.`pawn_id` = `et1`.`id`))) where ((`et0`.`type_id` = 1) and (`et1`.`type_id` = 1));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_distance` AS select `c0`.`id` AS `city0_id`,`c1`.`id` AS `city1_id`,(abs((`c1`.`location_x` - `c0`.`location_x`)) + abs((`c1`.`location_y` - `c0`.`location_y`))) AS `dist` from (`city` `c0` left join `city` `c1` on((`c1`.`id` <> `c0`.`id`)));
 
 
 -- Dumping structure for view gigablaster.city_sovereign
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `city_sovereign`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_sovereign` AS select `t`.`city_id` AS `city_id`,`t`.`sovereign_id` AS `sovereign_id`,`t`.`sum_value` AS `sum_value` from (`gigablaster`.`influence_sum` `t` join (select `influence_sum`.`city_id` AS `city_id`,max(`influence_sum`.`sum_value`) AS `max_value` from `gigablaster`.`influence_sum` group by `influence_sum`.`city_id`) `tmax` on(((`tmax`.`city_id` = `t`.`city_id`) and (`t`.`sum_value` = `tmax`.`max_value`))));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_sovereign` AS select `t`.`city_id` AS `city_id`,min(`t`.`sovereign_id`) AS `sovereign_id`,`t`.`sum_value` AS `sum_value` from (`gigablaster`.`influence_sum` `t` join (select `influence_sum`.`city_id` AS `city_id`,max(`influence_sum`.`sum_value`) AS `max_value` from `gigablaster`.`influence_sum` group by `influence_sum`.`city_id`) `tmax` on(((`tmax`.`city_id` = `t`.`city_id`) and (`t`.`sum_value` = `tmax`.`max_value`)))) group by `t`.`city_id`;
+
+
+-- Dumping structure for view gigablaster.influence
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `influence`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `influence` AS select `influencemodifier`.`city_id` AS `city_id`,`influencemodifier`.`sovereign_id` AS `sovereign_id`,`influencemodifier`.`type_id` AS `type_id`,`influencemodifier`.`value` AS `value` from `influencemodifier` union select `influence_relationship`.`city_id` AS `city_id`,`influence_relationship`.`sovereign_id` AS `sovereign_id`,4 AS `4`,`influence_relationship`.`value` AS `value` from `influence_relationship`;
+
+
+-- Dumping structure for view gigablaster.influence_relationship
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `influence_relationship`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `influence_relationship` AS select `city`.`id` AS `city_id`,`relationship`.`sovereign_id` AS `sovereign_id`,sum(`sold`.`quantity`) AS `value` from (((`city` join `sold` on((`sold`.`buyer_id` = `city`.`id`))) join `pawn` on((`pawn`.`id` = `sold`.`seller_id`))) join `relationship` on((`relationship`.`player_id` = `pawn`.`player_id`))) group by `city`.`id`,`relationship`.`sovereign_id`;
 
 
 -- Dumping structure for view gigablaster.influence_sum
@@ -672,7 +879,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view gigablaster.player_ext
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `player_ext`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `t_cart`.`player_id` AS `player_id`,`t_cart`.`cart_used` AS `cart_used` from (select `gigablaster`.`pawn`.`player_id` AS `player_id`,sum(`gigablaster`.`pawn`.`level`) AS `cart_used` from `gigablaster`.`pawn` where (`gigablaster`.`pawn`.`type_id` = 10) group by `gigablaster`.`pawn`.`player_id`) `t_cart`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `t_cart`.`player_id` AS `player_id`,`t_cart`.`cart_used` AS `cart_used` from (select `gigablaster`.`player`.`id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`level`),0) AS `cart_used` from (`gigablaster`.`player` left join `gigablaster`.`pawn` on(((`gigablaster`.`pawn`.`player_id` = `gigablaster`.`player`.`id`) and (`gigablaster`.`pawn`.`type_id` = 10)))) group by `gigablaster`.`player`.`id`) `t_cart`;
 
 
 -- Dumping structure for view gigablaster.prodinput_sum
@@ -687,10 +894,16 @@ DROP TABLE IF EXISTS `prod_sum`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prod_sum` AS select `prod`.`location_x` AS `location_x`,`prod`.`location_y` AS `location_y`,`prodtype`.`ressource_id` AS `ressource_id`,floor(sum((`prodtype`.`quantity` * `prod`.`percent_max`))) AS `quantity` from (`prod` join `prodtype` on((`prodtype`.`id` = `prod`.`prodtype_id`))) group by `prod`.`location_x`,`prod`.`location_y`,`prodtype`.`ressource_id`;
 
 
+-- Dumping structure for view gigablaster.relationship
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `relationship`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `relationship` AS select `relationshipmodifier`.`id` AS `id`,`relationshipmodifier`.`player_id` AS `player_id`,`relationshipmodifier`.`sovereign_id` AS `sovereign_id`,`relationshipmodifier`.`type_id` AS `type_id` from `relationshipmodifier`;
+
+
 -- Dumping structure for view gigablaster.sold
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `sold`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,`prodinputtype`.`quantity` AS `quantity` from ((((((`player` join `pawn` `seller` on((`seller`.`player_id` = `player`.`id`))) join `prod` on((`prod`.`pawn_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`))));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,floor((`prodinputtype`.`quantity` * `prod`.`percent_max`)) AS `quantity` from (((((((`player` join `pawn` `seller` on((`seller`.`player_id` = `player`.`id`))) join `prod` on((`prod`.`pawn_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`)))) join `demand` on(((`demand`.`city_id` = `buyer`.`id`) and (`demand`.`ressource_id` = `prodinputtype`.`ressource_id`))));
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

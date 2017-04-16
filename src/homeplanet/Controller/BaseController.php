@@ -86,7 +86,7 @@ class BaseController extends Controller {
 		$aCity = $a;
 			
 		return [
-				'player' => $oGame->getContextPlayer(),
+				'player' => $oGame->getPlayer(),
 				'location' => $oLocation,
 				'zoom' => 0,
 				'game' => $oGame,

@@ -79,6 +79,25 @@ class Printo extends \Twig_Extension {
 		$oReflexion = new \ReflectionClass($object);
 		//$aName = explode('\\', $oReflexion->getName());
 		
-		return 'printo/'.$oReflexion->getShortName().'.html.twig';
+		$sSuffix = $this->_getSuffixe($aParam);
+		return 'printo/'.$oReflexion->getShortName().$sSuffix.'.html.twig';
+	}
+	
+	private function _getSuffixe( $aParam ) {
+		
+		$mSuffixeParam = null;
+		$mSuffixeParam = isset( $aParam[0] ) ? $aParam[0] : $mSuffixeParam;
+		$mSuffixeParam = isset( $aParam['_suffix'] ) ? $aParam['_suffix'] : $mSuffixeParam;
+		
+		if( $mSuffixeParam === null )
+			return '';
+		
+		if( is_array($mSuffixeParam) )
+			return '_'.implode('_',$mSuffixeParam);
+		if( is_string($mSuffixeParam) )
+			return '_'.$mSuffixeParam;
+		
+		throw new \Exception('Invalid param suffix');
+		
 	}
 }

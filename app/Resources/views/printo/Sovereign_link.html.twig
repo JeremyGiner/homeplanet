@@ -1,0 +1,5 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+<a href="{{ path('sovereign', {'id': o.id} ) }}">
+	{{ o.label|default('Unnamed') }}
+	#{{ o.id }}
+</a>

@@ -1,0 +1,34 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+<h4>{{ o.label|default('Unamed') }}</h4>
+<p>
+Description : Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas augue leo, ullamcorper sed mauris non, suscipit feugiat augue. Integer laoreet elit felis, a imperdiet nulla sagittis ut. Aenean tortor arcu, lobortis non sollicitudin vel, pretium at ante. Sed a elit urna. In porta, quam id varius dictum, lectus lectus fringilla nulla, ut hendrerit risus tellus at ex.
+</p>
+<h4>Relationship</h4>
+<table class="table">
+<thead>
+	<tr>
+		<th>Type</th>
+		<th>Value</th>
+	</tr>
+</thead>
+<tbody>
+{% for oRelationship in param.relationshipAr %}
+	<tr>
+		<th colspan="99">
+			{{ oRelationship.type.label }}
+		</th>
+		<td>
+			{{ 10 }}
+		</td>
+	</tr>
+{% endfor %}
+{% if param.relationshipAr is empty  %}
+	<tr>
+		<td class="text-muted" colspan="99">
+			<small>No interactions in effect for this sovereign</small>
+		</td>
+	</tr>
+{% endif %}
+</tbody>
+</table>
+{{ form(param.form) }}

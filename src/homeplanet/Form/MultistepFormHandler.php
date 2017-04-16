@@ -104,7 +104,6 @@ class MultistepFormHandler {
 	}
 	
 	public function reset() {
-		var_dump('hard reset');
 		$this->_oSession->remove($this->_sSessionKey);
 	}
 	
@@ -126,7 +125,6 @@ class MultistepFormHandler {
 		
 		// Case : Reset
 		if( $oForm->has('_reset') && $oForm->get('_reset')->isClicked() ) {
-			var_dump('reset');
 			$this->_iStep = 0;
 			$this->_oData = null;
 			return;
@@ -134,8 +132,7 @@ class MultistepFormHandler {
 		
 		// Case : back
 		if( $oForm->has('_prev') && $oForm->get('_prev')->isClicked() ) {
-			var_dump('prev');
-			$this->_iStep = max(0,$this->_iStep--);
+			$this->_iStep = max(0,$this->_iStep-1);
 			return;
 		}
 		

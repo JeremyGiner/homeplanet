@@ -20,7 +20,7 @@ use homeplanet\Entity\Ressource;
 /**
  * Create trade route entity
  */
-class MerchantFactory extends Entity {
+class MerchantFactory extends Pawn {
 	
 	/**
 	 * @Assert\NotBlank()

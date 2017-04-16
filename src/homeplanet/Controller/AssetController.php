@@ -287,7 +287,6 @@ class AssetController extends BaseController {
 		$oData = $oStepHandler->getData( $oData );
 		
 		$oForm = $this->createForm(TradeRouteCreationForm::class,$oData,[
-			'validation_groups' => ['form_step1'],
 			'game' => $this->_oGame,
 			'step' => $oStepHandler->getStep(),
 			'repo' => $oGame->getPawnRepo(),
@@ -312,7 +311,6 @@ class AssetController extends BaseController {
 			}
 			
 			$oForm = $this->createForm(TradeRouteCreationForm::class,$oForm->getData(),[
-				'validation_groups' => ['form_step1'],
 				'game' => $this->_oGame,
 				'step' => $oStepHandler->getStep(),
 			]+$a);

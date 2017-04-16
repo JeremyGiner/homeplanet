@@ -12,6 +12,7 @@ use homeplanet\Entity\attribute\ProductionType;
 use Doctrine\ORM\EntityRepository;
 use homeplanet\tool\TileValidatorRange;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormInterface;
 
 class TradeRouteCreationForm extends MultistepType {
 	
@@ -26,6 +27,11 @@ class TradeRouteCreationForm extends MultistepType {
 			'gameview' => null,
 			'game' => null,
 			'repo' => null,
+			'validation_groups' => function (FormInterface $form) {
+				//TODO
+				//var_dump( $form->getConfig()->getOption('step') );
+				return ['form_step1'];
+			}
 		]);
 	}
 	

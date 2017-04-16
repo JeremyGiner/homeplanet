@@ -1,6 +1,56 @@
-<h4>City {{ o.label }}</h4>
-population : {{ o.getPopulation().getQuantity() }} 
-(+{{ o.getPopulation().getGrowth() }})<br>
+{% import 'homeplanet/macro/commun.twig' as commun %}
+{# Index demand by certain category #}
+{% set a = [] %}
+{% set aResCat = [] %}
+{% for oDemand in o.getDemandAr() %}
+	{% set key = null %}
+	{% for oResCat in oDemand.ressource.categoryAr
+		if oResCat.id in [5,1,10,11,4,]
+	%}
+		{% set key = oResCat.id %}
+		
+		{% set aResCat = array_set( aResCat, key, oResCat) %}
+	{% endfor %}
+	{% set key = key == null ? -1 : key %}
+	{% set a = a[key] is not defined ? array_set( a, key, [] ) : a %}
+	{% set a = array_set( a, key, a[key]|merge([oDemand])) %}
+{% endfor %}
+
+
+<h4>
+	City {{ o.label }}
+	<small class="pull-right">
+		population : {{ o.getPopulation().getQuantity() }} 
+		({{ o.population.growth > 0 ? '+'~o.population.growth : o.population.growth }})<br>
+	</small>
+</h4>
+
+
+<div class="row">
+<div class="col-xs-6">
+	<p>
+		City description : 
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin varius, enim quis cursus ultrices, nisl metus vehicula felis, in pharetra metus mi nec elit. In consequat massa ligula, vitae euismod lectus suscipit nec. Pellentesque iaculis lacinia eros at finibus. Phasellus leo metus, rhoncus auctor rhoncus at, sollicitudin vitae magna.
+	</p>
+</div>
+<div class="col-xs-6">
+	{% if o.sovereign != null %}
+		Ruler : {{ printo(o.sovereign,['link']) }}
+	{% endif %}
+	<ul class="list-group">
+	{% for influence in o.influenceAr %}
+		<li class="list-group-item">
+			{{ printo(o.sovereign,['link']) }},
+			{{ influence.type.label }}
+			<span class="pull-right">
+				{{ influence.value }}
+			</span>
+		</li>
+	{% endfor %}
+	</ul>
+</div>
+</div>
+
 <table class="table">
 <thead>
 	<tr>
@@ -10,18 +60,29 @@ population : {{ o.getPopulation().getQuantity() }}
 	</tr>
 </thead>
 <tbody>
-{% for oDemand in o.getDemandAr() %}
+{% for iResCategoyId, aDemand in a %}
+	<tr>
+		<th colspan="99">
+			{{
+				aResCat[iResCategoyId] is defined ?
+				aResCat[iResCategoyId].label|capitalize :
+				'Other'
+			}}
+		</th>
+	</tr>
+	{% for oDemand in aDemand %}
 	<tr>
 		<td>
 			{{ printo(oDemand.getRessource()) }}
 		</td>
 		<td>
-			{{ oDemand.getPriceModifier()*100 }} %
+			x{{ oDemand.getPriceModifier()|number_format(2) }}
 		</td>
 		<td>
-			{{ oDemand.getPrice() }}
+			{{ commun.credit( oDemand.getPrice() ) }}
 		</td>
 	</tr>
+	{% endfor %}
 {% endfor %}
 </tbody>
 </table>

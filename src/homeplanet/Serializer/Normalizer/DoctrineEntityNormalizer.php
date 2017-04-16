@@ -81,9 +81,6 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 	 * @return bool
 	*/
 	public function supportsDenormalization($data, $type, $format = null) {
-		var_dump($data);
-		
-		
 		if( !isset($data['class']) )
 			return false;
 		

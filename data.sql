@@ -21,16 +21,20 @@
 /*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.influence: ~0 rows (approximately)
-/*!40000 ALTER TABLE `influence` DISABLE KEYS */;
-/*!40000 ALTER TABLE `influence` ENABLE KEYS */;
+-- Dumping data for table gigablaster.influencemodifier: ~0 rows (approximately)
+/*!40000 ALTER TABLE `influencemodifier` DISABLE KEYS */;
+/*!40000 ALTER TABLE `influencemodifier` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.influencetype: ~2 rows (approximately)
 /*!40000 ALTER TABLE `influencetype` DISABLE KEYS */;
-INSERT INTO `influencetype` (`id`, `label`) VALUES
-	(1, 'economic');
-INSERT INTO `influencetype` (`id`, `label`) VALUES
-	(2, 'politic');
+INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
+	(1, 'economic', 10);
+INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
+	(2, 'politic', 10);
+INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
+	(3, 'military', 1);
+INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
+	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.pawn: ~0 rows (approximately)
@@ -116,7 +120,7 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 -- Dumping data for table gigablaster.player: ~2 rows (approximately)
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
 INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
-	(1, 1, 'Sir toto', 95371, 0, 3);
+	(1, 1, 'Sir toto', 700, 0, 3);
 INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
 	(2, 2, 'Mastert itit', 100, 0, 5);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
@@ -271,6 +275,16 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(490, 330);
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` ENABLE KEYS */;
 
+-- Dumping data for table gigablaster.relationshipmodifier: ~2 rows (approximately)
+/*!40000 ALTER TABLE `relationshipmodifier` DISABLE KEYS */;
+/*!40000 ALTER TABLE `relationshipmodifier` ENABLE KEYS */;
+
+-- Dumping data for table gigablaster.relationshiptype: 1 rows
+/*!40000 ALTER TABLE `relationshiptype` DISABLE KEYS */;
+INSERT INTO `relationshiptype` (`id`, `label`, `description`, `value`) VALUES
+	(1, 'gift', 'Sovereign have been given a gift.', 10);
+/*!40000 ALTER TABLE `relationshiptype` ENABLE KEYS */;
+
 -- Dumping data for table gigablaster.rescategory: ~10 rows (approximately)
 /*!40000 ALTER TABLE `rescategory` DISABLE KEYS */;
 INSERT INTO `rescategory` (`id`, `label`) VALUES
@@ -295,7 +309,7 @@ INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(13, 'tradable');
 /*!40000 ALTER TABLE `rescategory` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.ressource: ~63 rows (approximately)
+-- Dumping data for table gigablaster.ressource: ~57 rows (approximately)
 /*!40000 ALTER TABLE `ressource` DISABLE KEYS */;
 INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`) VALUES
 	(1, 'Credit(sell/buy)', 1, 0);
@@ -425,7 +439,7 @@ INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`) VALUES
 	(212, 'gold bar', 10, 0);
 /*!40000 ALTER TABLE `ressource` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.ressource_rescategory: ~74 rows (approximately)
+-- Dumping data for table gigablaster.ressource_rescategory: ~76 rows (approximately)
 /*!40000 ALTER TABLE `ressource_rescategory` DISABLE KEYS */;
 INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(1, 13);
@@ -577,7 +591,7 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 212);
 /*!40000 ALTER TABLE `ressource_rescategory` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.sovereign: ~0 rows (approximately)
+-- Dumping data for table gigablaster.sovereign: ~3 rows (approximately)
 /*!40000 ALTER TABLE `sovereign` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sovereign` ENABLE KEYS */;
 
@@ -589,12 +603,22 @@ INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 	(2, 'Titi', 'titi@gmail.com', '$2y$12$905JS5gAdmNS.c5VM10ksObhf9sBsWDnl8opgKS6kBJlZ6qxyPIPS');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
--- Dumping data for table gigablaster._view_note: 2 rows
+-- Dumping data for table gigablaster._view_note: 7 rows
 /*!40000 ALTER TABLE `_view_note` DISABLE KEYS */;
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
-	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	prodinputtype.quantity AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y');
+	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
-	('player_ext', 'SELECT * \r\nFROM (\r\n	SELECT \r\n		pawn.player_id,\r\n		SUM(pawn.`level`) as cart_used\r\n	FROM pawn\r\n	WHERE pawn.type_id = 10 #transport\r\n	GROUP BY pawn.player_id\r\n) t_cart');
+	('player_ext', 'SELECT * \r\nFROM (\r\n	SELECT \r\n		player.id as player_id,\r\n		IFNULL(SUM(pawn.`level`), 0) as cart_used\r\n	FROM player\r\n	LEFT JOIN pawn ON pawn.player_id = player.id\r\n		AND pawn.type_id = 10 #transport\r\n	GROUP BY player.id\r\n) t_cart');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('city_distance', 'SELECT \r\n	c0.id as city0_id,\r\n	c1.id as city1_id,\r\n	abs(c1.location_x - c0.location_x)\r\n	+abs(c1.location_y - c0.location_y) as dist\r\nFROM city as c0\r\nLEFT JOIN city as c1 ON c1.id != c0.id\r\n');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('relationship', 'SELECT \r\n	*\r\nFROM relationshipmodifier');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('influence_relationship', 'SELECT \r\n	city.id as city_id,\r\n	relationship.sovereign_id,\r\n	SUM(sold.quantity) as value\r\nFROM city\r\nJOIN sold ON sold.buyer_id = city.id\r\nJOIN pawn ON pawn.id = sold.seller_id\r\nJOIN relationship ON relationship.player_id = pawn.player_id\r\nGROUP BY city.id, relationship.sovereign_id');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('influence', '	SELECT \r\n		influencemodifier.city_id,\r\n		influencemodifier.sovereign_id,\r\n		influencemodifier.type_id,\r\n		influencemodifier.value\r\n	FROM influencemodifier\r\nUNION\r\n	SELECT\r\n		influence_relationship.city_id,\r\n		influence_relationship.sovereign_id,\r\n		4, #provider\r\n		influence_relationship.value\r\n	FROM influence_relationship');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('city_sovereign', 'SELECT \r\n	`t`.`city_id` AS `city_id`,\r\n	MIN(`t`.`sovereign_id`) AS `sovereign_id`,\r\n	`t`.`sum_value` AS `sum_value` \r\nFROM `gigablaster`.`influence_sum` `t` \r\nJOIN (\r\n	SELECT \r\n		`influence_sum`.`city_id` AS `city_id`,\r\n		MAX(`influence_sum`.`sum_value`) AS `max_value` \r\n	FROM `gigablaster`.`influence_sum` \r\n	GROUP BY `influence_sum`.`city_id`\r\n) `tmax` \r\n	ON `tmax`.`city_id` = `t`.`city_id`\r\n	AND `t`.`sum_value` = `tmax`.`max_value`\r\nGROUP BY `t`.`city_id`');
 /*!40000 ALTER TABLE `_view_note` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

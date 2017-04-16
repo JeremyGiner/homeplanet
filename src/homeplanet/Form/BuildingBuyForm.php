@@ -43,7 +43,7 @@ class BuildingBuyForm extends AbstractType {
 				'query_builder' => function(EntityRepository $er) {
 					return $er->createQueryBuilder('u')
 						->where('u._sLabel not in ( :filter)')
-						->setParameter('filter', ['city','merchant','trade route']);
+						->setParameter('filter', ['trade route']);
 				},
 			])
 			->add('submit',SubmitType::class);

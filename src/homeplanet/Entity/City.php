@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="city")
  * @ORM\Entity(repositoryClass="homeplanet\Repository\CityRepository")
  */
@@ -58,6 +57,26 @@ class City {
 	 */
 	protected $_oPopulation;
 	
+	/**
+	 * @ORM\ManyToMany(targetEntity="homeplanet\Entity\Sovereign")
+	 * @ORM\JoinTable(
+	 *     name="city_sovereign",
+	 *     joinColumns={@ORM\JoinColumn(name="city_id", referencedColumnName="id")},
+	 *     inverseJoinColumns={@ORM\JoinColumn(name="sovereign_id", referencedColumnName="id")}
+	 * )
+	 * @var ArrayCollection
+	 */
+	protected $_aSovereign;
+	
+	/**
+	 * @ORM\OneToMany(
+	 *     targetEntity="\homeplanet\Entity\Influence",
+	 *     mappedBy="_oCity"
+	 * )
+	 * @var ArrayCollection
+	 */
+	protected $_aInfluence;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
@@ -85,6 +104,14 @@ class City {
 	
 	public function getLocation() {
 		return new Location($this->_x, $this->_y);
+	}
+	
+	public function getSovereign() {
+		return $this->_aSovereign->first();
+	}
+	
+	public function getInfluenceAr() {
+		return $this->_aInfluence->toArray();
 	}
 	
 //_____________________________________________________________________________

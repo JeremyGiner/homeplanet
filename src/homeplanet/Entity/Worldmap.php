@@ -54,8 +54,10 @@ class Worldmap {
 	
 	public function loadRegion( $iRegionX, $iRegionY ) {
 		
+		
 		// Cache config
 		$cache = new FilesystemAdapter();
+		//$cache->clear();
 		$sKey = 'worldmap.region.'.$iRegionX.'_'.$iRegionY;
 		
 		// remove the cache item
@@ -308,6 +310,12 @@ class Worldmap {
 			$aRessource[35] = (int)(100
 				* $fPerlinSoil
 			);
+		}
+		
+		// Remove zero
+		foreach ( $aRessource as $key => $value ) {
+			if( $value == 0 )
+				unset($aRessource[$key]);
 		}
 			
 			
