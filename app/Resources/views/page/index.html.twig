@@ -10,16 +10,16 @@
 	{ 'route': '', 'label': 'ABOUT' }
 	]
 %}
+{% set navbar = navbar|merge( [{
+		'route': 
+			( not is_granted('ROLE_USER') ) ? 'login' :
+			( is_granted('ROLE_PLAYER') )? 'overview' : 'player_create', 
+		'label': 'Play', 
+		'CSSClass': 'hightlighted' 
+	}])
+%}
+
 {% set user = (user is defined)? user : null %}
-{% if user is defined and user is not null %}
-	
-	{% set navbar = navbar|merge( [
-		{'route': 'play', 'label': 'Play', 'CSSClass': 'hightlighted' }
-		])
-	%}
-{% else %}
-	
-{% endif %}
 {% set route_current = route_current|default('index') %}
 
 {# ____________________________________________________________________________
@@ -60,6 +60,6 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link href="css/planet.css" rel="stylesheet" type="text/css" />
-<link href="css/ressource_atlas.css" rel="stylesheet" type="text/css" />
+<link href="{{ asset('css/planet.css') }}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('css/ressource_atlas.css') }}" rel="stylesheet" type="text/css" />
 {% endblock %}

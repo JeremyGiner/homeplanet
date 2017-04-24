@@ -47,13 +47,6 @@ class PlanetController extends BaseController {
 	public function playAction( Request $oRequest ) {
 		
 		$this->_handleRequest( $oRequest );
-
-
-		// Case : no player associated
-		// TODO : use firewall
-		$oPlayer = $this->_oGame->getPlayer( $this->getUser()->getId() );
-		if( $oPlayer == null )
-			return $this->redirect( $this->generateUrl('player_create') );
 		
 		$oEntityManager = $this->getDoctrine()->getManager();
 		
@@ -107,42 +100,7 @@ class PlanetController extends BaseController {
 //_____________________________________________________________________________
 
 	
-	/**
-	 * @Route("/player/create", name="player_create")
-	 */
-	public function playerCreateAction( Request $oRequest ) {
-	
-		$this->_handleRequest( $oRequest );
-		
-		// Limit player to 1 per user
-		if( $this->_oGame->getPlayer($this->getUser()->getId()) != null )
-			return $this->redirect( $this->generateUrl('play'));
-		
-		// Player Create form
-		$oPlayer = new Player($this->getUser(), '');
-		$oForm = $this->createFormBuilder($oPlayer)
-			->add( 'name', TextType::class, ['label' => 'Player name'] )
-			->add('submit', SubmitType::class, ['label' => 'Ok'])
-			->getForm();
-		$oForm->handleRequest( $oRequest );
-		if( $oForm->isSubmitted() && $oForm->isValid() ) {
-		
-			$oData = $oForm->getData();
-			//var_dump($oData);
-			$oEntityManager = $this->getDoctrine()->getManager();
-			$oEntityManager->persist( $oData );
-			$oEntityManager->flush();
-			return $this->redirect( $this->generateUrl('play'));
-		}
-		
-		return $this->render(
-				'page/page_form.html.twig',
-				[
-					'title' => 'Create player',
-					'form' => $oForm->createView(),
-				]
-		);
-	}
+
 	
 //_____________________________________________________________________________
 

@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class UserController extends Controller {
 	
@@ -81,6 +82,7 @@ class UserController extends Controller {
 	    	->setAction($this->generateUrl('login_check'))
 	    	->add('_username', TextType::class,  ['label' => 'Email'])
 	    	->add('_password', PasswordType::class)
+	    	->add('_target_path',HiddenType::class, ['data' => '/play' ] )
 	    	->add('signin', SubmitType::class, ['label' => 'Sign in'])
 	    	->getForm();
     
@@ -124,17 +126,28 @@ class UserController extends Controller {
     	
     	if( $form->isValid() && $form->isSubmitted() ) {
     		$em = $this->getDoctrine()->getEntityManager();
-    		$em->persist( $form->getData() );
-    		$em->flush();
-    		return $this->redirectToRoute('register_confirm');
-    	}
+    		
+    		$oUser = $form->getData();
+    		
+			$encoder = $this->get('security.encoder_factory')
+				->getEncoder($oUser);
+			$passw = $encoder->encodePassword( 
+					$oUser->getPassword(), 
+					$oUser->getSalt() 
+			);
+			$oUser->setPassword($passw);
+					
+			$em->persist( $oUser );
+			$em->flush();
+			return $this->redirectToRoute('register_confirm');
+		}
     
     	return $this->render('page/page_register.html.twig', [
-    			'date' => \date('d/m/Y H:i:s'),
-    			'form' => $form->createView(),
-    			'user' => $this->getUser(),
-    	]);
-    }
+				'date' => \date('d/m/Y H:i:s'),
+				'form' => $form->createView(),
+				'user' => $this->getUser(),
+		]);
+	}
     
     /**
      * @Route( "/register_confirm", name="register_confirm"  )

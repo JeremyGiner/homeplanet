@@ -27,9 +27,11 @@ class Player {
 	protected $_iId;
 	
 	/**
-	 * @ORM\Column(type="integer", name="user_id")
+	 * @ORM\OneToOne(targetEntity="AppBundle\Entity\User")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+	 * @var User
 	 */
-	protected $_iUserId;
+	protected $_oUser;
 	
 	/**
 	 * @ORM\Column(type="string", name="name")
@@ -63,10 +65,11 @@ class Player {
 	
 	public function __construct( User $oUser, $sName ) {
 		
-		$this->_iUserId = $oUser->getId();
+		$this->_oUser = $oUser;
 		$this->_sName = $sName;
 		$this->_iCredit = 100;
 		$this->_iIncome = 0;
+		$this->_iCart = 1;
 	}
 	
 //_____________________________________________________________________________
@@ -77,7 +80,7 @@ class Player {
 	}
 	
 	public function getUserId() {
-		return $this->_iUserId;
+		return $this->_oUser->getId();
 	}
 	
 	public function getName() {

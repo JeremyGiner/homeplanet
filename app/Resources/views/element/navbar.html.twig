@@ -30,18 +30,18 @@
 			</li>
 			<li class="navbar-form">
 				<div class="form-group">
-					<a class="btn btn-danger" href="logout">Disconnect</a>
+					<a class="btn btn-danger" href="{{ path('logout') }}">Disconnect</a>
 				</div>
 			</li>
 {% else %}
 			<li class="navbar-form">
 				<div class="form-group">
-					<a class="btn btn-primary" href="register">Inscription</a>
+					<a class="btn btn-primary" href="{{ path('register') }}">Inscription</a>
 				</div>
 			</li>
 			<li class="navbar-form">
 				<div class="form-group">
-					<a class="btn btn-primary" href="login">Connection</a>
+					<a class="btn btn-primary" href="{{ path('login') }}">Connection</a>
 				</div>
 			</li>
 {% endif %}

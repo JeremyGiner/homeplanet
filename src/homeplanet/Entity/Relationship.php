@@ -37,7 +37,6 @@ class Relationship {
 	protected $_oSovereign;
 	
 	/**
-	 * @ORM\Id
 	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\RelationshipType")
 	 * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
 	 * @var RelationshipType

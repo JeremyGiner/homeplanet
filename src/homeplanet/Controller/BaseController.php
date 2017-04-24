@@ -29,6 +29,7 @@ class BaseController extends Controller {
 	public function getLocation() {
 		return $this->_oLocation;
 	}
+	
 
 //_____________________________________________________________________________
 //	Sub-routine

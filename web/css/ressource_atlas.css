@@ -1,0 +1,447 @@
+
+@CHARSET "UTF-8";
+
+.ress-sprite {
+	background-image: url('http://vignette1.wikia.nocookie.net/thesettlersonline/images/d/d5/ResCSS.png/revision/latest?cb=20140501225055');
+	background-size: 1200% 1200%;
+}
+
+.ress-sprite-0 {
+	background-image: none;
+}
+
+
+.ress-sprite-0-0 {
+	background-position: 0% 0%;
+}
+.ress-sprite-0-1 {
+	background-position: 0% 9.0909090909091%;
+}
+.ress-sprite-0-2 {
+	background-position: 0% 18.181818181818%;
+}
+.ress-sprite-0-3 {
+	background-position: 0% 27.272727272727%;
+}
+.ress-sprite-0-4 {
+	background-position: 0% 36.363636363636%;
+}
+.ress-sprite-0-5 {
+	background-position: 0% 45.454545454545%;
+}
+.ress-sprite-0-6 {
+	background-position: 0% 54.545454545455%;
+}
+.ress-sprite-0-7 {
+	background-position: 0% 63.636363636364%;
+}
+.ress-sprite-0-8 {
+	background-position: 0% 72.727272727273%;
+}
+.ress-sprite-0-9 {
+	background-position: 0% 81.818181818182%;
+}
+.ress-sprite-0-10 {
+	background-position: 0% 90.909090909091%;
+}
+.ress-sprite-0-11 {
+	background-position: 0% 100%;
+}
+.ress-sprite-1-0 {
+	background-position: 9.0909090909091% 0%;
+}
+.ress-sprite-1-1 {
+	background-position: 9.0909090909091% 9.0909090909091%;
+}
+.ress-sprite-1-2 {
+	background-position: 9.0909090909091% 18.181818181818%;
+}
+.ress-sprite-1-3 {
+	background-position: 9.0909090909091% 27.272727272727%;
+}
+.ress-sprite-1-4 {
+	background-position: 9.0909090909091% 36.363636363636%;
+}
+.ress-sprite-1-5 {
+	background-position: 9.0909090909091% 45.454545454545%;
+}
+.ress-sprite-1-6 {
+	background-position: 9.0909090909091% 54.545454545455%;
+}
+.ress-sprite-1-7 {
+	background-position: 9.0909090909091% 63.636363636364%;
+}
+.ress-sprite-1-8 {
+	background-position: 9.0909090909091% 72.727272727273%;
+}
+.ress-sprite-1-9 {
+	background-position: 9.0909090909091% 81.818181818182%;
+}
+.ress-sprite-1-10 {
+	background-position: 9.0909090909091% 90.909090909091%;
+}
+.ress-sprite-1-11 {
+	background-position: 9.0909090909091% 100%;
+}
+.ress-sprite-2-0 {
+	background-position: 18.181818181818% 0%;
+}
+.ress-sprite-2-1 {
+	background-position: 18.181818181818% 9.0909090909091%;
+}
+.ress-sprite-2-2 {
+	background-position: 18.181818181818% 18.181818181818%;
+}
+.ress-sprite-2-3 {
+	background-position: 18.181818181818% 27.272727272727%;
+}
+.ress-sprite-2-4 {
+	background-position: 18.181818181818% 36.363636363636%;
+}
+.ress-sprite-2-5 {
+	background-position: 18.181818181818% 45.454545454545%;
+}
+.ress-sprite-2-6 {
+	background-position: 18.181818181818% 54.545454545455%;
+}
+.ress-sprite-2-7 {
+	background-position: 18.181818181818% 63.636363636364%;
+}
+.ress-sprite-2-8 {
+	background-position: 18.181818181818% 72.727272727273%;
+}
+.ress-sprite-2-9 {
+	background-position: 18.181818181818% 81.818181818182%;
+}
+.ress-sprite-2-10 {
+	background-position: 18.181818181818% 90.909090909091%;
+}
+.ress-sprite-2-11 {
+	background-position: 18.181818181818% 100%;
+}
+.ress-sprite-3-0 {
+	background-position: 27.272727272727% 0%;
+}
+.ress-sprite-3-1 {
+	background-position: 27.272727272727% 9.0909090909091%;
+}
+.ress-sprite-3-2 {
+	background-position: 27.272727272727% 18.181818181818%;
+}
+.ress-sprite-3-3 {
+	background-position: 27.272727272727% 27.272727272727%;
+}
+.ress-sprite-3-4 {
+	background-position: 27.272727272727% 36.363636363636%;
+}
+.ress-sprite-3-5 {
+	background-position: 27.272727272727% 45.454545454545%;
+}
+.ress-sprite-3-6 {
+	background-position: 27.272727272727% 54.545454545455%;
+}
+.ress-sprite-3-7 {
+	background-position: 27.272727272727% 63.636363636364%;
+}
+.ress-sprite-3-8 {
+	background-position: 27.272727272727% 72.727272727273%;
+}
+.ress-sprite-3-9 {
+	background-position: 27.272727272727% 81.818181818182%;
+}
+.ress-sprite-3-10 {
+	background-position: 27.272727272727% 90.909090909091%;
+}
+.ress-sprite-3-11 {
+	background-position: 27.272727272727% 100%;
+}
+.ress-sprite-4-0 {
+	background-position: 36.363636363636% 0%;
+}
+.ress-sprite-4-1 {
+	background-position: 36.363636363636% 9.0909090909091%;
+}
+.ress-sprite-4-2 {
+	background-position: 36.363636363636% 18.181818181818%;
+}
+.ress-sprite-4-3 {
+	background-position: 36.363636363636% 27.272727272727%;
+}
+.ress-sprite-4-4 {
+	background-position: 36.363636363636% 36.363636363636%;
+}
+.ress-sprite-4-5 {
+	background-position: 36.363636363636% 45.454545454545%;
+}
+.ress-sprite-4-6 {
+	background-position: 36.363636363636% 54.545454545455%;
+}
+.ress-sprite-4-7 {
+	background-position: 36.363636363636% 63.636363636364%;
+}
+.ress-sprite-4-8 {
+	background-position: 36.363636363636% 72.727272727273%;
+}
+.ress-sprite-4-9 {
+	background-position: 36.363636363636% 81.818181818182%;
+}
+.ress-sprite-4-10 {
+	background-position: 36.363636363636% 90.909090909091%;
+}
+.ress-sprite-4-11 {
+	background-position: 36.363636363636% 100%;
+}
+.ress-sprite-5-0 {
+	background-position: 45.454545454545% 0%;
+}
+.ress-sprite-5-1 {
+	background-position: 45.454545454545% 9.0909090909091%;
+}
+.ress-sprite-5-2 {
+	background-position: 45.454545454545% 18.181818181818%;
+}
+.ress-sprite-5-3 {
+	background-position: 45.454545454545% 27.272727272727%;
+}
+.ress-sprite-5-4 {
+	background-position: 45.454545454545% 36.363636363636%;
+}
+.ress-sprite-5-5 {
+	background-position: 45.454545454545% 45.454545454545%;
+}
+.ress-sprite-5-6 {
+	background-position: 45.454545454545% 54.545454545455%;
+}
+.ress-sprite-5-7 {
+	background-position: 45.454545454545% 63.636363636364%;
+}
+.ress-sprite-5-8 {
+	background-position: 45.454545454545% 72.727272727273%;
+}
+.ress-sprite-5-9 {
+	background-position: 45.454545454545% 81.818181818182%;
+}
+.ress-sprite-5-10 {
+	background-position: 45.454545454545% 90.909090909091%;
+}
+.ress-sprite-5-11 {
+	background-position: 45.454545454545% 100%;
+}
+.ress-sprite-6-0 {
+	background-position: 54.545454545455% 0%;
+}
+.ress-sprite-6-1 {
+	background-position: 54.545454545455% 9.0909090909091%;
+}
+.ress-sprite-6-2 {
+	background-position: 54.545454545455% 18.181818181818%;
+}
+.ress-sprite-6-3 {
+	background-position: 54.545454545455% 27.272727272727%;
+}
+.ress-sprite-6-4 {
+	background-position: 54.545454545455% 36.363636363636%;
+}
+.ress-sprite-6-5 {
+	background-position: 54.545454545455% 45.454545454545%;
+}
+.ress-sprite-6-6 {
+	background-position: 54.545454545455% 54.545454545455%;
+}
+.ress-sprite-6-7 {
+	background-position: 54.545454545455% 63.636363636364%;
+}
+.ress-sprite-6-8 {
+	background-position: 54.545454545455% 72.727272727273%;
+}
+.ress-sprite-6-9 {
+	background-position: 54.545454545455% 81.818181818182%;
+}
+.ress-sprite-6-10 {
+	background-position: 54.545454545455% 90.909090909091%;
+}
+.ress-sprite-6-11 {
+	background-position: 54.545454545455% 100%;
+}
+.ress-sprite-7-0 {
+	background-position: 63.636363636364% 0%;
+}
+.ress-sprite-7-1 {
+	background-position: 63.636363636364% 9.0909090909091%;
+}
+.ress-sprite-7-2 {
+	background-position: 63.636363636364% 18.181818181818%;
+}
+.ress-sprite-7-3 {
+	background-position: 63.636363636364% 27.272727272727%;
+}
+.ress-sprite-7-4 {
+	background-position: 63.636363636364% 36.363636363636%;
+}
+.ress-sprite-7-5 {
+	background-position: 63.636363636364% 45.454545454545%;
+}
+.ress-sprite-7-6 {
+	background-position: 63.636363636364% 54.545454545455%;
+}
+.ress-sprite-7-7 {
+	background-position: 63.636363636364% 63.636363636364%;
+}
+.ress-sprite-7-8 {
+	background-position: 63.636363636364% 72.727272727273%;
+}
+.ress-sprite-7-9 {
+	background-position: 63.636363636364% 81.818181818182%;
+}
+.ress-sprite-7-10 {
+	background-position: 63.636363636364% 90.909090909091%;
+}
+.ress-sprite-7-11 {
+	background-position: 63.636363636364% 100%;
+}
+.ress-sprite-8-0 {
+	background-position: 72.727272727273% 0%;
+}
+.ress-sprite-8-1 {
+	background-position: 72.727272727273% 9.0909090909091%;
+}
+.ress-sprite-8-2 {
+	background-position: 72.727272727273% 18.181818181818%;
+}
+.ress-sprite-8-3 {
+	background-position: 72.727272727273% 27.272727272727%;
+}
+.ress-sprite-8-4 {
+	background-position: 72.727272727273% 36.363636363636%;
+}
+.ress-sprite-8-5 {
+	background-position: 72.727272727273% 45.454545454545%;
+}
+.ress-sprite-8-6 {
+	background-position: 72.727272727273% 54.545454545455%;
+}
+.ress-sprite-8-7 {
+	background-position: 72.727272727273% 63.636363636364%;
+}
+.ress-sprite-8-8 {
+	background-position: 72.727272727273% 72.727272727273%;
+}
+.ress-sprite-8-9 {
+	background-position: 72.727272727273% 81.818181818182%;
+}
+.ress-sprite-8-10 {
+	background-position: 72.727272727273% 90.909090909091%;
+}
+.ress-sprite-8-11 {
+	background-position: 72.727272727273% 100%;
+}
+.ress-sprite-9-0 {
+	background-position: 81.818181818182% 0%;
+}
+.ress-sprite-9-1 {
+	background-position: 81.818181818182% 9.0909090909091%;
+}
+.ress-sprite-9-2 {
+	background-position: 81.818181818182% 18.181818181818%;
+}
+.ress-sprite-9-3 {
+	background-position: 81.818181818182% 27.272727272727%;
+}
+.ress-sprite-9-4 {
+	background-position: 81.818181818182% 36.363636363636%;
+}
+.ress-sprite-9-5 {
+	background-position: 81.818181818182% 45.454545454545%;
+}
+.ress-sprite-9-6 {
+	background-position: 81.818181818182% 54.545454545455%;
+}
+.ress-sprite-9-7 {
+	background-position: 81.818181818182% 63.636363636364%;
+}
+.ress-sprite-9-8 {
+	background-position: 81.818181818182% 72.727272727273%;
+}
+.ress-sprite-9-9 {
+	background-position: 81.818181818182% 81.818181818182%;
+}
+.ress-sprite-9-10 {
+	background-position: 81.818181818182% 90.909090909091%;
+}
+.ress-sprite-9-11 {
+	background-position: 81.818181818182% 100%;
+}
+.ress-sprite-10-0 {
+	background-position: 90.909090909091% 0%;
+}
+.ress-sprite-10-1 {
+	background-position: 90.909090909091% 9.0909090909091%;
+}
+.ress-sprite-10-2 {
+	background-position: 90.909090909091% 18.181818181818%;
+}
+.ress-sprite-10-3 {
+	background-position: 90.909090909091% 27.272727272727%;
+}
+.ress-sprite-10-4 {
+	background-position: 90.909090909091% 36.363636363636%;
+}
+.ress-sprite-10-5 {
+	background-position: 90.909090909091% 45.454545454545%;
+}
+.ress-sprite-10-6 {
+	background-position: 90.909090909091% 54.545454545455%;
+}
+.ress-sprite-10-7 {
+	background-position: 90.909090909091% 63.636363636364%;
+}
+.ress-sprite-10-8 {
+	background-position: 90.909090909091% 72.727272727273%;
+}
+.ress-sprite-10-9 {
+	background-position: 90.909090909091% 81.818181818182%;
+}
+.ress-sprite-10-10 {
+	background-position: 90.909090909091% 90.909090909091%;
+}
+.ress-sprite-10-11 {
+	background-position: 90.909090909091% 100%;
+}
+.ress-sprite-11-0 {
+	background-position: 100% 0%;
+}
+.ress-sprite-11-1 {
+	background-position: 100% 9.0909090909091%;
+}
+.ress-sprite-11-2 {
+	background-position: 100% 18.181818181818%;
+}
+.ress-sprite-11-3 {
+	background-position: 100% 27.272727272727%;
+}
+.ress-sprite-11-4 {
+	background-position: 100% 36.363636363636%;
+}
+.ress-sprite-11-5 {
+	background-position: 100% 45.454545454545%;
+}
+.ress-sprite-11-6 {
+	background-position: 100% 54.545454545455%;
+}
+.ress-sprite-11-7 {
+	background-position: 100% 63.636363636364%;
+}
+.ress-sprite-11-8 {
+	background-position: 100% 72.727272727273%;
+}
+.ress-sprite-11-9 {
+	background-position: 100% 81.818181818182%;
+}
+.ress-sprite-11-10 {
+	background-position: 100% 90.909090909091%;
+}
+.ress-sprite-11-11 {
+	background-position: 100% 100%;
+}
+
+	

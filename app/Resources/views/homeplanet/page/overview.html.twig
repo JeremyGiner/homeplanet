@@ -1,0 +1,18 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+    	
+	{% block header %}
+		Overview
+	{% endblock %}
+    
+	{% block content %}
+		{{ printo(gameview.player) }}		
+	{% endblock %}
+	{% endembed %}
+</div>
+</div>
+{% endblock %}

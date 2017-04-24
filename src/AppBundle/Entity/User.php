@@ -7,13 +7,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\PersistentCollection;
 use Doctrine\Common\Collections\Criteria;
+use homeplanet\Entity\Player;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
 /**
  * @ORM\Entity @ORM\Table(name="user")
  * @UniqueEntity(fields="player_name", message="Player name already taken")
  * @UniqueEntity(fields="email", message="Email already taken")
  */
-class User implements UserInterface, \Serializable {
+class User implements UserInterface, \Serializable, EquatableInterface {
 	
 	/** 
 	 * @ORM\Id 
@@ -43,10 +45,22 @@ class User implements UserInterface, \Serializable {
 	protected $password_shadow;
 	
 	
+	/**
+	 * @ORM\OneToOne(
+	 *     targetEntity="homeplanet\Entity\Player",
+	 *     mappedBy="_oUser"
+	 * )
+	 * @var Player
+	 */
+	protected $player;
+	
 //_____________________________________________________________________________
 //	Accessor
 	
-	function getId() {return $this->id; }
+	function getId() {
+		return $this->id; 
+	}
+	
 	function getName() {
 		return $this->player_name;
 	}
@@ -55,6 +69,9 @@ class User implements UserInterface, \Serializable {
 		return $this->email;
 	}
 	
+	function getPlayer() {
+		return $this->player;
+	}
 	
 //_____________________________________
 //	Interface Symfony\Component\Security\Core\User\UserInterface
@@ -72,9 +89,16 @@ class User implements UserInterface, \Serializable {
 	}
 	
 	public function getRoles() {
+		
+		$a = [];
+		if( $this->player !== null ) {
+			$a[] = 'ROLE_PLAYER';
+		}
+		
 		if( $this->id == 1 )
-			return array('ROLE_ADMIN');
-		return array('ROLE_USER');
+			return $a+['ROLE_ADMIN'];
+		
+		return $a+['ROLE_USER'];
 	}
 	
 	public function eraseCredentials() {
@@ -83,6 +107,26 @@ class User implements UserInterface, \Serializable {
 	
 	public function getPlayerName() {
 		return $this->getName();
+	}
+	
+	/**
+	 * Update the authentified user's roles
+	 * @source http://stackoverflow.com/questions/27185180/getroles-ignored-in-symfony2
+	 * @see \Symfony\Component\Security\Core\User\EquatableInterface::isEqualTo()
+	 */
+	public function isEqualTo( UserInterface $user) {
+		if ($user instanceof User) {
+			// Check that the roles are the same, in any order
+			$isEqual = count($this->getRoles()) == count($user->getRoles());
+			if ($isEqual) {
+				foreach($this->getRoles() as $role) {
+					$isEqual = $isEqual && in_array($role, $user->getRoles());
+				}
+			}
+			return $isEqual;
+		}
+	
+		return false;
 	}
 	
 //_____________________________________________________________________________

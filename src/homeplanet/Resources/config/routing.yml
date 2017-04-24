@@ -1,3 +1,4 @@
 homeplanet:
     resource: "@HomeplanetBundle/Controller/"
     type:     annotation
+    prefix:   /game

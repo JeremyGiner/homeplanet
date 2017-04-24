@@ -5,7 +5,6 @@ app:
 # app/config/routing.yml
 homeplanet:
     resource: "@HomeplanetBundle/Resources/config/routing.yml"
-    #prefix:   /game
 
 #______________________________________________________________________________
 # LOGIN User auth

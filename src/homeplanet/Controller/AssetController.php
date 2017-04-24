@@ -2,21 +2,19 @@
 namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\Pawn;
 use homeplanet\Game;
 use homeplanet\Entity\PawnFactory;
-use homeplanet\tool\Perlin;
 use homeplanet\Form\TradeRouteFactory;
 use homeplanet\Form\TradeRouteCreationForm;
-use homeplanet\Entity\Ressource;
 use homeplanet\Entity\Player;
 use homeplanet\Form\BuildingBuy;
 use homeplanet\Form\BuildingBuyForm;
@@ -26,14 +24,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Tests\ButtonTest;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use homeplanet\Form\LocationType;
-use homeplanet\Form\EntityTypeChoiceType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\attribute\ProductionType;
 use homeplanet\Form\StepType;
 use homeplanet\Form\MultistepType;
@@ -41,13 +31,12 @@ use homeplanet\Form\MultistepFormHandler;
 use Symfony\Component\Serializer\Serializer;
 use homeplanet\Serializer\Normalizer\DoctrineEntityNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 
 /**
- *
+ * @Route("/asset")
  */
 class AssetController extends BaseController {
 	
@@ -57,7 +46,7 @@ class AssetController extends BaseController {
 	
 	/**
 	 * Display assets by location
-	 * @Route("/asset", name="asset")
+	 * @Route("", name="asset")
 	 */
 	public function mainAction( Request $oRequest ) {
 		
@@ -157,7 +146,7 @@ class AssetController extends BaseController {
 	}
 	
 	/**
-	 * @Route("/asset/{id}", name="asset_view", requirements={"id": "\d+"})
+	 * @Route("/{id}", name="asset_view", requirements={"id": "\d+"})
 	 */
 	public function assetViewAction( $id, Request $oRequest  ) {
 		$this->_handleRequest($oRequest);
@@ -186,7 +175,7 @@ class AssetController extends BaseController {
 	}
 	
 	/**
-	 * @Route("/asset-create", name="asset_create")
+	 * @Route("/create", name="asset_create")
 	 */
 	public function createAction( Request $oRequest ) {
 		
@@ -202,7 +191,7 @@ class AssetController extends BaseController {
 		$oData = new BuildingBuy(
 				$this->_oLocation,
 				$this->_oGame->getPawnType(2),
-				$this->_oGame->getPlayer($oUser->getId())
+				$this->_oGame->getPlayer()
 		);
 		
 		$oFormBuild = $this->createForm(BuildingBuyForm::class, $oData, 
@@ -300,7 +289,6 @@ class AssetController extends BaseController {
 			
 			
 			if( $oForm->has('confirm') && $oForm->get('confirm')->isClicked() ) {
-				var_dump('end');
 				$oStepHandler->reset();
 				/* @var $oFactory TradeRouteFactory */
 				$oFactory = $oForm->getData();
