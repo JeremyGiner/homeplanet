@@ -36,9 +36,9 @@
 	{% block content %}
 		<ul class="list-group">
 		{% for oPawn in aPawn %}
-		<li class="list-group-item">
-			{{ printo(oPawn) }}
-		</li>
+			<a class="list-group-item" href="{{ path('asset_view',{id:oPawn.id}) }}">
+				{{ printo( oPawn ) }}
+			</a>
 		{% endfor %}
 		</ul>
 	{% endblock %}

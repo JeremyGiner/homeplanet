@@ -1,4 +1,4 @@
-{% extends 'page/index.html.twig' %}
+{% extends 'homeplanet/page/game.html.twig' %}
 
 {% block page_content %}
 <div class="row">
@@ -34,8 +34,14 @@
 					{% endfor %}
 				{% endif %}
 			{% endfor %}
+			{% if form_prodtype is defined %}
+				{{ form(form_prodtype) }}
+			{% endif %}
 		{% endblock %}
 	{% endembed %}
 	</div>
 </div>
+
+
+
 {% endblock %}

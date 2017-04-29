@@ -10,7 +10,7 @@ use homeplanet\Entity\attribute\Location;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use homeplanet\Form\EntityTypeChoiceType;
+use homeplanet\Form\PawnTypeChoiceType;
 use homeplanet\Form\BuildingBuy;
 use Doctrine\ORM\EntityRepository;
 
@@ -37,7 +37,7 @@ class BuildingBuyForm extends AbstractType {
 				'label' => 'Location', 
 				'gameview' => $aOption['gameview'],
 			])
-			->add('pawntype',EntityTypeChoiceType::class,[
+			->add('pawntype',PawnTypeChoiceType::class,[
 				//'mapped' => false,
 				'label' => false,
 				'query_builder' => function(EntityRepository $er) {

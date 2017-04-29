@@ -1,3 +1,6 @@
+{#____________________________________________________________________________
+	homeplanet\Form\LocaionType rendering #}
+
 {% block location_widget %}
 	<input id="{{ id }}" name="{{ full_name }}" type="text" value="{{ value }}">
 	<button class="btn btn-default" type="button" onclick="$('#{{ id }}_modal').modal('show')">Select</button>
@@ -69,3 +72,20 @@
 {% endfor -%}
 </div>
 {% endblock %}
+
+{#____________________________________________________________________________
+	homeplanet\Form\PawnType rendering #}
+{% block pawntype_widget %}
+<div class="row">
+{% for i in form.children|keys %}
+	<div class="col-xs-12 small" style="">
+	    {% include 'homeplanet/form/build_chckbx.html.twig' 
+    	with form.children[i].vars|merge({
+    		'data':form.vars.choices[i].data
+		}) only %}
+    	
+	</div>
+{% endfor %}
+</div>
+{% endblock %}
+

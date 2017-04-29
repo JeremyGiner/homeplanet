@@ -1,34 +1,38 @@
-<a href="{{ path('asset_view',{id:o.id}) }}">
-	#{{ o.getId() }} {{ o.getType().getLabel() }} 
-	({{ o.getLocationAr()|join(';') }})<br>
-</a>
-{% for oProduction in o.getProductionAr() %}
-	{% if( oProduction.getType().getRessource().getId() == 1 ) %}
-		{% if oProduction.getRatioMax() < 1 %}
-			<p class="bg-danger">
-				Working at 
-				{{ (oProduction.getRatioMax()*100)|round }}%
-				efficiency.<br>
-				Require ressources or buyer.
-			</p>
+{% import 'homeplanet/macro/commun.twig' as commun %}
+
+
+<div class="row">
+<div class="col-xs-4">
+	<img class="img-responsive" src="{{ commun.icon_entitytype(o.type) }}">
+</div>
+<div class="col-xs-8">
+	<h4>
+		#{{ o.getId() }} {{ o.getType().getLabel() }} 
+	</h4>
+	({{ o.getLocationAr()|join(';') }})
+	
+	{% for oProduction in o.getProductionAr() %}
+		{{ printo(oProduction.getType()) }}
+		{% if( oProduction.getType().getRessource().getId() == 1 ) %}
+			{% if oProduction.getRatioMax() < 1 %}
+				<p class="bg-danger">
+					Working at 
+					{{ (oProduction.getRatioMax()*100)|round }}%
+					efficiency.<br>
+					Require ressources or buyer.
+				</p>
+			{% endif %}
+		{% else %}
+			{% if oProduction.getRatioMax() < 1 %}
+				<p class="bg-danger">
+					Working at 
+					{{ (oProduction.getRatioMax()*100)|round }}%
+					efficiency.<br>
+					Require ressources.
+				</p>
+			{% endif %}
 		{% endif %}
-		Sell : 
-		{% for oProdInput in oProduction.getProdInputAr() %}
-			{{ oProdInput.getType().getRessource().getLabel() }}
-			x{{ oProdInput.getType().getQuantity() }} 
-			({{ (oProduction.getRatioMax()*100)|round }}%)
-		{% endfor %}
-		<br>
-	{% else %}
-		{% if oProduction.getRatioMax() < 1 %}
-			<p class="bg-danger">
-				Working at 
-				{{ (oProduction.getRatioMax()*100)|round }}%
-				efficiency.<br>
-				Require ressources.
-			</p>
-		{% endif %}
-		{% include 'homeplanet/text/prodtype.html.twig' 
-			with {prodtype: oProduction.getType()} %}
-	{% endif %}
-{% endfor %}
+	{% endfor %}
+</div>
+</div>
+

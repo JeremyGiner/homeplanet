@@ -70,6 +70,10 @@ class PawnFactory extends Pawn {
 				}
 				
 				$aAddOn[] = $oProd;
+				
+				// TODO : clean up
+				// Limit to 1
+				break;
 			}
 		}
 		

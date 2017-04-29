@@ -1,0 +1,28 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+{# require o var #}
+				
+{% if( o.getRessource().getId() == 1 ) %}
+	Sell : 
+	{% for oProdInputType in o.getProdInputTypeAr() %}
+		{{ printo(oProdInputType.getRessource()) }}
+		x{{ oProdInputType.getQuantity() }}
+	{% endfor %}
+	<br>
+{% else %}
+	<div class="row">
+	<div class="col-xs-5">
+		{% for oProdInputType in o.getProdInputTypeAr() %}
+			- {{ oProdInputType.getQuantity() }} 
+			{{ printo(oProdInputType.getRessource()) }}
+			<br>
+		{% endfor %}
+	</div>
+	<div class="col-xs-2">
+		&rarr;
+	</div>
+	<div class="col-xs-5">
+		+ {{ o.getQuantity() }} 
+		{{ printo(o.getRessource()) }}
+	</div>
+	</div>
+{% endif %}

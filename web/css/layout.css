@@ -100,6 +100,17 @@
 	padding: 5px;
 }
 
+.d-inline {
+	display: inline;
+}
+
+.d-block {
+	display: block;
+}
+.d-inline-block {
+	display: inline-block;
+}
+
 /*_____________________________________
 	 */
 

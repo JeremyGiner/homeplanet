@@ -21,9 +21,12 @@ class Production {
 	protected $_iId;
 	
 	/**
-	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Pawn")
+	 * @ORM\ManyToOne(
+	 *     targetEntity="homeplanet\Entity\Pawn",
+	 *     inversedBy="_aProduction"
+	 * )
 	 * @ORM\JoinColumn(name="pawn_id", referencedColumnName="id")
-	 * @var ProductionType
+	 * @var Pawn
 	 */
 	protected $_oPawn;
 	
@@ -77,6 +80,26 @@ class Production {
 		$this->_fRatioMax = 0;
 		
 		$this->_aProdInput = new ArrayCollection();
+		
+	}
+	
+	static public function create(
+			Pawn $oPawn,
+			Location $oLocation,
+			ProductionType $oProdType
+	) {
+		$o = new Production($oPawn, $oLocation, $oProdType);
+		foreach( $oProdType->getProdInputTypeAr() as $oProdInputType ) {
+			$o->_aProdInput->add(
+					new ProductionInput(
+							$o,
+							$oLocation,
+							$oProdInputType
+					)
+			);
+		
+		}
+		return $o;
 	}
 	
 //______________________________________________________________________________
@@ -115,4 +138,5 @@ class Production {
 		$this->_fRatioMax = $f;
 		return $this;
 	}
+	
 }

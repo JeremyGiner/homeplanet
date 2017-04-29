@@ -13,6 +13,7 @@ use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\Pawn;
 use homeplanet\Game;
 use homeplanet\Entity\PawnFactory;
+use homeplanet\Entity\attribute\Production;
 use homeplanet\Form\TradeRouteFactory;
 use homeplanet\Form\TradeRouteCreationForm;
 use homeplanet\Entity\Player;
@@ -34,6 +35,8 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * @Route("/asset")
@@ -154,11 +157,57 @@ class AssetController extends BaseController {
 	
 		$oUser = $this->getUser();
 		$oGame = $this->getGame();
+		
+		/* @var $oEntity Pawn */
 		$oEntity = $oGame->getPawnRepo()->find( $id );
 	
 		if( $oEntity == null )
-			throw('invalid entity id');
-	
+			return $this->redirect( $this->generateUrl('asset') );
+		
+		
+		//_____________________________
+		
+		// TODO : form validation
+		$oForm = $this->createFormBuilder( array() )
+			->add('production_type', EntityType::class, [
+				'class' => ProductionType::class,
+				'label' => false,
+				'choice_label' => 'ressource.label',
+				'query_builder' => function (EntityRepository $er) use ($oEntity ){
+					return $er->createQueryBuilder('prodtype')
+					->join('prodtype._aPawnType', 'pawntype')
+					->join('prodtype._oRessource', 'ressource')
+					->where('pawntype._iId = '.$oEntity->getType()->getId());
+				},
+			])
+			->add('submit',SubmitType::class,['label'=>'Change'])
+			->getForm();
+		
+		$oForm->handleRequest( $oRequest );
+		
+		if( $oForm->isSubmitted() && $oForm->isValid() ) {
+			//$oEntity->clearProduction();
+			
+			//$oGame->getEntityManager()->persist($oEntity);
+			foreach ( $oEntity->getProductionAr() as $oProd ) {
+				$oGame->getEntityManager()->remove($oProd);
+			}
+			$oEntity->setProduction( Production::create(
+					$oEntity, 
+					$oEntity->getLocationAr()[0], 
+					$oForm->getData()['production_type']
+			) );
+			$oGame->getEntityManager()->flush();
+			
+			//var_dump($oForm->getData()['production_type']);
+			return $this->redirect( $oRequest->getUri() );
+		}
+			
+		
+		
+		//_____________________________
+		
+		
 		return $this->render(
 				'homeplanet/page/entityView.html.twig',
 				[
@@ -169,6 +218,7 @@ class AssetController extends BaseController {
 								'player' => $oGame->getContextPlayer(),
 								'game' => $oGame,
 						],
+						'form_prodtype' => $oForm->createView(),
 				]
 		);
 	
@@ -220,10 +270,14 @@ class AssetController extends BaseController {
 			);
 				
 			$a = $oFactory->create();
+			
+			$oPawn = $a['entity'];
 			$oGame->addPawn( $a['entity'], $a['addOn'] );
 				
-			return $this->redirect( $this->generateUrl('asset') );
+			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}
+		
+		
 		
 		// Render
 		

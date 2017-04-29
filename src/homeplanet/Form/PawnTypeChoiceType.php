@@ -13,15 +13,19 @@ use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\PawnType as GameEntityType;
 
 
-class EntityTypeChoiceType extends AbstractType {
+class PawnTypeChoiceType extends AbstractType {
 	
 	
 	function getParent() {
 		return EntityType::class;
 	}
 	
+	function getBlockPrefix() {
+		return 'pawntype';
+	}
+	
 //_____________________________________________________________________________
-//	Builder
+//	Option
 	
 	function configureOptions( OptionsResolver $oResolver ) {
 		$oResolver->setDefaults([
@@ -46,7 +50,7 @@ class EntityTypeChoiceType extends AbstractType {
 	
 	
 	public function buildView(FormView $oView, FormInterface $oForm, array $aOptions) {
-
+		
 	}
 	
 }
