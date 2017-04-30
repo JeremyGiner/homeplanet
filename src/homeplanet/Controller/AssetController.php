@@ -166,6 +166,7 @@ class AssetController extends BaseController {
 		
 		
 		//_____________________________
+		//	Form sawp prod
 		
 		// TODO : form validation
 		$oForm = $this->createFormBuilder( array() )
@@ -192,7 +193,7 @@ class AssetController extends BaseController {
 			foreach ( $oEntity->getProductionAr() as $oProd ) {
 				$oGame->getEntityManager()->remove($oProd);
 			}
-			$oEntity->setProduction( Production::create(
+			$oEntity->addProduction( Production::create(
 					$oEntity, 
 					$oEntity->getLocationAr()[0], 
 					$oForm->getData()['production_type']
