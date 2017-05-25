@@ -1,0 +1,31 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+	<div class="col-xs-12">
+	{% embed 'bootstrap/panel.html.twig' %}
+		{% block header %}
+			#{{ gameview.entity.getId() }} 
+			{{ gameview.entity.getType().getLabel() }} 
+			({{ gameview.entity.getLocationAr()|join(';') }})
+		{% endblock %}
+		{% block content %}
+			{{ printo( gameview.entity ) }}
+			{% if form_prodtype is defined %}
+				<hr/>
+				{% form_theme form_prodtype 'bootstrap_3_horizontal_layout.html.twig' %}
+				{{ form(form_prodtype) }}
+			{% endif %}
+			{% if form_delete is defined %}
+				<hr/>
+				{% form_theme form_delete 'bootstrap_3_horizontal_layout.html.twig' %}
+				{{ form(form_delete) }}
+			{% endif %}
+		{% endblock %}
+	{% endembed %}
+	</div>
+</div>
+
+
+
+{% endblock %}

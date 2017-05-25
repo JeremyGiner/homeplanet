@@ -51,7 +51,7 @@
 	{% endblock %}
 	{% endembed %}
 {% endblock %}
-				
+
 {% block production_type_widget %}
 <div class="row">
 {%- for i in form.children|keys %}
@@ -76,6 +76,7 @@
 {#____________________________________________________________________________
 	homeplanet\Form\PawnType rendering #}
 {% block pawntype_widget %}
+{#
 <div class="row">
 {% for i in form.children|keys %}
 	<div class="col-xs-12 small" style="">
@@ -86,6 +87,34 @@
     	
 	</div>
 {% endfor %}
+you piece of shit must die
+
 </div>
+#}
+
+{% set a = indexBy( form.children,'vars[label_printo].category.id' ) %}
+
+<div class="panel-group">
+
+{% for key,aOption in a %}
+{% set category = aOption|first.vars['label_printo'].category %}
+<div class="panel panel-default">
+	<a class="panel-heading d-block" 
+		data-toggle="collapse" data-parent="#accordion" href="#collapse{{ key }}"
+	>
+		<h3 class="panel-title">{{ category.label|capitalize }}</h3>
+	</a>
+	<div id="collapse{{ key }}" class="panel-collapse collapse">
+		<div class="list-group">
+			{% for child in aOption %}
+				{% include 'homeplanet/form/build_chckbx.html.twig' 
+			    	with child.vars only %}
+			{% endfor %}
+		</div>
+	</div>
+</div>
+{% endfor %}
+</div>
+
 {% endblock %}
 

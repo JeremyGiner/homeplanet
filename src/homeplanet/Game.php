@@ -66,7 +66,7 @@ class Game {
 		$this->_oGameState = null;
 		//$this->_oGameState = $this->_oEntityManager->getRepository('homeplanet\Entity\GameState')->find(1);
 		
-		$this->_oWorldmap = new Worldmap(); 
+		$this->_oWorldmap = new Worldmap( $this ); 
 		
 		$this->_aPawnByLoc = [];
 		$a = $this->getPawnRepo()->getPawnAr_byArea( $iCenterY-6, $iCenterY+6, $iCenterX-6, $iCenterX+6 );

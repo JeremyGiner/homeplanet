@@ -20,6 +20,10 @@ body {
 
 /*___________________________
 	UTILS style*/
+	
+.clickable {
+	cursor: pointer;
+}
 
 .hightlighted {
 	background-color: rgb(230, 230, 230);
@@ -134,6 +138,53 @@ h4 {
 	font-weight: bold;
 }
 
+/*
+TODO use Less
+*/
+
+/*.list-group-item.active,.list-group-item.active:focus,.list-group-item.active:hover*/ 
+.radio-button-input:checked+label.list-group-item
+{
+	z-index:2;
+	color:#fff;/*@list-group-active-color*/
+	background-color:#337ab7;	/*@list-group-active-bg*/
+	border-color:#337ab7;	/*@list-group-active-border*/
+}
+.radio-button-input:checked+label.list-group-item .list-group-item-heading,
+.radio-button-input:checked+label.list-group-item .list-group-item-heading>.small,
+.radio-button-input:checked+label.list-group-item .list-group-item-heading>small,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-heading,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-heading>.small,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-heading>small,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-heading,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-heading>.small,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-heading>small {
+	color:inherit;
+}
+.radio-button-input:checked+label.list-group-item .list-group-item-text,
+.radio-button-input:checked+label.list-group-item:focus .list-group-item-text,
+.radio-button-input:checked+label.list-group-item:hover .list-group-item-text {
+	color:#c7ddef;
+}
+
+
+.radio-button-input:disabled+label.list-group-item,
+.radio-button-input:disabled+label.list-group-item:focus,
+.radio-button-input:disabled+label.list-group-item:hover {
+	color:#777;
+	cursor:not-allowed;
+	background-color:#eee
+}
+.radio-button-input:disabled+label.list-group-item .list-group-item-heading,
+.radio-button-input:disabled+label.list-group-item:focus .list-group-item-heading,
+.radio-button-input:disabled+label.list-group-item:hover .list-group-item-heading {
+	color:inherit
+}
+.radio-button-input:disabled+label.list-group-item .list-group-item-text,
+.radio-button-input:disabled+label.list-group-item:focus .list-group-item-text,
+.radio-button-input:disabled+label.list-group-item:hover .list-group-item-text {
+	color:#777
+}
 
 /*___________________________
 	SPECIFIC */

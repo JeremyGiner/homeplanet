@@ -111,6 +111,13 @@
 	display: inline-block;
 }
 
+label.list-group-item {
+	width: 100%;
+	text-align: left;
+	clear: both;
+	font-weight: initial;
+}
+
 /*_____________________________________
 	 */
 
@@ -206,18 +213,18 @@
 
 /*______________*/
 
-.form-build-radio {
+.radio-button-input {
 	display: none;
 }
-.form-build-radio+label {
+.radio-button-input+label {
 	color: grey;
 }
-.form-build-radio+label img {
+.radio-button-input+label img {
 	opacity: 0.5;
 }
-.form-build-radio:checked+label {
+.radio-button-input:checked+label {
 	color: inherit;
 }
-.form-build-radio:checked+label img {
+.radio-button-input:checked+label img {
 	opacity: 1;
 }

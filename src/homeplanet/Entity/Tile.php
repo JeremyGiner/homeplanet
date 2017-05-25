@@ -5,6 +5,10 @@ use homeplanet\tool\F;
 use homeplanet\Entity\attribute\Location;
 
 class Tile {
+	/**
+	 * @var Worldmap
+	 */
+	protected $_oWorldmap;
 	
 	/**
 	 * @var Location
@@ -38,14 +42,16 @@ class Tile {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( 
-			$oLocation, 
+	public function __construct(
+			Worldmap $oWorldmap,
+			Location $oLocation, 
 			$fElevation, 
 			$fHumidity, 
 			$fTemp, 
-			$aRessource,
+			array $aRessource,
 			$oTileSouth
 	) {
+		$this->_oWorldmap = $oWorldmap;
 		$this->_oLocation = $oLocation;
 		
 		$this->_fElevation = $fElevation;
@@ -81,6 +87,24 @@ class Tile {
 	
 	public function getTemperature() {
 		return $this->_fTemperature;
+	}
+	
+	public function getWorldmap() {
+		return $this->_oWorldmap;
+	}
+	
+	public function getCity() {
+		return $this->_oWorldmap
+			->getGame()
+			->getCityRepo()
+			->findByLocation($this->_oLocation);
+	}
+	
+	public function getOvercrowd( $iRessourceId ) {
+		return $this->_oWorldmap
+			->getGame()
+			->getOvercrowdRepo()
+			->get($iRessourceId, $this->_oLocation->getX(), $this->_oLocation->getY());
 	}
 	
 	public function getRessNatQuantityAr() {
@@ -219,6 +243,14 @@ class Tile {
 	}
 	
 //_____________________________________________________________________________
+//	Modifier
+
+	public function setWorldmap( Worldmap $oWorldmap ) {
+		$this->_oWorldmap = $oWorldmap;
+		return $this;
+	}
+
+//_____________________________________________________________________________
 //	Sub-routine
 	
 	private function _interpolate( $iAlpha, $iOmega, $fPercent ) {
@@ -256,6 +288,7 @@ class Tile {
 		// Quick fix : avoid recursive serialisation
 		$a = array_flip($a);
 		unset($a['_oSouthTile']);
+		unset($a['_oWorldmap']);
 		$a = array_flip($a);
 		
 		return $a;

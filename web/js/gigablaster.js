@@ -138,7 +138,14 @@ $(function() {
 		return false;
 	})
 
-	
+	//_________________________________
+	// Bootstrap tooltip
+	$('[data-tooltip]').each(function () {
+		$(this).tooltip({
+			html: true,
+			title: $($(this).data('tooltip')).html()
+		});
+	});
 });
 
 //_____________________________________________________________________________

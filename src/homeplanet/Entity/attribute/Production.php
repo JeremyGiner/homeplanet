@@ -131,6 +131,29 @@ class Production {
 		return $this->getType()->getQuantity()*$this->getRatioMax();
 	}
 	
+	public function isSeller() {
+		// True if produce credit
+		return $this->getType()->getRessource()->getId() == 1;
+	}
+	
+	public function isBuyer() {
+		// True if firt produce input is credit
+		$first = $this->_aProdInput->first();
+		
+		if( $first === null )
+			return false;
+		return $first->getType()->getRessource()->getId() == 1;
+	}
+	
+	public function isTransporter() {
+		$first = $this->_aProdInput->first();
+		
+		if( $first === null )
+			return false;
+		
+		return $this->getType()->getRessource()->getId() == $first->getType()->getRessource()->getId();
+	}
+	
 //______________________________________________________________________________
 //	Modifier
 	

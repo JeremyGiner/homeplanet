@@ -44,10 +44,11 @@ class Buy {
 	/**
 	 * @Assert\GreaterThanOrEqual(
 	 *     value = 0,
-	 *     message = "not enought money"
+	 *     message = "not enought money",
+	 *     groups={"Buy"}
 	 * )
 	 */
 	function getPlayerCreditNew() {
-		return $this->_oPlayer->getCredit() - $this->_iCost;
+		return $this->_oPlayer->getCredit() - $this->getCost();
 	}
 }

@@ -1,25 +1,39 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
-<input class="form-build-radio" type="radio" 
+
+<input class="radio-button-input" type="radio" 
 	{% include 'homeplanet/form/widget_attributes.html.twig' %}
 	{% if value is defined %} value="{{ value }}"{% endif %}
 	{% if checked %} checked="checked"{% endif %}
  />
-<label {% for attrname, attrvalue in label_attr|merge({class: 'row', style: 'max-width: initial; display:block'}) %} {{ attrname }}="{{ attrvalue }}"{% endfor %} 
+<label {% for attrname, attrvalue in label_attr|merge({
+	class: 'list-group-item clickable'
+}) %} {{ attrname }}="{{ attrvalue }}"{% endfor %} 
 	for="{{ id }}"
 >
-	<div class="col-xs-4" style="padding-right:0">
-		<img class="img-responsive" src="{{ commun.icon_entitytype(data) }}">
+	<div class="row">
+	<div class="col-xs-4 col-sm-2" style="padding-right:0">
+		<img class="img-responsive" src="{{ commun.icon_entitytype(label_printo) }}">
 	</div>
-	<div class="col-xs-8">
-		<h4>
-		{{ label|trans({}, translation_domain)|capitalize }}
-		<span class="small pull-right">
-			Cost : {{ commun.credit( data.value ) }}
-		</span>
-		</h4>
-		{% for oProdType in data.getProdTypeAr() %}
-			{{ printo(oProdType) }}
+	<div class="col-xs-8 col-sm-10">
+		<header class="list-group-item-heading">
+			<strong>
+				{{ label_printo.label|trans({}, translation_domain)|capitalize }}
+			</strong>
+			<span class="{{ attr['disabled']?'text-danger' }} small pull-right">
+				Cost : {{ commun.credit( label_printo.value ) }}
+			</span>
+		</header>
+		<div class="small">
+		{{ label_printo.description }}
+		{% for oProdType in label_printo.getProdTypeAr() %}
+			{% if not oProdType.isSeller() 
+				and not oProdType.isBuyer()
+				and not oProdType.isTransporter()
+			%}
+				{{ printo(oProdType) }}
+			{% endif %}
 		{% endfor %}
-		
+		</div>
+	</div>
 	</div>
 </label>

@@ -48,11 +48,14 @@ class MapController extends BaseController {
 		
 		$aGameView = $this->_createView($oGame, $oLocation);
 		
+		$oCity = $oGame->getCityRepo()->getFull($oLocation);
+		
 		return $this->render(
 			'homeplanet/page/map_overview.html.twig',
 			[
 				'user' => $this->getUser(),
 				'gameview' => $aGameView,
+				'city' => $oCity,
 			]
 		);
 	}

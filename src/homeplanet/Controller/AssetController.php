@@ -37,6 +37,9 @@ use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;
+use homeplanet\Entity\PawnType;
+use AppBundle\Tool\ArrayTool;
+use homeplanet\Entity\City;
 
 /**
  * @Route("/asset")
@@ -127,15 +130,46 @@ class AssetController extends BaseController {
 				$aFluxByLocation[$sLocation][$iRessId] += $oProd->getQuantity();
 			}
 		}
-		
 
-		// Filter flux null
+		// Filter flux at 0
 		foreach ( $aFluxByLocation as $sLocation => $aFlux )
 		foreach ( $aFlux as $iRessId => $iValue ) {
 			if( $aFluxByLocation[$sLocation][$iRessId] == 0 )
 				unset($aFluxByLocation[$sLocation][$iRessId]);
 		}
 		
+		$aLocation = [];
+		$aCoordonate = [];
+		foreach ( $aPawnByLocation as $sLocation => $oPawn ) {
+			$oLocation = Location::getFromString($sLocation);
+			$aLocation[ $sLocation ] = $oLocation;
+			$aCoordonate[] = [$oLocation->getX(),$oLocation->getY()];
+		}
+		
+		
+		$q = $oGame->getEntityManager()->createQueryBuilder()
+			->select('city')
+			->from(City::class,'city')
+		;
+		
+		$i = -1;
+		$a = [];
+		foreach( $aCoordonate as $coordonate ) {
+			$q
+				->orWhere('city._x = ?'.++$i.' AND city._y = ?'.++$i)
+				//->setParameter('x'.$key, $oLocation->getX())
+				//->setParameter('y'.$key, $oLocation->getY())
+			;
+			$a[] = $coordonate[0];
+			$a[] = $coordonate[1];
+		}
+		$q->setParameters($a);
+		
+		$aCity = $q->getQuery()->getResult();
+		$aCity = ArrayTool::STindexBy($aCity, 'location.string');
+		
+		// Load overcrowd
+		$aOvercrowd = $oGame->getOvercrowdRepo()->findByCoordonateAr($a);
 		
 		return $this->render( 
 			'homeplanet/page/asset.html.twig', 
@@ -144,6 +178,9 @@ class AssetController extends BaseController {
 				'gameview' => $this->_createView($oGame, $oLocation),
 				'aPawnByloc' => $aPawnByLocation,
 				'aFluxByLocation' => $aFluxByLocation,
+				'aLocation' => $aLocation,
+				'worldmap' => $oGame->getWorldmap(),
+				'aCity' => $aCity,
 			]
 		);
 	}
@@ -166,13 +203,13 @@ class AssetController extends BaseController {
 		
 		
 		//_____________________________
-		//	Form sawp prod
+		//	Form switch prod
 		
 		// TODO : form validation
-		$oForm = $this->createFormBuilder( array() )
+		$oFormProd = $this->createFormBuilder( array() )
 			->add('production_type', EntityType::class, [
 				'class' => ProductionType::class,
-				'label' => false,
+				'label' => 'Production :',
 				'choice_label' => 'ressource.label',
 				'query_builder' => function (EntityRepository $er) use ($oEntity ){
 					return $er->createQueryBuilder('prodtype')
@@ -184,9 +221,9 @@ class AssetController extends BaseController {
 			->add('submit',SubmitType::class,['label'=>'Change'])
 			->getForm();
 		
-		$oForm->handleRequest( $oRequest );
+		$oFormProd->handleRequest( $oRequest );
 		
-		if( $oForm->isSubmitted() && $oForm->isValid() ) {
+		if( $oFormProd->isSubmitted() && $oFormProd->isValid() ) {
 			//$oEntity->clearProduction();
 			
 			//$oGame->getEntityManager()->persist($oEntity);
@@ -196,21 +233,42 @@ class AssetController extends BaseController {
 			$oEntity->addProduction( Production::create(
 					$oEntity, 
 					$oEntity->getLocationAr()[0], 
-					$oForm->getData()['production_type']
+					$oFormProd->getData()['production_type']
 			) );
 			$oGame->getEntityManager()->flush();
 			
 			//var_dump($oForm->getData()['production_type']);
+			return $this->redirect( $this->generateUrl('asset') );
+		}
+		
+		//_____________________________
+		//	Form sell asset
+		
+		$oFormSell = $this->createNamedBuilder('sell')
+			->add('submit',SubmitType::class,[
+					'label' => 'Sell '.$oEntity->getType()->getValue(),
+					'attr' => [
+							'class' => 'btn-danger',
+							'onclick' => 'return confirm("Are you sure?")',
+					], 
+			])
+			->getForm()
+		;
+			
+		$oFormSell->handleRequest( $oRequest );
+		
+		if( $oFormSell->isSubmitted() && $oFormSell->isValid() ) {
+			$em = $oGame->getEntityManager();
+			$em->remove( $oEntity );
+			$em->flush();
 			return $this->redirect( $oRequest->getUri() );
 		}
-			
-		
 		
 		//_____________________________
 		
 		
 		return $this->render(
-				'homeplanet/page/entityView.html.twig',
+				'homeplanet/page/pawnView.html.twig',
 				[
 						'date' => \date('d/m/Y H:i:s'),
 						'user' => $this->getUser(),
@@ -219,7 +277,8 @@ class AssetController extends BaseController {
 								'player' => $oGame->getContextPlayer(),
 								'game' => $oGame,
 						],
-						'form_prodtype' => $oForm->createView(),
+						'form_prodtype' => $oFormProd->createView(),
+						'form_delete' => $oFormSell->createView(),
 				]
 		);
 	
@@ -277,7 +336,6 @@ class AssetController extends BaseController {
 				
 			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}
-		
 		
 		
 		// Render

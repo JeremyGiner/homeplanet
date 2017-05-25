@@ -83,4 +83,27 @@ class ProductionType {
 		return $this->_aProdInputType;
 	}
 	
+	public function isSeller() {
+		// True if produce credit
+		return $this->getRessource()->getId() == 1;
+	}
+	
+	public function isBuyer() {
+		// True if firt produce input is credit
+		$first = $this->_aProdInputType->first();
+	
+		if( $first === null )
+			return false;
+		return $first->getRessource()->getId() == 1;
+	}
+	
+	public function isTransporter() {
+		$first = $this->_aProdInputType->first();
+	
+		if( $first === null )
+			return false;
+	
+		return $this->getRessource()->getId() == $first->getRessource()->getId();
+	}
+	
 }

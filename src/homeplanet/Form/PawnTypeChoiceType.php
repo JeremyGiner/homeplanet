@@ -30,7 +30,7 @@ class PawnTypeChoiceType extends AbstractType {
 	function configureOptions( OptionsResolver $oResolver ) {
 		$oResolver->setDefaults([
 			'class' => GameEntityType::class,
-			'choice_label' => 'label',
+			'choice_label' => false,
 			'expanded' => true,
 		]);
 	}
@@ -49,8 +49,15 @@ class PawnTypeChoiceType extends AbstractType {
 //	View
 	
 	
+	
 	public function buildView(FormView $oView, FormInterface $oForm, array $aOptions) {
 		
+	}
+	
+	public function finishView(FormView $oView, FormInterface $oForm, array $aOptions) {
+		foreach ( $oView->children as $key => $child ) {
+			$child->vars['label_printo'] = $oView->vars['choices'][$key]->data;
+		}
 	}
 	
 }

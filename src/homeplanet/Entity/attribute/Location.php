@@ -45,6 +45,10 @@ class Location {
 			abs($this->_y - $oLoc->_y);
 	}
 	
+	public function getString() {
+		return (string) $this;
+	}
+	
 //______________________________________________________________________________
 //	Sub-routine
 	

@@ -47,8 +47,16 @@
 	display: block;
 }
 
-.map .sprite-city {
+.sprite-city {
+	background-size: 100%;
 	background-image: url('http://vignette2.wikia.nocookie.net/thesettlersonline/images/3/38/Icon_settlers2hq.png/revision/latest?cb=20131120213525');
+}
+.sprite-cell-wrapper>.icon {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
 .map-cell {
@@ -62,11 +70,36 @@
 	cursor: not-allowed;
 }
 
+
 .icon {
+	position: relative;
+	/*
+	top: 1px;
+	*/
+	vertical-align: bottom;
 	display: inline-block;
 	width: 1em;
 	height: 1em;
+	font-size: 1.5em;
 }
+
+.sprite {
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.btn>.icon {
+	vertical-align: middle;
+}
+
+.ress-sprite {
+	font-size: 16px !important;
+}
+
 [class*='icon-credit-']:before{
 	content: "\e063";
 }

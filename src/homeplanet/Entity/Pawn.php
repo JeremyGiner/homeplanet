@@ -42,7 +42,7 @@ class Pawn {
 	/**
 	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\PawnType")
 	 * @ORM\JoinColumn(name="type_id", referencedColumnName="id")
-	 * @var EntityType
+	 * @var PawnType
 	 */
 	protected $_oType;
 	

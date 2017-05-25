@@ -5,15 +5,25 @@ use homeplanet\Entity\PawnType;
 use Symfony\Component\Validator\Constraints as Assert;
 use homeplanet\Entity\Player;
 use homeplanet\Entity\attribute\Location;
+use Symfony\Component\Validator\GroupSequenceProviderInterface;
 
-
+/**
+ * @Assert\GroupSequence({"BuildingBuy","after"})
+ */
 class BuildingBuy {
 	
 	/**
+	 * @Assert\NotBlank(message="Select an asset")
 	 * @var PawnType
 	 */
 	protected $_oPawnType;
+	
+	/**
+	 * @Assert\NotBlank(message="Invalid location")
+	 * @var PawnType
+	 */
 	protected $_oLocation;
+	
 	/**
 	 * @var Player
 	 */
@@ -30,7 +40,7 @@ class BuildingBuy {
 	
 //_____________________________________________________________________________
 //	Accessor
-
+	
 	function getPawnType() {
 		return $this->_oPawnType;
 	}
@@ -41,6 +51,10 @@ class BuildingBuy {
 	
 	function getLocation() {
 		return $this->_oLocation;
+	}
+	
+	function getCost() {
+		return $this->getPawnType()->getValue();
 	}
 	
 //_____________________________________________________________________________
@@ -56,14 +70,23 @@ class BuildingBuy {
 
 //_____________________________________________________________________________
 //	Validation
-
+	
 	/**
 	 * @Assert\GreaterThanOrEqual(
 	 *     value = 0,
-	 *     message = "not enought money"
+	 *     message = "Not enought money",
+	 *     groups={"after"}
 	 * )
 	 */
 	function getPlayerCreditNew() {
-		return $this->_oPlayer->getCredit() - $this->_oPawnType->getValue();
+		
+		// Quick fix for validation GroupSequence bug
+		// TODO : use Group Sequence Providers
+		if( $this->_oPawnType === null )
+			return -1;
+		
+		
+		return $this->_oPlayer->getCredit() - $this->getCost();
 	}
+	
 }

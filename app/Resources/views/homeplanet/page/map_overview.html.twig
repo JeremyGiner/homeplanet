@@ -18,6 +18,17 @@
 	{% endembed %}
 	
 	{% include 'homeplanet/panel/location_detail.html.twig' %}
+		
+	{% if city != null %}
+	{% embed 'bootstrap/panel.html.twig' %}
+	{% block header %}
+		City at {{ gameview.location }}
+	{% endblock %}
+	{% block content %}
+		{{ printo(city) }}
+	{% endblock %}
+	{% endembed %}
+	{% endif %}
 </div>
 </div>
 {% endblock %}

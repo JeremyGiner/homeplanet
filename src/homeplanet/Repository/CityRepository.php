@@ -49,7 +49,7 @@ WHERE city._x = :x
 		])
 			->useQueryCache(true)
 			->useResultCache(true);
-		return $oQuery->getResult();
+		return $oQuery->getFirstResult();
 	}
 	
 	/**

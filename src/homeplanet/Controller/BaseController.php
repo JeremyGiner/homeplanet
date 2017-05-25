@@ -7,6 +7,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Game;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 
 class BaseController extends Controller {
 	
@@ -58,6 +60,33 @@ class BaseController extends Controller {
 				$this->_oLocation->getY()
 		);
 		
+	}
+	
+	/**
+	 * 
+	 * @param string $name
+	 * @param mixed $type
+	 * @param mixed $data
+	 * @param array $options
+	 * @param FormBuilderInterface $parent
+	 * @return FormBuilderInterface
+	 */
+	public function createNamedBuilder(
+		$name, 
+		$type = null, 
+		mixed $data = null, 
+		array $options = array(), 
+		FormBuilderInterface $parent = null
+	) {
+		if( $type == 'form' || $type == null )
+			$type = FormType::class;
+		return $this->get('form.factory')->createNamedBuilder(
+				$name,
+				$type,
+				$data,
+				$options,
+				$parent
+		);
 	}
 	
 	// TODO : create class

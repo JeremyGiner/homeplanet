@@ -1,0 +1,29 @@
+<a class="btn-group btn-group-sm" href="{{ url('map_overview',{location: o.location~''}) }}">
+	<div class="btn btn-default">
+		<span class="glyphicon glyphicon-map-marker"></spaN>
+		{{ o.location }} 
+	</div>
+	<div class="btn" data-tooltip="#tip-first" data-placement="right"
+		style="background-color: #{{ o.getColorHex() }};width: 28px;"
+	>
+		{% if param.city != null %}
+			<div class="sprite sprite-city"></div>
+		{% endif %} 
+		&nbsp;
+	</div>
+</a>
+<div id="tip-first" class="tip-content hidden" style="color: black;">
+	<ul class="list-group">
+	{% set game = o.worldmap.game %}
+	{% for iRessId, iRessQuantity in o.getRessNatQuantityAr() %}
+		{{ printo(game.getRessource(iRessId)) }}
+		{% set overcrowd = o.overcrowd(iRessId).quantity|default(0) %}
+		{{ max(0,iRessQuantity - overcrowd) }}
+		{%  if (overcrowd is defined) %}
+			<span class="text-muted small">
+				( {{ iRessQuantity }} - {{ overcrowd }} )
+			</span>
+		{% endif %}
+	{% endfor %}
+	</ul>
+</div>

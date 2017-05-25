@@ -5,11 +5,17 @@ use homeplanet\tool\Perlin;
 use homeplanet\tool\OpenSimplexNoise;
 use homeplanet\tool\F;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use homeplanet\Game;
 
 /**
  * Sector(169x169)>Region(13x13)>Location(1x1)
  */
 class Worldmap {
+	
+	/**
+	 * @var Game
+	 */
+	protected $_oGame;
 	
 	/**
 	 * Index by x then y
@@ -32,7 +38,8 @@ class Worldmap {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct() {
+	public function __construct( Game $oGame ) {
+		$this->_oGame = $oGame;
 		$this->_aTile = [];
 	}
 	
@@ -52,6 +59,10 @@ class Worldmap {
 		return $this->_aTile[ $sKey ];
 	}
 	
+	public function getGame() {
+		return $this->_oGame;
+	}
+	
 	public function loadRegion( $iRegionX, $iRegionY ) {
 		
 		
@@ -66,6 +77,13 @@ class Worldmap {
 		// Attempt to get from cache
 		$oItem = $cache->getItem($sKey);
 		if ($oItem->isHit()) {
+			
+			$aTile = $oItem->get();
+			foreach ( $aTile as $oTile ) {
+				$oTile->setWorldmap( $this );
+				//var_dump($oTile);
+			}
+			
 			$this->_aTile = array_replace( $this->_aTile, $oItem->get());
 			return;
 		}
@@ -322,7 +340,9 @@ class Worldmap {
 		$oTileSouth = isset($this->_aTile[$x.':'.($y-1)])?
 			$this->_aTile[$x.':'.($y-1)]:
 			null;
+		
 		return new Tile(
+				$this,
 				new Location( $x, $y ),
 				$fElevation,
 				$fHumidity,

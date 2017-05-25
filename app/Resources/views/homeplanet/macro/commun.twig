@@ -49,7 +49,7 @@
 	{% set a = i|trim|reverse|split('',3) %}
 	{% for key,s in a|reverse %}
 		{{ s|reverse|number_format }}
-		<span class="icon icon-credit-{{ a|length-key-1 }}"></span>
+		<span class="glyphicon icon-credit-{{ a|length-key-1 }}"></span>
 	{% endfor %}
 
 {% endmacro  %}

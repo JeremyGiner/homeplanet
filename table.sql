@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS `city` (
   `location_y` int(10) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `location_x_location_y_unique` (`location_x`,`location_y`),
-  KEY `location_x_location_y` (`location_x`,`location_y`)
+  KEY `location_x_location_y` (`location_x`,`location_y`),
+  KEY `label` (`label`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -31,8 +32,11 @@ CREATE TABLE IF NOT EXISTS `demand` (
   `percent` float unsigned NOT NULL,
   `sold` int(10) unsigned NOT NULL DEFAULT '0',
   `price_modifier` float unsigned NOT NULL DEFAULT '0' COMMENT 'calc by proc demand_update',
+  `value` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`city_id`,`ressource_id`),
-  CONSTRAINT `FK_demand_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `FK_demand_ressource` (`ressource_id`),
+  CONSTRAINT `FK_demand_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_demand_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -88,9 +92,9 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   `label` varchar(200) DEFAULT NULL,
   `level` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
-  KEY `FK_entity_entitytype` (`type_id`),
   KEY `FK_entity_player` (`player_id`),
-  CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`)
+  KEY `FK_entity_entitytype` (`type_id`),
+  CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -99,8 +103,22 @@ CREATE TABLE IF NOT EXISTS `pawn` (
 -- Dumping structure for table gigablaster.pawntype
 CREATE TABLE IF NOT EXISTS `pawntype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `category_id` int(10) unsigned NOT NULL DEFAULT '1',
   `label` varchar(250) NOT NULL,
   `value_base` int(10) unsigned NOT NULL DEFAULT '0',
+  `description` text,
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `FK_pawntype_pawntypecategory` FOREIGN KEY (`category_id`) REFERENCES `pawntypecategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.pawntypecategory
+CREATE TABLE IF NOT EXISTS `pawntypecategory` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -111,7 +129,10 @@ CREATE TABLE IF NOT EXISTS `pawntype` (
 CREATE TABLE IF NOT EXISTS `pawntype_prodtype_assoc` (
   `pawntype_id` int(11) unsigned NOT NULL,
   `prodtype_id` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`pawntype_id`,`prodtype_id`)
+  PRIMARY KEY (`pawntype_id`,`prodtype_id`),
+  KEY `FK_pawntype_prodtype_assoc_prodtype` (`prodtype_id`),
+  CONSTRAINT `FK_pawntype_prodtype_assoc_pawntype` FOREIGN KEY (`pawntype_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_pawntype_prodtype_assoc_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -132,7 +153,7 @@ CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
 -- Dumping structure for table gigablaster.player
 CREATE TABLE IF NOT EXISTS `player` (
   `user_id` int(10) unsigned NOT NULL,
-  `id` int(10) unsigned NOT NULL DEFAULT '0',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(250) NOT NULL,
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
   `income` int(10) unsigned NOT NULL DEFAULT '0',
@@ -198,7 +219,9 @@ CREATE TABLE IF NOT EXISTS `prodinputtype` (
   `ressource_id` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `comment` varchar(250) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `FK_prodinputtype_ressource` (`ressource_id`),
+  CONSTRAINT `FK_prodinputtype_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -210,7 +233,9 @@ CREATE TABLE IF NOT EXISTS `prodtype` (
   `ressource_id` int(10) unsigned NOT NULL DEFAULT '0',
   `quantity` int(10) NOT NULL DEFAULT '0',
   `comment` text,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `FK_prodtype_ressource` (`ressource_id`),
+  CONSTRAINT `FK_prodtype_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -220,7 +245,10 @@ CREATE TABLE IF NOT EXISTS `prodtype` (
 CREATE TABLE IF NOT EXISTS `prodtype_prodinputtype_assoc` (
   `prodtype_id` int(11) unsigned NOT NULL,
   `prodinputtype_id` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`prodtype_id`,`prodinputtype_id`)
+  PRIMARY KEY (`prodtype_id`,`prodinputtype_id`),
+  KEY `FK_prodtype_prodinputtype_assoc_prodinputtype` (`prodinputtype_id`),
+  CONSTRAINT `FK_prodtype_prodinputtype_assoc_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_prodtype_prodinputtype_assoc_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -272,7 +300,10 @@ CREATE TABLE IF NOT EXISTS `ressource` (
   `label` varchar(250) NOT NULL DEFAULT '0',
   `baseprice` int(10) unsigned NOT NULL DEFAULT '1',
   `natural` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'bool',
-  PRIMARY KEY (`id`)
+  `description` text,
+  PRIMARY KEY (`id`),
+  KEY `natural` (`natural`),
+  KEY `baseprice` (`baseprice`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -282,7 +313,10 @@ CREATE TABLE IF NOT EXISTS `ressource` (
 CREATE TABLE IF NOT EXISTS `ressource_rescategory` (
   `rescat_id` int(10) unsigned NOT NULL,
   `res_id` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`rescat_id`,`res_id`)
+  PRIMARY KEY (`rescat_id`,`res_id`),
+  KEY `FK_ressource_rescategory_ressource` (`res_id`),
+  CONSTRAINT `FK_ressource_rescategory_rescategory` FOREIGN KEY (`rescat_id`) REFERENCES `rescategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_ressource_rescategory_ressource` FOREIGN KEY (`res_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -383,7 +417,8 @@ CREATE TABLE `overcrowd` (
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `player_ext` (
 	`player_id` INT(10) UNSIGNED NOT NULL,
-	`cart_used` DECIMAL(32,0) NOT NULL
+	`cart_used` DECIMAL(32,0) NOT NULL,
+	`income` DOUBLE NOT NULL
 ) ENGINE=MyISAM;
 
 
@@ -510,15 +545,11 @@ END//
 DELIMITER ;
 
 
--- Dumping structure for procedure gigablaster.demand_update
+-- Dumping structure for procedure gigablaster.demand_update_pricemodifier
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `demand_update`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `demand_update_pricemodifier`()
 BEGIN
-
-	# Disable full_group_only disable 
-	SET SESSION sql_mode = '';
-
-	# Upate basic food and essential price modifier
+	# Upate
 	UPDATE demand
 	JOIN
 	(
@@ -533,11 +564,44 @@ BEGIN
 					20,
 				GREATEST(
 					1,
-					20- SUM(sold.quantity)*10
-					/ population.quantity
-					
+					20 - 10 * (
+						SUM(sold.quantity /*TODO: - bought.quantity */ )
+						/ demand.value
+					)
 				))
 			) AS price_modifier_new
+		FROM demand
+		
+		# Get sold if any
+		LEFT JOIN sold 
+			ON demand.city_id = sold.buyer_id 
+			AND demand.ressource_id = sold.ressource_id
+			
+		GROUP BY demand.city_id, demand.ressource_id
+	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
+	SET demand.price_modifier = t.price_modifier_new;
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure gigablaster.demand_update_value
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `demand_update_value`()
+BEGIN
+
+	# Disable full_group_only disable 
+	SET SESSION sql_mode = '';
+
+	# Upate basic food and essential value to population quantity
+	UPDATE demand
+	JOIN
+	(
+		# Get new price modifier
+		# Require full_group_only disabled
+		SELECT 
+			demand.city_id,
+			demand.ressource_id,
+			population.quantity AS value_new
 		FROM demand
 		
 		# Include basic food
@@ -553,13 +617,40 @@ BEGIN
 		JOIN population ON population.city_id = demand.city_id
 		
 		# Get sold if any
-		LEFT JOIN sold 
-			ON demand.city_id = sold.buyer_id 
-			AND demand.ressource_id = sold.ressource_id
+		#LEFT JOIN sold 
+		#	ON demand.city_id = sold.buyer_id 
+		#	AND demand.ressource_id = sold.ressource_id
 			
 		GROUP BY demand.city_id, demand.ressource_id
 	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
-	SET demand.price_modifier = t.price_modifier_new;
+	SET demand.value = t.value_new;
+	
+	# Upate innessential and luxury on random value
+	UPDATE demand
+	JOIN
+	(
+		SELECT 
+			demand.city_id,
+			demand.ressource_id,
+			ROUND(RAND() * 1 * population.quantity ) AS value_new
+		FROM demand
+		
+		# Include basic food
+		JOIN ressource ON ressource.id = demand.ressource_id
+		JOIN ressource_rescategory 
+			ON ressource_rescategory.res_id = ressource.id
+			AND (
+				ressource_rescategory.rescat_id = 10/*inessential*/
+				OR ressource_rescategory.rescat_id != 4/*luxury*/
+			)
+		
+		# Get related population
+		JOIN population ON population.city_id = demand.city_id
+		
+			
+		GROUP BY demand.city_id, demand.ressource_id
+	) as t ON t.city_id = demand.city_id AND t.ressource_id = demand.ressource_id
+	SET demand.value = t.value_new;
 	
 END//
 DELIMITER ;
@@ -695,47 +786,136 @@ BEGIN
 	) AS tprod_percent ON prod.id = tprod_percent.prod_id
 	SET prod.percent_max = tprod_percent.percent;
 	
-/* Update SELL prod percent depending on the availability of prodinput and the demand */
+/* ____________________________________________________________________________________
+	Update SELL prod percent depending on the availability of prodinput and the demand */
 	UPDATE prod 
 	
 	JOIN (
-				SELECT 
+		SELECT 
 			prod.id as prod_id,
 			LEAST(
 				1.0,
 				MIN(
 					( 
-						( prodinputtype.quantity / prodinput_sum.quantity ) * IFNULL(prod_sum.quantity, 0) 
+						( prodinputtype.quantity / tprodinput_sum.quantity ) 
+						* IFNULL(prod_sum.quantity, 0) 
 					) / prodinputtype.quantity
 				)
 			)
-			* IF(MAX(demand.price_modifier) IS NULL,0,1) as percent
+			* IF(MAX(demand.price_modifier) IS NULL,0,1) # Check if demand at this location
+			as percent
 		FROM prod
-		JOIN prodtype ON prodtype.id = prod.prodtype_id
+		JOIN pawn ON pawn.id = prod.pawn_id
+		
+		# Filter prodtype: seller
+		JOIN prodtype 
+			ON prodtype.id = prod.prodtype_id
+			AND prodtype.ressource_id = 1
+		
 		JOIN prodinput ON prodinput.prod_id = prod.id
 		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+		
+		# Get sum of output at this location for product needed
 		LEFT JOIN prod_sum 
 			ON prod_sum.location_x = prodinput.location_x
 			AND prod_sum.location_y = prodinput.location_y
 			AND prod_sum.ressource_id = prodinputtype.ressource_id
-		LEFT JOIN prodinput_sum
-			ON prodinput_sum.location_x = prodinput.location_x
-			AND prodinput_sum.location_y = prodinput.location_y
-			AND prodinput_sum.ressource_id = prodinputtype.ressource_id
-		JOIN ressource 
-			ON ressource.id = prodinputtype.ressource_id
-			AND ressource.`natural` = 0
+			
+		# Get sum of need of other input at this location
+		LEFT JOIN (
+			SELECT 
+				pawn.player_id,
+				prodinput.location_x,
+				prodinput.location_y,
+				prodinputtype.ressource_id,
+				SUM(prodinputtype.quantity) as quantity
+			FROM prodinput
+			JOIN prod ON prod.id = prodinput.prod_id
+			JOIN pawn ON pawn.id = prod.pawn_id
+			JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+			GROUP BY 
+				pawn.player_id,
+				prodinput.location_x,
+				prodinput.location_y,
+				prodinputtype.ressource_id
+		) as tprodinput_sum
+			ON tprodinput_sum.player_id = pawn.player_id
+			AND tprodinput_sum.location_x = prodinput.location_x
+			AND tprodinput_sum.location_y = prodinput.location_y
+			AND tprodinput_sum.ressource_id = prodinputtype.ressource_id
+		
+		# Get demand at this location
 		LEFT JOIN city 
 			ON city.location_x = prod.location_x
 			AND city.location_y = prod.location_y
 		LEFT JOIN demand 
 			ON demand.city_id = city.id
 			AND demand.ressource_id = prodinputtype.ressource_id
-		WHERE prodtype.ressource_id = 1 # exclude sell
+		
+		GROUP BY prod.id
+
+	) AS tprod_percent ON prod.id = tprod_percent.prod_id
+	SET prod.percent_max = tprod_percent.percent;
+
+/* ____________________________________________________________________________________
+Update BUY prod percent */
+	UPDATE prod 
+	
+	JOIN (
+		SELECT 
+			prod.id as prod_id,
+			LEAST(
+				1.0,
+				IF(
+					tcost.cost = 0,
+					1.0,
+					player.credit / tcost.cost
+				)
+			)
+			* IF(MAX(demand.price_modifier) IS NULL,0,1) as percent
+		FROM prod
+		JOIN prodtype ON prodtype.id = prod.prodtype_id
+		
+		# FILTER prod of type buy
+		JOIN prodinput ON prodinput.prod_id = prod.id
+		JOIN prodinputtype 
+			ON prodinputtype.id = prodinput.prodinputtype_id
+			AND prodinputtype.ressource_id = 1 # buy only
+		
+		# JOIN demand
+		LEFT JOIN city 
+			ON city.location_x = prod.location_x
+			AND city.location_y = prod.location_y
+		LEFT JOIN demand 
+			ON demand.city_id = city.id
+			AND demand.ressource_id = prodtype.ressource_id
+		
+		# JOIN player
+		JOIN pawn ON prod.pawn_id = pawn.id
+		JOIN player ON player.id = pawn.player_id
+		
+		# JOIN Player total buy cost 
+		JOIN (
+			SELECT 
+				player.id as player_id,
+				IFNULL( SUM( demand.price_modifier * ressource.baseprice ), 0)  as cost
+			FROM prod
+			JOIN prodtype ON prodtype.id = prod.prodtype_id
+			JOIN pawn ON prod.pawn_id = pawn.id
+			JOIN player ON player.id = pawn.player_id
+			LEFT JOIN city 
+				ON city.location_x = prod.location_x
+				AND city.location_y = prod.location_y
+			LEFT JOIN demand 
+				ON demand.city_id = city.id
+				AND demand.ressource_id = prodtype.ressource_id
+			LEFT JOIN ressource ON ressource.id = demand.ressource_id
+			GROUP BY player.id
+		) as tcost ON tcost.player_id = player.id
+		
 		GROUP BY prod.id
 	) AS tprod_percent ON prod.id = tprod_percent.prod_id
 	SET prod.percent_max = tprod_percent.percent;
-	
 	
 END//
 DELIMITER ;
@@ -828,7 +1008,8 @@ BEGIN
 	
 	CALL `city_spawn`();
 	
-	CALL `demand_update`();
+	CALL `demand_update_value`();
+	CALL `demand_update_pricemodifier`();
 	
 	CALL `income_update`();
 	CALL `credit_update`();
@@ -879,7 +1060,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view gigablaster.player_ext
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `player_ext`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `t_cart`.`player_id` AS `player_id`,`t_cart`.`cart_used` AS `cart_used` from (select `gigablaster`.`player`.`id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`level`),0) AS `cart_used` from (`gigablaster`.`player` left join `gigablaster`.`pawn` on(((`gigablaster`.`pawn`.`player_id` = `gigablaster`.`player`.`id`) and (`gigablaster`.`pawn`.`type_id` = 10)))) group by `gigablaster`.`player`.`id`) `t_cart`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `gigablaster`.`player`.`id` AS `player_id`,ifnull(`tcartused`.`value`,0) AS `cart_used`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`gigablaster`.`player` left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`level`),0) AS `value` from `gigablaster`.`pawn` where (`gigablaster`.`pawn`.`type_id` = 10) group by `gigablaster`.`pawn`.`player_id`) `tcartused` on((`tcartused`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`gigablaster`.`pawn` join `gigablaster`.`sold` on((`sold`.`seller_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `sold`.`buyer_id`) and (`gigablaster`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `sold`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`)),0) AS `value` from (((((`gigablaster`.`pawn` join `gigablaster`.`prod` on((`gigablaster`.`prod`.`pawn_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`prodtype` on((`gigablaster`.`prodtype`.`id` = `gigablaster`.`prod`.`prodtype_id`))) join `gigablaster`.`city` on(((`gigablaster`.`city`.`location_x` = `gigablaster`.`prod`.`location_x`) and (`gigablaster`.`city`.`location_y` = `gigablaster`.`prod`.`location_y`)))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `gigablaster`.`city`.`id`) and (`gigablaster`.`demand`.`ressource_id` = `gigablaster`.`prodtype`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `gigablaster`.`demand`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `gigablaster`.`player`.`id`)));
 
 
 -- Dumping structure for view gigablaster.prodinput_sum
