@@ -26,7 +26,7 @@ class ProductionInput {
 	 *     cascade={"persist"}
 	 * )
 	 * @ORM\JoinColumn(name="prod_id", referencedColumnName="id")
-	 * @var ProductionType
+	 * @var Production
 	 */
 	protected $_oProd;
 	
@@ -78,7 +78,9 @@ class ProductionInput {
 	}
 	
 	public function getQuantity() {
-		return $this->getType()->getQuantity();
+		return $this->getType()->getQuantity()
+			* $this->getProduction()->getRatioMax()
+		;
 	}
 	
 }

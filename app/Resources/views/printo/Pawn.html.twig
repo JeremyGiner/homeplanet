@@ -7,31 +7,15 @@
 </div>
 <div class="col-xs-8">
 	<h4>
-		#{{ o.getId() }} {{ o.getType().getLabel() }} 
+		#{{ o.getId() }} {{ o.type.label|capitalize() }} 
+		<small class="pull-right">
+			Lvl.{{ o.grade }}
+		</small>
 	</h4>
 	({{ o.getLocationAr()|join(';') }})
 	
 	{% for oProduction in o.getProductionAr() %}
-		{{ printo(oProduction.getType()) }}
-		{% if( oProduction.getType().getRessource().getId() == 1 ) %}
-			{% if oProduction.getRatioMax() < 1 %}
-				<p class="bg-danger">
-					Working at 
-					{{ (oProduction.getRatioMax()*100)|round }}%
-					efficiency.<br>
-					Require ressources or buyer.
-				</p>
-			{% endif %}
-		{% else %}
-			{% if oProduction.getRatioMax() < 1 %}
-				<p class="bg-danger">
-					Working at 
-					{{ (oProduction.getRatioMax()*100)|round }}%
-					efficiency.<br>
-					Require ressources.
-				</p>
-			{% endif %}
-		{% endif %}
+		{{ printo(oProduction) }}
 	{% endfor %}
 </div>
 </div>

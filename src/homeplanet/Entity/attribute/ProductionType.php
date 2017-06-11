@@ -3,6 +3,7 @@ namespace homeplanet\Entity\attribute;
 
 use Doctrine\ORM\Mapping as ORM;
 use homeplanet\Entity\Ressource;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
@@ -80,7 +81,7 @@ class ProductionType {
 	 * @return ProductionInputType[]
 	 */
 	public function getProdInputTypeAr() {
-		return $this->_aProdInputType;
+		return $this->_aProdInputType->toArray();
 	}
 	
 	public function isSeller() {
@@ -104,6 +105,14 @@ class ProductionType {
 			return false;
 	
 		return $this->getRessource()->getId() == $first->getRessource()->getId();
+	}
+	
+	public function getLabel() {
+		$a = array_map(function( $oProdInputType ) {
+			return $oProdInputType->getRessource()->getLabel();
+		}, $this->getProdInputTypeAr() );
+		
+		return implode(',', $a).' -> '.$this->getRessource()->getLabel();
 	}
 	
 }

@@ -46,6 +46,11 @@ class Pawn {
 	 */
 	protected $_oType;
 	
+	/**
+	 * @ORM\Column(type="integer", name="grade")
+	 */
+	protected $_iGrade;
+	
 //_____________________________________
 //	Attribute
 	
@@ -78,6 +83,8 @@ class Pawn {
 		$this->_aPosition = new ArrayCollection();
 		$this->_aProduction = new ArrayCollection();
 		$this->_aDemand = new ArrayCollection();
+		
+		$this->_iGrade = 1;
 		/*
 		foreach ( $this->_oType->getAttributeDefault( $this, 'production' ) as $oProd )
 			$this->_aProduction->add( $oProd );
@@ -101,6 +108,10 @@ class Pawn {
 	
 	public function getPlayer() {
 		return $this->_oPlayer;
+	}
+	
+	public function getGrade() {
+		return $this->_iGrade;
 	}
 	/**
 	 * @return EntityLocation[]
@@ -145,10 +156,17 @@ class Pawn {
 	
 	public function addLocation( Location $oLoc ) {
 		$this->_aPosition->add( new PawnLocation($this, $oLoc));
+		return $this;
 	}
 	
 	public function addProduction( Production $oProd ) {
 		$this->_aProduction->add( $oProd );
+		return $this;
+	}
+	
+	public function upgrade() {
+		$this->_iGrade++;
+		return $this;
 	}
 
 }

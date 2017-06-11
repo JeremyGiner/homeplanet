@@ -1,6 +1,7 @@
 <?php
 namespace homeplanet\Entity\attribute;
 use Doctrine\ORM\Mapping as ORM;
+use homeplanet\Entity\Ressource;
 
 /**
  * @ORM\Entity

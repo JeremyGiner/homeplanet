@@ -7,7 +7,7 @@ use homeplanet\Entity\Pawn;
 use homeplanet\Entity\Tile;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="homeplanet\Repository\ProductionRepository")
  * @ORM\Table(name="prod")
  */
 class Production {
@@ -64,13 +64,26 @@ class Production {
 	 */
 	protected $_fRatioMax;
 	
+	/**
+	 * @ORM\Column(type="integer", name="grade")
+	 * @var int
+	 */
+	protected $_iGrade;
+	
+	/**
+	 * @ORM\Column(type="boolean", name="updated")
+	 * @var boolean
+	 */
+	protected $_bUpdated;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
 	function __construct( 
 			Pawn $oPawn, 
 			Location $oLocation, 
-			ProductionType $oProdType
+			ProductionType $oProdType,
+			$iGrade = null
 	) {
 		$this->_oPawn = $oPawn;
 		$this->_iLocationX = $oLocation->getX();
@@ -81,6 +94,8 @@ class Production {
 		
 		$this->_aProdInput = new ArrayCollection();
 		
+		$this->_iGrade = ( is_null($iGrade) ) ? $oPawn->getGrade() : $iGrade;
+		$this->_bUpdated = false;
 	}
 	
 	static public function create(
@@ -117,9 +132,17 @@ class Production {
 	public function getType() {
 		return $this->_oProdType;
 	}
+	public function getGrade() {
+		return $this->_iGrade;
+	}
+	
+	public function getRatio() {
+		return $this->getRatioMax();
+	}
 	public function getRatioMax() {
 		return $this->_fRatioMax;
 	}
+	
 	/**
 	 * @return ProductionInput[]
 	 */
@@ -128,7 +151,10 @@ class Production {
 	}
 	
 	public function getQuantity() {
-		return $this->getType()->getQuantity()*$this->getRatioMax();
+		return $this->getType()->getQuantity()
+			* $this->getRatioMax()
+			//* $this->getGrade()
+		;
 	}
 	
 	public function isSeller() {
@@ -137,7 +163,7 @@ class Production {
 	}
 	
 	public function isBuyer() {
-		// True if firt produce input is credit
+		// True if firt input is credit
 		$first = $this->_aProdInput->first();
 		
 		if( $first === null )
@@ -154,11 +180,37 @@ class Production {
 		return $this->getType()->getRessource()->getId() == $first->getType()->getRessource()->getId();
 	}
 	
+	public function isHarvester() {
+		// True if firt input is natural deposit
+		$first = $this->_aProdInput->first();
+		
+		if( $first === null )
+			return false;
+		
+		return $first->getType()->getRessource()->isNatural();
+	}
+	
 //______________________________________________________________________________
 //	Modifier
 	
 	public function setRatio( $f ) {
-		$this->_fRatioMax = $f;
+		if( !$this->isHarvester() )
+			throw new Exception('non-harvester is getting set ratio');
+		
+		$this->_fRatioMax = min( $this->getGrade(), $f);
+		return $this;
+	}
+	
+	public function setGrade( $i ) {
+		$this->_iGrade = $i;
+		$this->_fRatioMax = 0;
+		if( !$this->isHarvester() )
+			$this->_bUpdated = false;
+		return $this;
+	}
+	
+	public function setNotUpdated() {
+		$this->_bUpdated = false;
 		return $this;
 	}
 	

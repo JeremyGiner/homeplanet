@@ -17,6 +17,7 @@ use homeplanet\Entity\attribute\Production;
 use homeplanet\Form\TradeRouteFactory;
 use homeplanet\Form\TradeRouteCreationForm;
 use homeplanet\Entity\Player;
+use homeplanet\Form\Buy;
 use homeplanet\Form\BuildingBuy;
 use homeplanet\Form\BuildingBuyForm;
 use homeplanet\Form\MerchantCreationForm;
@@ -56,6 +57,8 @@ class AssetController extends BaseController {
 	 */
 	public function mainAction( Request $oRequest ) {
 		
+		
+		
 		$this->_handleRequest( $oRequest );
 		
 		$oEntityManager = $this->getDoctrine()->getManager();
@@ -68,8 +71,8 @@ class AssetController extends BaseController {
 		// Check game
 		$oGame = $this->_oGame;
 		
-		$oPlayer = $oGame->getPlayer();
 		
+		$oPlayer = $oGame->getPlayer();
 		//_____________________________
 		// Render
 		
@@ -210,7 +213,7 @@ class AssetController extends BaseController {
 			->add('production_type', EntityType::class, [
 				'class' => ProductionType::class,
 				'label' => 'Production :',
-				'choice_label' => 'ressource.label',
+				'choice_label' => 'label',
 				'query_builder' => function (EntityRepository $er) use ($oEntity ){
 					return $er->createQueryBuilder('prodtype')
 					->join('prodtype._aPawnType', 'pawntype')
@@ -230,15 +233,54 @@ class AssetController extends BaseController {
 			foreach ( $oEntity->getProductionAr() as $oProd ) {
 				$oGame->getEntityManager()->remove($oProd);
 			}
-			$oEntity->addProduction( Production::create(
+			$oProd = Production::create(
 					$oEntity, 
 					$oEntity->getLocationAr()[0], 
 					$oFormProd->getData()['production_type']
-			) );
+			);
+			$oEntity->addProduction( $oProd );
 			$oGame->getEntityManager()->flush();
+			
+			$oGame->getProductionRepo()->updateProduction();
 			
 			//var_dump($oForm->getData()['production_type']);
 			return $this->redirect( $this->generateUrl('asset') );
+		}
+		
+		//_____________________________
+		//	Form upgrade asset
+		
+		$oBuyUpgrade = new Buy($oGame->getPlayer(), $oEntity->getType()->getValue());
+		$oFormUpgrade = $this->createNamedBuilder(
+				'upgrade', 
+				FormType::class, 
+				$oBuyUpgrade
+			)
+			->add('submit',SubmitType::class,[
+					'label' => 'Upgrade '.$oEntity->getType()->getValue(),
+					'attr' => [
+							'class' => 'btn-primary',
+					], 
+			])
+			->getForm()
+		;
+			
+		$oFormUpgrade->handleRequest( $oRequest );
+		
+		if( $oFormUpgrade->isSubmitted() && $oFormUpgrade->isValid() ) {
+			$oBuyUpgrade->getPlayer()->setCredit( $oBuyUpgrade->getPlayerCreditNew() );
+			
+			// Update entity's grade and his production
+			$oEntity->upgrade();
+			foreach ( $oEntity->getProductionAr() as $oProduction ) {
+				$oGame->updateProductionRatio($oProduction);
+			}
+			
+			$oGame->getEntityManager()->flush();
+			
+			$oGame->getProductionRepo()->updateProduction();
+			
+			return $this->redirect( $oRequest->getUri() );
 		}
 		
 		//_____________________________
@@ -259,8 +301,23 @@ class AssetController extends BaseController {
 		
 		if( $oFormSell->isSubmitted() && $oFormSell->isValid() ) {
 			$em = $oGame->getEntityManager();
+			$oProdRepo = $oGame->getProductionRepo();
+			
+			// 
+			foreach ( $oEntity->getProductionAr() as $oProd ) {
+				
+				foreach ( $oProdRepo->getSupplied($oProd) 
+						as $oSupplied 
+				) {
+					$oSupplied->setNotUpdated();
+				}
+			}
+			//
 			$em->remove( $oEntity );
 			$em->flush();
+			
+			$oProdRepo->updateProduction();
+			
 			return $this->redirect( $oRequest->getUri() );
 		}
 		
@@ -279,6 +336,7 @@ class AssetController extends BaseController {
 						],
 						'form_prodtype' => $oFormProd->createView(),
 						'form_delete' => $oFormSell->createView(),
+						'form_upgrade' => $oFormUpgrade->createView(),
 				]
 		);
 	
@@ -333,6 +391,9 @@ class AssetController extends BaseController {
 			
 			$oPawn = $a['entity'];
 			$oGame->addPawn( $a['entity'], $a['addOn'] );
+			
+			$oGame->getProductionRepo()->updateProduction();
+			
 				
 			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}

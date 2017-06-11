@@ -21,6 +21,11 @@
 				{% form_theme form_delete 'bootstrap_3_horizontal_layout.html.twig' %}
 				{{ form(form_delete) }}
 			{% endif %}
+			{% if form_upgrade is defined %}
+				<hr/>
+				{% form_theme form_delete 'bootstrap_3_horizontal_layout.html.twig' %}
+				{{ form(form_upgrade) }}
+			{% endif %}
 		{% endblock %}
 	{% endembed %}
 	</div>

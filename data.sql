@@ -13,15 +13,19 @@
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.demand: ~0 rows (approximately)
+-- Dumping data for table gigablaster.demand: ~22 rows (approximately)
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
+
+-- Dumping data for table gigablaster.event: ~0 rows (approximately)
+/*!40000 ALTER TABLE `event` DISABLE KEYS */;
+/*!40000 ALTER TABLE `event` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.gamestate: ~0 rows (approximately)
 /*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.influencemodifier: ~0 rows (approximately)
+-- Dumping data for table gigablaster.influencemodifier: ~2 rows (approximately)
 /*!40000 ALTER TABLE `influencemodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `influencemodifier` ENABLE KEYS */;
 
@@ -37,7 +41,11 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawn: ~0 rows (approximately)
+-- Dumping data for table gigablaster.notification: ~0 rows (approximately)
+/*!40000 ALTER TABLE `notification` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notification` ENABLE KEYS */;
+
+-- Dumping data for table gigablaster.pawn: ~8 rows (approximately)
 /*!40000 ALTER TABLE `pawn` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn` ENABLE KEYS */;
 
@@ -111,7 +119,7 @@ INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(5, 'merchant');
 /*!40000 ALTER TABLE `pawntypecategory` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawntype_prodtype_assoc: ~141 rows (approximately)
+-- Dumping data for table gigablaster.pawntype_prodtype_assoc: ~289 rows (approximately)
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` DISABLE KEYS */;
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1, 1002);
@@ -173,6 +181,302 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(202, 1133);
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(201, 1141);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2002);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2002);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2003);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2003);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2004);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2004);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2005);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2005);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2006);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2006);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2007);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2007);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2008);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2008);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2009);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2009);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2010);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2010);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2011);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2011);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2012);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2012);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2013);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2013);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2014);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2014);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2033);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2033);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2034);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2034);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2100);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2100);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2101);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2101);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2102);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2102);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2103);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2103);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2104);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2104);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2105);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2105);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2110);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2110);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2111);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2111);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2112);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2112);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2113);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2113);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2115);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2115);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2116);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2116);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2120);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2120);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2121);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2121);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2122);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2122);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2123);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2123);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2130);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2130);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2131);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2131);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2132);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2132);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2133);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2133);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2140);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2140);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 2141);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 2141);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3002);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3002);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3003);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3003);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3004);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3004);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3005);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3005);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3006);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3006);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3007);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3007);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3008);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3008);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3009);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3009);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3010);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3010);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3011);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3011);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3012);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3012);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3013);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3013);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3014);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3014);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3033);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3033);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3034);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3034);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3100);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3100);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3101);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3101);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3102);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3102);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3103);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3103);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3104);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3104);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3105);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3105);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3110);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3110);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3111);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3111);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3112);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3112);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3113);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3113);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3115);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3115);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3116);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3116);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3120);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3120);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3121);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3121);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3122);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3122);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3123);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3123);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3130);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3130);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3131);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3131);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3132);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3132);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3133);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3133);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3140);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3140);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2000, 3141);
+INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
+	(2001, 3141);
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1000, 4002);
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
@@ -397,14 +701,14 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1002, 4141);
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawn_location_assoc: ~0 rows (approximately)
+-- Dumping data for table gigablaster.pawn_location_assoc: ~8 rows (approximately)
 /*!40000 ALTER TABLE `pawn_location_assoc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn_location_assoc` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.player: ~3 rows (approximately)
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
 INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
-	(1, 1, 'Lord toto', 600, 0, 1);
+	(1, 1, 'Lord toto', 10680, 0, 1);
 INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
 	(2, 2, 'Mastert itit', 100, 0, 5);
 INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
@@ -415,11 +719,15 @@ INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUE
 /*!40000 ALTER TABLE `population` DISABLE KEYS */;
 /*!40000 ALTER TABLE `population` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prod: ~0 rows (approximately)
+-- Dumping data for table gigablaster.post: 0 rows
+/*!40000 ALTER TABLE `post` DISABLE KEYS */;
+/*!40000 ALTER TABLE `post` ENABLE KEYS */;
+
+-- Dumping data for table gigablaster.prod: ~7 rows (approximately)
 /*!40000 ALTER TABLE `prod` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prod` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prodinput: ~0 rows (approximately)
+-- Dumping data for table gigablaster.prodinput: ~7 rows (approximately)
 /*!40000 ALTER TABLE `prodinput` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prodinput` ENABLE KEYS */;
 
@@ -1729,12 +2037,12 @@ INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 	(4, 'Tester', 'test@toto.com', '$2y$12$dwCvQDoF5yd2korjJGsojuxIaWohx4txT1d2PWcynqQJz.omjnELK');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
--- Dumping data for table gigablaster._view_note: 7 rows
+-- Dumping data for table gigablaster._view_note: 9 rows
 /*!40000 ALTER TABLE `_view_note` DISABLE KEYS */;
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
-	('player_ext', 'SELECT \r\n	player.id as player_id,\r\n	IFNULL(tcartused.value,0) as cart_used,\r\n	IFNULL(trevenue.value,0)\r\n	- IFNULL(tcharge.value,0)\r\n	AS income\r\nFROM player\r\n\r\n# JOIN cart owned by player\r\nLEFT JOIN (\r\n	SELECT\r\n		 pawn.player_id,\r\n		 IFNULL(SUM(pawn.`level`), 0) as value\r\n	FROM pawn\r\n	WHERE pawn.type_id = 10 #transport\r\n	GROUP BY pawn.player_id\r\n) as tcartused ON tcartused.player_id = player.id\r\n\r\n# JOIN sold product\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				* sold.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN sold ON sold.seller_id = pawn.id\r\n	JOIN demand \r\n		ON demand.city_id = sold.buyer_id\r\n		AND demand.ressource_id = sold.ressource_id\r\n	JOIN ressource ON ressource.id = sold.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as trevenue ON trevenue.player_id = player.id\r\n\r\n#JOIN buy\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				#* prodtype_buyer.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN prod ON prod.pawn_id = pawn.id\r\n	JOIN prodtype ON prodtype.id = prod.prodtype_id\r\n	JOIN city \r\n		ON  city.location_x = prod.location_x\r\n		AND city.location_y = prod.location_y\r\n	JOIN demand \r\n		ON demand.city_id = city.id \r\n		AND demand.ressource_id = prodtype.ressource_id\r\n	JOIN ressource ON ressource.id = demand.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as tcharge ON tcharge.player_id = player.id\r\n	\r\n');
+	('player_ext', 'SELECT \r\n	player.id as player_id,\r\n	IFNULL(tcartused.value,0) as cart_used,\r\n	IFNULL(trevenue.value,0)\r\n	- IFNULL(tcharge.value,0)\r\n	AS income\r\nFROM player\r\n\r\n# JOIN cart owned by player\r\nLEFT JOIN (\r\n	SELECT\r\n		 pawn.player_id,\r\n		 IFNULL(SUM(pawn.grade), 0) as value\r\n	FROM pawn\r\n	JOIN pawntype ON pawntype.id = pawn.type_id \r\n	WHERE pawntype.category_id = 4 #transporter\r\n	GROUP BY pawn.player_id\r\n) as tcartused ON tcartused.player_id = player.id\r\n\r\n# JOIN sold product\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				* sold.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN sold ON sold.seller_id = pawn.id\r\n	JOIN demand \r\n		ON demand.city_id = sold.buyer_id\r\n		AND demand.ressource_id = sold.ressource_id\r\n	JOIN ressource ON ressource.id = sold.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as trevenue ON trevenue.player_id = player.id\r\n\r\n#JOIN buy\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				#* prodtype_buyer.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN prod ON prod.pawn_id = pawn.id\r\n	JOIN prodtype ON prodtype.id = prod.prodtype_id\r\n	JOIN city \r\n		ON  city.location_x = prod.location_x\r\n		AND city.location_y = prod.location_y\r\n	JOIN demand \r\n		ON demand.city_id = city.id \r\n		AND demand.ressource_id = prodtype.ressource_id\r\n	JOIN ressource ON ressource.id = demand.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as tcharge ON tcharge.player_id = player.id\r\n	\r\n');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('city_distance', 'SELECT \r\n	c0.id as city0_id,\r\n	c1.id as city1_id,\r\n	abs(c1.location_x - c0.location_x)\r\n	+abs(c1.location_y - c0.location_y) as dist\r\nFROM city as c0\r\nLEFT JOIN city as c1 ON c1.id != c0.id\r\n');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
@@ -1745,6 +2053,10 @@ INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('influence', '	SELECT \r\n		influencemodifier.city_id,\r\n		influencemodifier.sovereign_id,\r\n		influencemodifier.type_id,\r\n		influencemodifier.value\r\n	FROM influencemodifier\r\nUNION\r\n	SELECT\r\n		influence_relationship.city_id,\r\n		influence_relationship.sovereign_id,\r\n		4, #provider\r\n		influence_relationship.value\r\n	FROM influence_relationship');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('city_sovereign', 'SELECT \r\n	`t`.`city_id` AS `city_id`,\r\n	MIN(`t`.`sovereign_id`) AS `sovereign_id`,\r\n	`t`.`sum_value` AS `sum_value` \r\nFROM `gigablaster`.`influence_sum` `t` \r\nJOIN (\r\n	SELECT \r\n		`influence_sum`.`city_id` AS `city_id`,\r\n		MAX(`influence_sum`.`sum_value`) AS `max_value` \r\n	FROM `gigablaster`.`influence_sum` \r\n	GROUP BY `influence_sum`.`city_id`\r\n) `tmax` \r\n	ON `tmax`.`city_id` = `t`.`city_id`\r\n	AND `t`.`sum_value` = `tmax`.`max_value`\r\nGROUP BY `t`.`city_id`');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('prod_sum', 'SELECT \r\n	pawn.player_id,\r\n	prod.location_x AS location_x,\r\n	prod.location_y AS location_y,\r\n	prodtype.ressource_id AS ressource_id, \r\n	FLOOR(SUM((prodtype.quantity * prod.percent_max ))) AS quantity\r\nFROM prod\r\nJOIN prodtype ON prodtype.id = prod.prodtype_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nGROUP BY prod.location_x,prod.location_y,prodtype.ressource_id,pawn.player_id');
+INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
+	('prodinput_sum', 'SELECT \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id,\r\n	SUM(prodinputtype.quantity * prod.grade) as quantity\r\nFROM prodinput\r\nJOIN prod ON prod.id = prodinput.prod_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nGROUP BY \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id');
 /*!40000 ALTER TABLE `_view_note` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

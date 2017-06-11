@@ -22,7 +22,7 @@
 		<div class="col-xs-3">
 			{{ printo( worldmap.tile( oLocation.x, oLocation.y ), {
 				'_suffix': 'link',
-				'city': aCity[sLocation],
+				'city': aCity[sLocation]|default(null),
 			} ) }}
 		</div>
 		<div class="col-xs-6">

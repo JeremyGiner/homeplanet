@@ -1,0 +1,50 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+{# require o var #}
+<div class="row">
+<div class="col-xs-12 col-sm-6">
+{% if( o.type.ressource.id == 1 ) %}
+	Sell : 
+	{% for oProdInputType in o.type.getProdInputTypeAr() %}
+		{{ printo(oProdInputType.getRessource()) }}
+		x{{ oProdInputType.getQuantity() }}
+	{% endfor %}
+	<br>
+{% else %}
+	<div class="row">
+	<div class="col-xs-5">
+		{% for oProdInput in o.getProdInputAr() %}
+			- {{ oProdInput.getQuantity() }} 
+			{{ printo(oProdInput.type.getRessource()) }}
+			<br>
+		{% endfor %}
+	</div>
+	<div class="col-xs-2">
+		&rarr;
+	</div>
+	<div class="col-xs-5">
+		+ {{ o.quantity() }} 
+		{{ printo(o.type.getRessource()) }}
+	</div>
+	</div>
+{% endif %}
+</div>
+<div class="col-xs-12 col-sm-6">
+{% if o.ratio < o.grade %}
+{% if( o.getType().getRessource().getId() == 1 ) %}
+		<p class="bg-danger">
+			Working at 
+			{{ ((o.ratio/o.grade)*100)|round }}%
+			efficiency.<br>
+			Require ressources or buyer.
+		</p>
+{% else %}
+		<p class="bg-danger">
+			Working at 
+			{{ ((o.ratio/o.grade)*100)|round }}%
+			efficiency.<br>
+			Require ressources.
+		</p>
+{% endif %}
+{% endif %}
+</div>
+</div>

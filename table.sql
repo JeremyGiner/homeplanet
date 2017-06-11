@@ -42,17 +42,6 @@ CREATE TABLE IF NOT EXISTS `demand` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table gigablaster.gamestate
-CREATE TABLE IF NOT EXISTS `gamestate` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `time_origin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `turn` int(10) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
 -- Dumping structure for table gigablaster.influencemodifier
 CREATE TABLE IF NOT EXISTS `influencemodifier` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -90,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   `player_id` int(10) unsigned DEFAULT NULL,
   `type_id` int(10) unsigned NOT NULL DEFAULT '1',
   `label` varchar(200) DEFAULT NULL,
-  `level` int(10) unsigned NOT NULL DEFAULT '1',
+  `grade` int(10) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `FK_entity_player` (`player_id`),
   KEY `FK_entity_entitytype` (`type_id`),
@@ -178,6 +167,16 @@ CREATE TABLE IF NOT EXISTS `population` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table gigablaster.post
+CREATE TABLE IF NOT EXISTS `post` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `content` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table gigablaster.prod
 CREATE TABLE IF NOT EXISTS `prod` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -185,7 +184,9 @@ CREATE TABLE IF NOT EXISTS `prod` (
   `prodtype_id` int(10) unsigned NOT NULL,
   `location_x` int(11) NOT NULL,
   `location_y` int(11) NOT NULL,
-  `percent_max` float NOT NULL DEFAULT '0',
+  `percent_max` int(11) NOT NULL DEFAULT '0',
+  `grade` int(10) unsigned NOT NULL DEFAULT '1',
+  `updated` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_prod_prodtype` (`prodtype_id`),
   KEY `FK_prod_pawn` (`pawn_id`),
@@ -371,7 +372,7 @@ CREATE TABLE `city_distance` (
 CREATE TABLE `city_sovereign` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
 	`sovereign_id` INT(11) UNSIGNED NULL,
-	`sum_value` DOUBLE(17,0) NULL
+	`sum_value` DECIMAL(60,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -381,7 +382,7 @@ CREATE TABLE `influence` (
 	`city_id` INT(11) UNSIGNED NOT NULL,
 	`sovereign_id` INT(11) UNSIGNED NOT NULL,
 	`type_id` BIGINT(20) UNSIGNED NOT NULL,
-	`value` DOUBLE(17,0) NULL
+	`value` DECIMAL(38,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -390,7 +391,7 @@ CREATE TABLE `influence` (
 CREATE TABLE `influence_relationship` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
 	`sovereign_id` INT(10) UNSIGNED NOT NULL,
-	`value` DOUBLE(17,0) NULL
+	`value` DECIMAL(38,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -399,7 +400,7 @@ CREATE TABLE `influence_relationship` (
 CREATE TABLE `influence_sum` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
 	`sovereign_id` INT(11) UNSIGNED NULL,
-	`sum_value` DOUBLE(17,0) NULL
+	`sum_value` DECIMAL(60,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -425,20 +426,22 @@ CREATE TABLE `player_ext` (
 -- Dumping structure for view gigablaster.prodinput_sum
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `prodinput_sum` (
+	`player_id` INT(10) UNSIGNED NULL,
 	`location_x` INT(10) UNSIGNED NOT NULL,
 	`location_y` INT(10) UNSIGNED NOT NULL,
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` DECIMAL(32,0) NULL
+	`quantity` DECIMAL(42,0) NULL
 ) ENGINE=MyISAM;
 
 
 -- Dumping structure for view gigablaster.prod_sum
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `prod_sum` (
+	`player_id` INT(10) UNSIGNED NULL,
 	`location_x` INT(11) NOT NULL,
 	`location_y` INT(11) NOT NULL,
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` DOUBLE(17,0) NULL
+	`quantity` DECIMAL(16,0) NULL
 ) ENGINE=MyISAM;
 
 
@@ -458,7 +461,7 @@ CREATE TABLE `sold` (
 	`seller_id` INT(10) UNSIGNED NOT NULL,
 	`buyer_id` INT(10) UNSIGNED NOT NULL,
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` DOUBLE(17,0) NOT NULL
+	`quantity` DECIMAL(16,0) NOT NULL
 ) ENGINE=MyISAM;
 
 
@@ -758,15 +761,13 @@ BEGIN
 			prod.id as prod_id,
 			prod.location_x,
 			prod.location_y,
-			LEAST(
-				1.0,
-				MIN(
-					( 
-						( prodinputtype.quantity / prodinput_sum.quantity ) * IFNULL(prod_sum.quantity, 0) 
-					) / prodinputtype.quantity
-				)
+			MIN(
+				( 
+					( prodinputtype.quantity * prod.grade / prodinput_sum.quantity ) * IFNULL(prod_sum.quantity, 0)
+				) /*/ (prodinputtype.quantity * prod.grade)*/
 			) as percent
 		FROM prod
+		JOIN pawn ON pawn.id = prod.pawn_id
 		JOIN prodtype ON prodtype.id = prod.prodtype_id
 		JOIN prodinput ON prodinput.prod_id = prod.id
 		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
@@ -775,7 +776,8 @@ BEGIN
 			AND prod_sum.location_y = prodinput.location_y
 			AND prod_sum.ressource_id = prodinputtype.ressource_id
 		LEFT JOIN prodinput_sum
-			ON prodinput_sum.location_x = prodinput.location_x
+			ON prodinput_sum.player_id = pawn.player_id
+			AND prodinput_sum.location_x = prodinput.location_x
 			AND prodinput_sum.location_y = prodinput.location_y
 			AND prodinput_sum.ressource_id = prodinputtype.ressource_id
 		JOIN ressource 
@@ -784,7 +786,7 @@ BEGIN
 		WHERE prodtype.ressource_id != 1 # exclude sell
 		GROUP BY prod.id
 	) AS tprod_percent ON prod.id = tprod_percent.prod_id
-	SET prod.percent_max = tprod_percent.percent;
+	SET prod.percent_max = FLOOR(tprod_percent.percent);
 	
 /* ____________________________________________________________________________________
 	Update SELL prod percent depending on the availability of prodinput and the demand */
@@ -793,14 +795,10 @@ BEGIN
 	JOIN (
 		SELECT 
 			prod.id as prod_id,
-			LEAST(
-				1.0,
-				MIN(
-					( 
-						( prodinputtype.quantity / tprodinput_sum.quantity ) 
-						* IFNULL(prod_sum.quantity, 0) 
-					) / prodinputtype.quantity
-				)
+			MIN(
+				( 
+					( (prodinputtype.quantity * prod.grade) / prodinput_sum.quantity ) * IFNULL(prod_sum.quantity, 0) 
+				)/* / (prodinputtype.quantity * prod.grade)*/
 			)
 			* IF(MAX(demand.price_modifier) IS NULL,0,1) # Check if demand at this location
 			as percent
@@ -822,27 +820,11 @@ BEGIN
 			AND prod_sum.ressource_id = prodinputtype.ressource_id
 			
 		# Get sum of need of other input at this location
-		LEFT JOIN (
-			SELECT 
-				pawn.player_id,
-				prodinput.location_x,
-				prodinput.location_y,
-				prodinputtype.ressource_id,
-				SUM(prodinputtype.quantity) as quantity
-			FROM prodinput
-			JOIN prod ON prod.id = prodinput.prod_id
-			JOIN pawn ON pawn.id = prod.pawn_id
-			JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
-			GROUP BY 
-				pawn.player_id,
-				prodinput.location_x,
-				prodinput.location_y,
-				prodinputtype.ressource_id
-		) as tprodinput_sum
-			ON tprodinput_sum.player_id = pawn.player_id
-			AND tprodinput_sum.location_x = prodinput.location_x
-			AND tprodinput_sum.location_y = prodinput.location_y
-			AND tprodinput_sum.ressource_id = prodinputtype.ressource_id
+		LEFT JOIN prodinput_sum
+			ON prodinput_sum.player_id = pawn.player_id
+			AND prodinput_sum.location_x = prodinput.location_x
+			AND prodinput_sum.location_y = prodinput.location_y
+			AND prodinput_sum.ressource_id = prodinputtype.ressource_id
 		
 		# Get demand at this location
 		LEFT JOIN city 
@@ -855,7 +837,7 @@ BEGIN
 		GROUP BY prod.id
 
 	) AS tprod_percent ON prod.id = tprod_percent.prod_id
-	SET prod.percent_max = tprod_percent.percent;
+	SET prod.percent_max = FLOOR(tprod_percent.percent);
 
 /* ____________________________________________________________________________________
 Update BUY prod percent */
@@ -915,8 +897,257 @@ Update BUY prod percent */
 		
 		GROUP BY prod.id
 	) AS tprod_percent ON prod.id = tprod_percent.prod_id
-	SET prod.percent_max = tprod_percent.percent;
+	SET prod.percent_max = FLOOR(tprod_percent.percent);
 	
+END//
+DELIMITER ;
+
+
+-- Dumping structure for procedure gigablaster.prod_update_single
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_update_single`()
+BEGIN
+
+
+	DECLARE c INT DEFAULT 0;
+	
+	REPEAT
+	
+	/* Mark prods affected by this change */
+		UPDATE prod 
+		JOIN prodinput ON prodinput.prod_id = prod.id
+		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+		JOIN (
+			SELECT 
+				prod.location_x,
+				prod.location_y,
+				prodtype.ressource_id as ressource_id
+			FROM prod 
+			JOIN prodtype ON prodtype.id = prod.prodtype_id 
+			WHERE prod.updated = 0
+		) t 
+			ON t.ressource_id = prodinputtype.ressource_id
+			AND t.location_x = prodinput.location_x
+			AND t.location_y = prodinput.location_y
+		
+		SET prod.updated = 0
+		;
+	
+	UNTIL ROW_COUNT() = 0 END REPEAT;
+	
+	
+	
+	
+	
+	
+REPEAT
+	/*
+		SET @changing_prod = (
+			SELECT 
+				prod.location_x,
+				prod.location_y,
+				prodtype.ressource_id as ressource_id
+			FROM prod 
+			JOIN prodtype ON prodtype.id = prod.prodtype_id 
+			WHERE prod.updated = 0
+		);
+	*/
+	/*
+	CREATE TEMPORARY TABLE IF NOT EXISTS changing_prod AS (
+		SELECT 
+			prod.location_x,
+			prod.location_y,
+			prodtype.ressource_id as ressource_id
+		FROM prod 
+		JOIN prodtype ON prodtype.id = prod.prodtype_id 
+		WHERE prod.updated = 0
+	);
+	*/
+	SET c = 0;
+/* Update prod percent depending on the availability of prodinput */
+		UPDATE prod 
+		
+		JOIN (
+			SELECT 
+				prod.pawn_id,
+				prod.id as prod_id,
+				prod.location_x,
+				prod.location_y,
+				MIN( get_prod_ratio(prodinputtype.quantity, prod.grade, prodinput_sum.quantity, IFNULL(prod_sum.quantity, 0) ) )
+				as percent
+			FROM prod
+			JOIN pawn ON pawn.id = prod.pawn_id
+			JOIN prodtype ON prodtype.id = prod.prodtype_id
+			JOIN prodinput ON prodinput.prod_id = prod.id
+			JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+			LEFT JOIN prod_sum 
+				ON prod_sum.location_x = prodinput.location_x
+				AND prod_sum.location_y = prodinput.location_y
+				AND prod_sum.ressource_id = prodinputtype.ressource_id
+			LEFT JOIN prodinput_sum
+				ON prodinput_sum.player_id = pawn.player_id
+				AND prodinput_sum.location_x = prodinput.location_x
+				AND prodinput_sum.location_y = prodinput.location_y
+				AND prodinput_sum.ressource_id = prodinputtype.ressource_id
+			JOIN ressource 
+				ON ressource.id = prodinputtype.ressource_id
+				AND ressource.`natural` = 0
+				
+			# exclude sell
+			WHERE prodtype.ressource_id != 1 
+			#TODO : exclude buy
+			
+			# Filter production already updated
+			AND prod.updated = 0
+			
+			GROUP BY prod.id
+		) AS tprod_percent ON prod.id = tprod_percent.prod_id
+		SET prod.percent_max = FLOOR(tprod_percent.percent);
+		
+		SET c = c + ROW_COUNT();
+		
+/* ____________________________________________________________________________________
+	Update SELL prod percent depending on the availability of prodinput and the demand */
+		UPDATE prod 
+		
+		JOIN (
+			SELECT 
+				prod.id as prod_id,
+				MIN( get_prod_ratio(prodinputtype.quantity, prod.grade, prodinput_sum.quantity, IFNULL(prod_sum.quantity, 0) ) )
+				as percent
+			FROM prod
+			JOIN pawn ON pawn.id = prod.pawn_id
+			
+			# Filter prodtype: seller
+			JOIN prodtype 
+				ON prodtype.id = prod.prodtype_id
+				AND prodtype.ressource_id = 1
+			
+			JOIN prodinput ON prodinput.prod_id = prod.id
+			JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+			
+			# Get sum of output at this location for product needed
+			LEFT JOIN prod_sum 
+				ON prod_sum.location_x = prodinput.location_x
+				AND prod_sum.location_y = prodinput.location_y
+				AND prod_sum.ressource_id = prodinputtype.ressource_id
+				
+			# Get sum of need of other input at this location
+			LEFT JOIN prodinput_sum
+				ON prodinput_sum.player_id = pawn.player_id
+				AND prodinput_sum.location_x = prodinput.location_x
+				AND prodinput_sum.location_y = prodinput.location_y
+				AND prodinput_sum.ressource_id = prodinputtype.ressource_id
+			
+			# Get demand at this location
+			LEFT JOIN city 
+				ON city.location_x = prod.location_x
+				AND city.location_y = prod.location_y
+			LEFT JOIN demand 
+				ON demand.city_id = city.id
+				AND demand.ressource_id = prodinputtype.ressource_id
+				
+			# Filter production already updated
+			WHERE prod.updated = 0
+			
+			GROUP BY prod.id
+	
+		) AS tprod_percent ON prod.id = tprod_percent.prod_id
+		SET prod.percent_max = FLOOR(tprod_percent.percent);
+		
+	SET c = c + ROW_COUNT();
+	
+/* ____________________________________________________________________________________
+Update BUY prod percent */
+		UPDATE prod 
+		
+		JOIN (
+			SELECT 
+				prod.id as prod_id,
+				LEAST(
+					1.0,
+					IF(
+						tcost.cost = 0,
+						1.0,
+						player.credit / tcost.cost
+					)
+				)
+				* IF(MAX(demand.price_modifier) IS NULL,0,1) as percent
+			FROM prod
+			JOIN prodtype ON prodtype.id = prod.prodtype_id
+			
+			# FILTER prod of type buy
+			JOIN prodinput ON prodinput.prod_id = prod.id
+			JOIN prodinputtype 
+				ON prodinputtype.id = prodinput.prodinputtype_id
+				AND prodinputtype.ressource_id = 1 # buy only
+			
+			# JOIN demand
+			LEFT JOIN city 
+				ON city.location_x = prod.location_x
+				AND city.location_y = prod.location_y
+			LEFT JOIN demand 
+				ON demand.city_id = city.id
+				AND demand.ressource_id = prodtype.ressource_id
+			
+			# JOIN player
+			JOIN pawn ON prod.pawn_id = pawn.id
+			JOIN player ON player.id = pawn.player_id
+			
+			# JOIN Player total buy cost 
+			JOIN (
+				SELECT 
+					player.id as player_id,
+					IFNULL( SUM( demand.price_modifier * ressource.baseprice ), 0)  as cost
+				FROM prod
+				JOIN prodtype ON prodtype.id = prod.prodtype_id
+				JOIN pawn ON prod.pawn_id = pawn.id
+				JOIN player ON player.id = pawn.player_id
+				LEFT JOIN city 
+					ON city.location_x = prod.location_x
+					AND city.location_y = prod.location_y
+				LEFT JOIN demand 
+					ON demand.city_id = city.id
+					AND demand.ressource_id = prodtype.ressource_id
+				LEFT JOIN ressource ON ressource.id = demand.ressource_id
+				GROUP BY player.id
+			) as tcost ON tcost.player_id = player.id
+			
+			# Filter production already updated
+			WHERE prod.updated = 0
+			
+			GROUP BY prod.id
+		) AS tprod_percent ON prod.id = tprod_percent.prod_id
+		SET prod.percent_max = FLOOR(tprod_percent.percent);
+	
+	SET c = c + ROW_COUNT();
+		
+/* ____________________________________________________________________________________
+Failt safe harvester */
+	
+		UPDATE prod 
+		
+		# Get prod with natural input
+		JOIN prodinput ON prodinput.prod_id = prod.id
+		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+		JOIN ressource 
+			ON ressource.id = prodinputtype.ressource_id
+			AND ressource.`natural` = 1
+		
+		SET prod.updated = 1
+		
+		# Filter production already updated
+		WHERE prod.updated = 0
+		;
+	SET c = c + ROW_COUNT();
+		
+/* ____________________________________________________________________________________
+ */
+
+UNTIL c = 0 END REPEAT;
+	
+	UPDATE prod SET prod.updated = 1 WHERE prod.updated = 0;
+
 END//
 DELIMITER ;
 
@@ -1021,6 +1252,30 @@ END//
 DELIMITER ;
 
 
+-- Dumping structure for function gigablaster.get_prod_ratio
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `get_prod_ratio`(`inputQ` INT, `grade` INT, `inputTotal` INT, `suppliedTotal` INT) RETURNS float
+BEGIN
+/*
+Calc prod : 
+	 (inputQ*grade) / inputQ total asked = ratio input
+	 ratio input * supplied total = allocated ress
+	 inputQ / allocated ress = percent
+	 percent.max(1) * grade = mult
+*/
+	RETURN 
+		LEAST( 1,
+			(
+				( inputQ*grade / inputTotal )
+				* suppliedTotal
+			) 
+			/(inputQ*grade)
+		) * grade
+	;
+END//
+DELIMITER ;
+
+
 -- Dumping structure for view gigablaster.city_distance
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `city_distance`;
@@ -1060,19 +1315,19 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view gigablaster.player_ext
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `player_ext`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `gigablaster`.`player`.`id` AS `player_id`,ifnull(`tcartused`.`value`,0) AS `cart_used`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`gigablaster`.`player` left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`level`),0) AS `value` from `gigablaster`.`pawn` where (`gigablaster`.`pawn`.`type_id` = 10) group by `gigablaster`.`pawn`.`player_id`) `tcartused` on((`tcartused`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`gigablaster`.`pawn` join `gigablaster`.`sold` on((`sold`.`seller_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `sold`.`buyer_id`) and (`gigablaster`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `sold`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`)),0) AS `value` from (((((`gigablaster`.`pawn` join `gigablaster`.`prod` on((`gigablaster`.`prod`.`pawn_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`prodtype` on((`gigablaster`.`prodtype`.`id` = `gigablaster`.`prod`.`prodtype_id`))) join `gigablaster`.`city` on(((`gigablaster`.`city`.`location_x` = `gigablaster`.`prod`.`location_x`) and (`gigablaster`.`city`.`location_y` = `gigablaster`.`prod`.`location_y`)))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `gigablaster`.`city`.`id`) and (`gigablaster`.`demand`.`ressource_id` = `gigablaster`.`prodtype`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `gigablaster`.`demand`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `gigablaster`.`player`.`id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `gigablaster`.`player`.`id` AS `player_id`,ifnull(`tcartused`.`value`,0) AS `cart_used`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`gigablaster`.`player` left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`grade`),0) AS `value` from (`gigablaster`.`pawn` join `gigablaster`.`pawntype` on((`gigablaster`.`pawntype`.`id` = `gigablaster`.`pawn`.`type_id`))) where (`gigablaster`.`pawntype`.`category_id` = 4) group by `gigablaster`.`pawn`.`player_id`) `tcartused` on((`tcartused`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`gigablaster`.`pawn` join `gigablaster`.`sold` on((`sold`.`seller_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `sold`.`buyer_id`) and (`gigablaster`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `sold`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`)),0) AS `value` from (((((`gigablaster`.`pawn` join `gigablaster`.`prod` on((`gigablaster`.`prod`.`pawn_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`prodtype` on((`gigablaster`.`prodtype`.`id` = `gigablaster`.`prod`.`prodtype_id`))) join `gigablaster`.`city` on(((`gigablaster`.`city`.`location_x` = `gigablaster`.`prod`.`location_x`) and (`gigablaster`.`city`.`location_y` = `gigablaster`.`prod`.`location_y`)))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `gigablaster`.`city`.`id`) and (`gigablaster`.`demand`.`ressource_id` = `gigablaster`.`prodtype`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `gigablaster`.`demand`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `gigablaster`.`player`.`id`)));
 
 
 -- Dumping structure for view gigablaster.prodinput_sum
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `prodinput_sum`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prodinput_sum` AS select `prodinput`.`location_x` AS `location_x`,`prodinput`.`location_y` AS `location_y`,`prodinputtype`.`ressource_id` AS `ressource_id`,sum(`prodinputtype`.`quantity`) AS `quantity` from (`prodinput` join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) group by `prodinput`.`location_x`,`prodinput`.`location_y`,`prodinputtype`.`ressource_id`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prodinput_sum` AS select `pawn`.`player_id` AS `player_id`,`prodinput`.`location_x` AS `location_x`,`prodinput`.`location_y` AS `location_y`,`prodinputtype`.`ressource_id` AS `ressource_id`,sum((`prodinputtype`.`quantity` * `prod`.`grade`)) AS `quantity` from (((`prodinput` join `prod` on((`prod`.`id` = `prodinput`.`prod_id`))) join `pawn` on((`pawn`.`id` = `prod`.`pawn_id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) group by `pawn`.`player_id`,`prodinput`.`location_x`,`prodinput`.`location_y`,`prodinputtype`.`ressource_id`;
 
 
 -- Dumping structure for view gigablaster.prod_sum
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `prod_sum`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prod_sum` AS select `prod`.`location_x` AS `location_x`,`prod`.`location_y` AS `location_y`,`prodtype`.`ressource_id` AS `ressource_id`,floor(sum((`prodtype`.`quantity` * `prod`.`percent_max`))) AS `quantity` from (`prod` join `prodtype` on((`prodtype`.`id` = `prod`.`prodtype_id`))) group by `prod`.`location_x`,`prod`.`location_y`,`prodtype`.`ressource_id`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prod_sum` AS select `pawn`.`player_id` AS `player_id`,`prod`.`location_x` AS `location_x`,`prod`.`location_y` AS `location_y`,`prodtype`.`ressource_id` AS `ressource_id`,floor(sum((`prodtype`.`quantity` * `prod`.`percent_max`))) AS `quantity` from ((`prod` join `prodtype` on((`prodtype`.`id` = `prod`.`prodtype_id`))) join `pawn` on((`pawn`.`id` = `prod`.`pawn_id`))) group by `prod`.`location_x`,`prod`.`location_y`,`prodtype`.`ressource_id`,`pawn`.`player_id`;
 
 
 -- Dumping structure for view gigablaster.relationship

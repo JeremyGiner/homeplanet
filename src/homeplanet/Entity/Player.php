@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Population;
 use Doctrine\Common\Collections\Doctrine\Common\Collections;
+
 /**
  * @ORM\Entity
  * @ORM\Table(name="player")

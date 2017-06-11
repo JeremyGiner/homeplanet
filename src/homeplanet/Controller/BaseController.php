@@ -74,7 +74,7 @@ class BaseController extends Controller {
 	public function createNamedBuilder(
 		$name, 
 		$type = null, 
-		mixed $data = null, 
+		$data = null, 
 		array $options = array(), 
 		FormBuilderInterface $parent = null
 	) {

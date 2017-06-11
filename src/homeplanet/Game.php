@@ -18,6 +18,7 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use homeplanet\Entity\PawnType;
 use homeplanet\Entity\attribute\ProductionInputType;
 use homeplanet\Repository\PawnRepository;
+use homeplanet\Repository\ProductionRepository;
 
 class Game {
 	/**
@@ -97,6 +98,13 @@ JOIN pawntype._aProdType prodtype
 	 */
 	public function getPawnRepo() {
 		return $this->_oEntityManager->getRepository(Pawn::class);
+	}
+	
+	/**
+	 * @return ProductionRepository
+	 */
+	public function getProductionRepo() {
+		return $this->_oEntityManager->getRepository(Production::class);
 	}
 	
 	public function getEntityManager() {
@@ -224,7 +232,7 @@ WHERE pos._x = :pos_x
 		
 		foreach( $oPawn->getProductionAr() as $oProd ) {
 			
-			$this->_updateProdNat($oProd);
+			$this->updateProductionRatio($oProd);
 			
 		}
 		$this->_oEntityManager->persist( $oPawn );
@@ -234,6 +242,14 @@ WHERE pos._x = :pos_x
 	public function removeEntity( Pawn $oPawn ) {
 		$this->_oEntityManager->remove( $oPawn );
 		$this->_oEntityManager->flush();
+	}
+	public function updateProductionRatio( Production $oProduction ) {
+		
+		$oProduction->setGrade( $oProduction->getPawn()->getGrade() );
+		
+		if( $oProduction->isHarvester() )
+			$this->_updateHarvester( $oProduction );
+			
 	}
 	
 //_____________________________________________________________________________
@@ -260,7 +276,7 @@ WHERE pos._x = :pos_x
 //_____________________________________________________________________________
 //	Sub-routine
 
-	function _updateProdNat( Production $oProduction ) {
+	function _updateHarvester( Production $oProduction ) {
 		// Get first prod input
 		$aInput = $oProduction->getProdInputAr();
 		
@@ -268,17 +284,19 @@ WHERE pos._x = :pos_x
 		if( !isset($aInput[0]) )
 			return;
 		
-		// Get resource
-		$oRess = $aInput[0]->getType()->getRessource();
+		// Get prod input
+		$oInput = $aInput[0];
 		
-		// Case : not nautral
+		// Get resource
+		$oRess = $oInput->getType()->getRessource();
+		
+		// Filter not nautral
 		if( !$oRess->isNatural() )
 			return;
 		
 		// Prod with natural ress
 		$x = $oProduction->getLocation()->getX();
 		$y = $oProduction->getLocation()->getY();
-			
 			
 		// Get natural deposit
 		$oTile = $this->getWorldmap()->getTile(
@@ -288,16 +306,20 @@ WHERE pos._x = :pos_x
 		$aRessNat = $oTile->getRessNatQuantityAr();
 		$iRessNat = isset( $aRessNat[ $oRess->getId() ] )?
 		$aRessNat[ $oRess->getId() ]:0;
-			
+		
 		// Get overcrowd
 		$oOvercrowd = $this->getOvercrowd($oRess->getId(), $x, $y);
 		$iOvercrowd = $oOvercrowd != null ? $oOvercrowd->getQuantity() : 0;
+		
+		// Get current allocated ressource
+		$old = $oInput->getQuantity();
 			
 		// Update prod ratio
-		if(
-				($iRessNat - $iOvercrowd) > 0
-		) {
-			$oProduction->setRatio(1.0);
+		$iCurrentAvailable = $iRessNat - $iOvercrowd;
+		if( $iCurrentAvailable > 0 ) {
+			
+			// Let setRatio cap top the ratio wti hthe grade
+			$oProduction->setRatio( $iCurrentAvailable + $old );
 		}
 	}
 }
