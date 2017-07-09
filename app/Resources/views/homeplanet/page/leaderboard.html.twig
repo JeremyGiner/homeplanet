@@ -1,0 +1,36 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+
+{% block page_content %}
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-8 col-sm-offset-2">
+		{% embed 'bootstrap/panel.html.twig' %}
+			{% block header %}
+				{{ title|default('') }}
+			{% endblock %}
+			{% block content %}
+				<table class="table table-strippe table-hover">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Contract max</th>
+						<th>Total worth</th>
+					</tr>
+				</thead>
+				{% for player in playerAr %}
+				<tbody>
+				<tr>
+					<td>{{ player.name }}</td>
+					<td>{{ player.contractMax }}</td>
+					<td>{{ player.credit }}</td>
+				</tr>
+				</tbody>
+				{% endfor %}
+				</table>
+			{% endblock %}
+		{% endembed %}
+		</div>
+	</div>
+</div>
+{% endblock %}

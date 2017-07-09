@@ -41,6 +41,9 @@ use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\PawnType;
 use AppBundle\Tool\ArrayTool;
 use homeplanet\Entity\City;
+use homeplanet\Form\TransportSet;
+use homeplanet\Form\TransportSetForm;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @Route("/asset")
@@ -208,6 +211,9 @@ class AssetController extends BaseController {
 		//_____________________________
 		//	Form switch prod
 		
+		$oFormProd = null;
+		if( $oEntity->getAttribute('transport') === null ) {
+		
 		// TODO : form validation
 		$oFormProd = $this->createFormBuilder( array() )
 			->add('production_type', EntityType::class, [
@@ -245,6 +251,12 @@ class AssetController extends BaseController {
 			
 			//var_dump($oForm->getData()['production_type']);
 			return $this->redirect( $this->generateUrl('asset') );
+		}
+		
+		} else {
+			$oFormProd = $this->_formTransportSetProcess( $oRequest, $oEntity);
+			if( $oFormProd instanceof RedirectResponse )
+				return $oFormProd;
 		}
 		
 		//_____________________________
@@ -352,6 +364,7 @@ class AssetController extends BaseController {
 		$oUser = $this->getUser();
 		$oGame = $this->_oGame;
 		$oLocation = $this->_oLocation;
+		$oPlayer = $oGame->getPlayer();
 		
 		//_____________________________
 		// Form join Build
@@ -398,7 +411,37 @@ class AssetController extends BaseController {
 			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}
 		
+		//_____________________________
+		//	Form buy contract
 		
+		$oBuyUpgrade = new Buy($oPlayer, $oPlayer->getContractPrice() );
+		$oFormUpgrade = $this->createNamedBuilder(
+					'buycontract',
+					FormType::class,
+					$oBuyUpgrade
+			)
+			->add('submit',SubmitType::class,[
+					'label' => 'Upgrade contract',
+					'attr' => [
+							'class' => 'btn-primary',
+					],
+			])
+			->getForm()
+		;
+			
+		$oFormUpgrade->handleRequest( $oRequest );
+		
+		if( $oFormUpgrade->isSubmitted() && $oFormUpgrade->isValid() ) {
+			$oBuyUpgrade->getPlayer()->setCredit( $oBuyUpgrade->getPlayerCreditNew() );
+			
+			$oPlayer->increaseContractMax();
+			
+			$oGame->getEntityManager()->flush();
+				
+			return $this->redirect( $oRequest->getUri() );
+		}
+		
+		//_____________________________
 		// Render
 		
 		return $this->render(
@@ -496,5 +539,98 @@ class AssetController extends BaseController {
 //_____________________________________________________________________________
 //	Sub-routine
 	
-	
+	private function _formTransportSetProcess( Request $oRequest, Pawn $oPawn ) {
+
+		/* @var $oData TransportSet */
+		$oData = new TransportSet();
+		$oData
+			->setPawn($oPawn)
+			->setLocationBegin($this->_oLocation)
+			->setLocationEnd(null)
+		;
+		
+		// Create serializer
+		$oSerializer = new Serializer([
+				new DoctrineEntityNormalizer($this->_oGame->getEntityManager()),
+				new ObjectNormalizer(null,null,null, new ReflectionExtractor()),
+				//new PropertyNormalizer(null,null,null, new ReflectionExtractor()),
+		],[
+				new JsonEncoder(),
+		]);
+		
+		// Commun option
+		$a = [
+				'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
+		];
+		
+		$oStepHandler = new MultistepFormHandler( 
+				$oRequest->getSession(), 
+				'multistep.transportset.'.$oPawn->getId() 
+		);
+		//$oStepHandler->reset();
+		$oStepHandler->setSerializer( $oSerializer, TransportSet::class );
+		$oStepHandler->setContext(array('groups' => array('serialisable')));
+		
+		$oData = $oStepHandler->getData( $oData );
+		
+		$oForm = $this->createForm(TransportSetForm::class,$oData,[
+				'game' => $this->_oGame,
+				'step' => $oStepHandler->getStep(),
+				//'repo' => $this->_oGame->getPawnRepo(),
+		]+$a);
+		
+		$oForm->handleRequest( $oRequest );
+		
+		$oStepHandler->handleForm( $oForm );
+		
+		if( $oForm->isSubmitted() && $oForm->isValid() ) {
+				
+				
+			if( $oForm->has('confirm') && $oForm->get('confirm')->isClicked() ) {
+				$oStepHandler->reset();
+				
+				// Update model
+				$oData = $oForm->getData();
+				$oPawn = $oData->getPawn();
+
+				//$oGame->getEntityManager()->persist($oEntity);
+				foreach ( $oPawn->getProductionAr() as $oProd ) {
+					$this->_oGame->getEntityManager()->remove($oProd);
+				}
+				
+				//$oPawn->resetLocation();
+				foreach ( $oPawn->getPawnLocationAr() as $oPosition ) {
+					$this->_oGame->getEntityManager()->remove($oPosition);
+				}
+				
+				$this->_oGame->getEntityManager()->flush();
+				
+				$oPawn->addLocation( $oData->getLocationBegin() );
+				$oPawn->addLocation( $oData->getLocationEnd() );
+				
+				$oProd = Production::createTransport(
+						$oPawn,
+						$oData->getLocationBegin(),
+						$oData->getLocationEnd(),
+						$oData->getProductionType()
+				);
+				$oPawn->addProduction( $oProd );
+				$this->_oGame->getEntityManager()->flush();
+				
+				$this->_oGame->getProductionRepo()->updateProduction();
+				
+		
+				return $this->redirect( $oRequest->getUri() );
+			}
+			
+			$oForm = $this->createForm(TransportSetForm::class,$oForm->getData(),[
+					'game' => $this->_oGame,
+					'step' => $oStepHandler->getStep(),
+			]+$a);
+			
+			return $this->redirect( $oRequest->getUri() );
+		}
+		
+		return $oForm;
+	}
 }

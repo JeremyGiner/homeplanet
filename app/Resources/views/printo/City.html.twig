@@ -76,7 +76,15 @@
 			{{ printo(oDemand.getRessource()) }}
 		</td>
 		<td>
-			x{{ oDemand.getPriceModifier()|number_format(2) }}
+			{% autoescape false %}
+			{% include 'bootstrap/progress-bar.html.twig' 
+				with { 
+					value: (oDemand.getPriceModifier()/20*100)|number_format(2),
+					label: '&times;'~oDemand.getPriceModifier(),
+					raw: true, 
+				} 
+			%}
+			{% endautoescape %}
 		</td>
 		<td>
 			{{ commun.credit( oDemand.getPrice() ) }}

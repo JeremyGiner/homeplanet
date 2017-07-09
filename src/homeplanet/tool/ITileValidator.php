@@ -6,5 +6,5 @@ use homeplanet\Entity\Tile;
 
 interface ITileValidator {
 	
-	public function validate( Tile $oTile );
+	public function validate( Tile $oTile = null );
 }

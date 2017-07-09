@@ -54,6 +54,36 @@ class PlayerController extends BaseController {
 		);
 	}
 	
+	/**
+	 * @Route("/player/list", name="player_list")
+	 */
+	public function listAction( Request $oRequest ) {
+
+		$this->_handleRequest( $oRequest );
+		
+		$oUser = $this->getUser();
+		$oGame = $this->getGame();
+		$oLocation = $this->_oLocation;
+		$oPlayer = $oGame->getPlayer();
+		
+		/*
+		$oGame->getEntityManager()->createQueryBuilder()
+			->from(Player::class, 'player')
+		*/
+		//_____________________________
+		// Render
+		
+		return $this->render(
+				'homeplanet/page/leaderboard.html.twig',
+				[
+						'title' => 'Player list',
+						'user' => $this->getUser(),
+						'gameview' => $this->_createView($oGame, $oLocation),
+						'playerAr' => $oGame->getEntityManager()->getRepository(Player::class)->findAll(),
+				]
+		);
+	}
+	
 //_____________________________________________________________________________
 //	Accessor
 

@@ -1,8 +1,0 @@
-{% embed 'homeplanet/element/map_zoom0.html.twig' %}
-{% block map_cell%}
-	<div onclick="
-		$('#trade_route_creation_form_location_pickup').value({{ x~':'~y }});
-		$('#trade_route_creation_form_location_pickup_modal').hide();
-	"></div>
-{% endblock %}
-{% endembed %}

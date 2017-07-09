@@ -23,6 +23,7 @@ class MultistepFormHandler {
 	
 	private $_sSerializerType;
 	private $_sSerializerFormat;
+	private $_aSerializerContext;
 	
 	private $_sSessionKey;
 	
@@ -33,23 +34,28 @@ class MultistepFormHandler {
 //	Constructor
 
 	public function __construct( 
-			Session $oSession
+			Session $oSession,
+			$sSessionKey = 'multitstep.data'
 	) {
-		$this->_sSessionKey = 'multitstep.data';
+		$this->_sSessionKey = $sSessionKey;
 		
 		$this->setSerializer();
 		$this->_oSession = $oSession;
 		
 		$this->_oData = null;
 		$this->_iStep = null;
+		
+		$this->_aSerializerContext = [];
 	}
 	
 //_____________________________________________________________________________
 //	Accessor
 	
 	public function getData( $oDefaultData = [] ) {
+		
 		if( $this->_iStep === null )
 			$this->load();
+		
 		return $this->_oData === null ? $oDefaultData : $this->_oData;
 	}
 	
@@ -72,18 +78,24 @@ class MultistepFormHandler {
 		$this->_sSerializerType = $sType;
 		$this->_sSerializerFormat = $sFormat;
 	}
+	
+	public function setContext( array $a ) {
+		$this->_aSerializerContext = $a;
+	}
 //_____________________________________________________________________________
 
 	public function load() {
 		if( $this->_oSession->has($this->_sSessionKey) ) {
 			$a = $this->_oSession->get($this->_sSessionKey);
+			
 			$this->_iStep = $a['step'];
 			$this->_oData = $this->_oSerializer == null ? 
 				$a['data'] :
 				$this->_oSerializer->deserialize(
 						$a['data'], 
 						$this->_sSerializerType, 
-						$this->_sSerializerFormat
+						$this->_sSerializerFormat,
+						$this->_aSerializerContext
 				);
 		} else {
 			$this->_iStep = 0;
@@ -98,7 +110,8 @@ class MultistepFormHandler {
 				$this->_oData :
 				$this->_oSerializer->serialize(
 						$this->_oData, 
-						$this->_sSerializerFormat
+						$this->_sSerializerFormat,
+						$this->_aSerializerContext
 				),
 		]);
 	}
@@ -110,10 +123,23 @@ class MultistepFormHandler {
 	public function handleForm( Form $oForm ) {
 		// Get data and step from session
 		
-		if( !($oForm->isSubmitted() && $oForm->isValid()) )
+		if( !( $oForm->isSubmitted() && $oForm->isValid() ) )
 			return;
 		
-		$this->_updateStep( $oForm );
+		// Case : Reset
+		if( $oForm->has('_reset') && $oForm->get('_reset')->isClicked() ) {
+			$this->reset();
+			return;
+		}
+		
+		// Case : back
+		if( $oForm->has('_prev') && $oForm->get('_prev')->isClicked() ) {
+			$this->_iStep = max(0,$this->_iStep-1);
+		} else {
+		// Case : forward
+			$this->_iStep++;
+			$this->_oData = $oForm->getData();
+		}
 		
 		$this->save();
 	}
@@ -121,25 +147,6 @@ class MultistepFormHandler {
 //_____________________________________________________________________________
 //	Sub-routine 
 	
-	private function _updateStep( Form $oForm) {
-		
-		// Case : Reset
-		if( $oForm->has('_reset') && $oForm->get('_reset')->isClicked() ) {
-			$this->_iStep = 0;
-			$this->_oData = null;
-			return;
-		}
-		
-		// Case : back
-		if( $oForm->has('_prev') && $oForm->get('_prev')->isClicked() ) {
-			$this->_iStep = max(0,$this->_iStep-1);
-			return;
-		}
-		
-		// Case : forward
-		$this->_iStep++;
-		$this->_oData = $oForm->getData();
-	}
 	
 	
 	

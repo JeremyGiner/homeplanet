@@ -26,9 +26,9 @@ class PlayerExt {
 	protected $_iPlayerId;
 	
 	/**
-	 * @ORM\Column(type="integer", name="cart_used")
+	 * @ORM\Column(type="integer", name="contract")
 	 */
-	protected $_iCartUsed;
+	protected $_iContract;
 	
 	/**
 	 * @ORM\OneToOne(targetEntity="Player")
@@ -55,8 +55,11 @@ class PlayerExt {
 		return $this->_iPlayerId;
 	}
 	
-	public function getCartUsed() {
-		return $this->_iCartUsed;
+	public function getContract() {
+		return $this->_iContract;
+	}
+	public function getContractUsed() {
+		return $this->getContract();
 	}
 	
 

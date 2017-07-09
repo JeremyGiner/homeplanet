@@ -150,11 +150,11 @@ class TradeRouteFactory {
 	/**
 	 * @Assert\GreaterThanOrEqual(
 	 *     value = 0,
-	 *     message = "not enought cart"
+	 *     message = "not enought contract available"
 	 * )
 	 */
-	function getPlayerRemainingCartNew() {
-		return $this->_oPlayer->getCartRemaining() - $this->_iLevel;
+	function getPlayerRemainingContractNew() {
+		return $this->_oPlayer->getContractRemaining() - $this->_iLevel;
 	}
 	
 //_____________________________________________________________________________

@@ -1,6 +1,8 @@
 <?php
-namespace homeplanet\tool;
+namespace homeplanet\tool\pathfinder;
 
+use homeplanet\Entity\attribute\Location;
+use homeplanet\Entity\Worldmap;
 /**
  * 
  */
@@ -8,13 +10,31 @@ class PathfinderWorldmap extends Pathfinder {
 	
 //_____________________________________________________________________________
 //	Constructor
-	
-	public function __construct( array $aMap ) {
+	/*
+	public function __construct( $aMap ) {
 		
+	}
+	*/
+	
+//_____________________________________________________________________________
+//
+
+	public function propagate($sBegin) {
+		if( $sBegin instanceof Location )
+			$sBegin = $sBegin->__toString();
+		return parent::propagate($sBegin);
+			
 	}
 	
 //_____________________________________________________________________________
 //	
+	/**
+	 * 
+	 * @return Worldmap
+	 */
+	public function getWorldmap() {
+		return $this->_aMap;
+	}
 	
 	public function getNeighbor( $sCoordonate ) {
 	
@@ -37,6 +57,8 @@ class PathfinderWorldmap extends Pathfinder {
 	}
 	
 	public function getDifficulty( $sFrom, $sTo ) {
+		return 0;
+		
 		$aMap = $this->_aMap;
 		
 		if( $aMap[$sTo]>$aMap[$sFrom] )
@@ -49,5 +71,26 @@ class PathfinderWorldmap extends Pathfinder {
 	
 		return 1 - ($aMap[$sFrom]-$aMap[$sTo]);
 	}
+
+// Land
 	
+// toward 1 goal
+	protected function _stopConditionfd( $sDiscovering, $aEnd ) {
+		
+		return in_array($sDiscovering,$aEnd);
+	}
+	
+// toward all goal
+	protected function _stopConditiondd( $sDiscovering, $aEnd ) {
+	
+		//remove goal
+		return empty( $aGoal );
+	}
+	
+// range
+	protected function _stopConditionqq( $sDiscovering, $aEnd ) {
+		// Test heat
+		
+		return $range >= $heat;
+	}
 }

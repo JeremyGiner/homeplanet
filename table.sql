@@ -10,6 +10,29 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+-- Dumping structure for table gigablaster.attribute
+CREATE TABLE IF NOT EXISTS `attribute` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type_id` int(10) unsigned NOT NULL,
+  `value` text,
+  PRIMARY KEY (`id`),
+  KEY `type_id` (`type_id`),
+  CONSTRAINT `FK_attribute_attributetype` FOREIGN KEY (`type_id`) REFERENCES `attributetype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.attributetype
+CREATE TABLE IF NOT EXISTS `attributetype` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table gigablaster.city
 CREATE TABLE IF NOT EXISTS `city` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -95,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `pawntype` (
   `category_id` int(10) unsigned NOT NULL DEFAULT '1',
   `label` varchar(250) NOT NULL,
   `value_base` int(10) unsigned NOT NULL DEFAULT '0',
+  `cost_deed` int(10) unsigned NOT NULL DEFAULT '0',
   `description` text,
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
@@ -109,6 +133,19 @@ CREATE TABLE IF NOT EXISTS `pawntypecategory` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table gigablaster.pawntype_attribute
+CREATE TABLE IF NOT EXISTS `pawntype_attribute` (
+  `pawntype_id` int(10) unsigned NOT NULL,
+  `attribute_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`pawntype_id`,`attribute_id`),
+  KEY `FK_pawntype_attribute_attribute` (`attribute_id`),
+  CONSTRAINT `FK_pawntype_attribute_attribute` FOREIGN KEY (`attribute_id`) REFERENCES `attribute` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_pawntype_attribute_pawntype` FOREIGN KEY (`pawntype_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -141,14 +178,17 @@ CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
 
 -- Dumping structure for table gigablaster.player
 CREATE TABLE IF NOT EXISTS `player` (
-  `user_id` int(10) unsigned NOT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
   `name` varchar(250) NOT NULL,
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
   `income` int(10) unsigned NOT NULL DEFAULT '0',
-  `cart` int(10) unsigned NOT NULL DEFAULT '0',
+  `contract_max` int(10) unsigned NOT NULL DEFAULT '0',
+  `allegeance` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
+  KEY `FK_player_sovereign` (`allegeance`),
+  CONSTRAINT `FK_player_sovereign` FOREIGN KEY (`allegeance`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -163,16 +203,6 @@ CREATE TABLE IF NOT EXISTS `population` (
   PRIMARY KEY (`city_id`),
   CONSTRAINT `FK_population_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.post
-CREATE TABLE IF NOT EXISTS `post` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
@@ -418,7 +448,7 @@ CREATE TABLE `overcrowd` (
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `player_ext` (
 	`player_id` INT(10) UNSIGNED NOT NULL,
-	`cart_used` DECIMAL(32,0) NOT NULL,
+	`contract` DECIMAL(32,0) NOT NULL,
 	`income` DOUBLE NOT NULL
 ) ENGINE=MyISAM;
 
@@ -1232,7 +1262,7 @@ DELIMITER ;
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `turn`()
 BEGIN
-	CALL `prod_percent_update`();
+	#CALL `prod_percent_update`();
 	
 	CALL `population_growth_update`();
 	CALL `population_quantity_update`();
@@ -1315,7 +1345,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view gigablaster.player_ext
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `player_ext`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `gigablaster`.`player`.`id` AS `player_id`,ifnull(`tcartused`.`value`,0) AS `cart_used`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`gigablaster`.`player` left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`grade`),0) AS `value` from (`gigablaster`.`pawn` join `gigablaster`.`pawntype` on((`gigablaster`.`pawntype`.`id` = `gigablaster`.`pawn`.`type_id`))) where (`gigablaster`.`pawntype`.`category_id` = 4) group by `gigablaster`.`pawn`.`player_id`) `tcartused` on((`tcartused`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`gigablaster`.`pawn` join `gigablaster`.`sold` on((`sold`.`seller_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `sold`.`buyer_id`) and (`gigablaster`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `sold`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`)),0) AS `value` from (((((`gigablaster`.`pawn` join `gigablaster`.`prod` on((`gigablaster`.`prod`.`pawn_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`prodtype` on((`gigablaster`.`prodtype`.`id` = `gigablaster`.`prod`.`prodtype_id`))) join `gigablaster`.`city` on(((`gigablaster`.`city`.`location_x` = `gigablaster`.`prod`.`location_x`) and (`gigablaster`.`city`.`location_y` = `gigablaster`.`prod`.`location_y`)))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `gigablaster`.`city`.`id`) and (`gigablaster`.`demand`.`ressource_id` = `gigablaster`.`prodtype`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `gigablaster`.`demand`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `gigablaster`.`player`.`id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `gigablaster`.`player`.`id` AS `player_id`,ifnull(`tcontract`.`value`,0) AS `contract`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`gigablaster`.`player` left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`grade`),0) AS `value` from (`gigablaster`.`pawn` join `gigablaster`.`pawntype` on((`gigablaster`.`pawntype`.`id` = `gigablaster`.`pawn`.`type_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcontract` on((`tcontract`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`gigablaster`.`pawn` join `gigablaster`.`sold` on((`sold`.`seller_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `sold`.`buyer_id`) and (`gigablaster`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `sold`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`)),0) AS `value` from (((((`gigablaster`.`pawn` join `gigablaster`.`prod` on((`gigablaster`.`prod`.`pawn_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`prodtype` on((`gigablaster`.`prodtype`.`id` = `gigablaster`.`prod`.`prodtype_id`))) join `gigablaster`.`city` on(((`gigablaster`.`city`.`location_x` = `gigablaster`.`prod`.`location_x`) and (`gigablaster`.`city`.`location_y` = `gigablaster`.`prod`.`location_y`)))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `gigablaster`.`city`.`id`) and (`gigablaster`.`demand`.`ressource_id` = `gigablaster`.`prodtype`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `gigablaster`.`demand`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `gigablaster`.`player`.`id`)));
 
 
 -- Dumping structure for view gigablaster.prodinput_sum

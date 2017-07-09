@@ -51,10 +51,13 @@ class Game {
 	 */
 	protected $_aPawnByLoc;
 	
+	static private $_oInstance = null;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
 	public function __construct( User $oContextUser, EntityManager $oEntityManager, $iCenterX, $iCenterY ) {
+		
 		$this->_oUser = $oContextUser;
 		$this->_oEntityManager = $oEntityManager;
 		
@@ -81,10 +84,16 @@ FROM homeplanet\Entity\PawnType pawntype
 JOIN pawntype._aProdType prodtype
 		');
 		$oQuery->getResult();
+		
+		self::$_oInstance =$this;
 	}
 	
 //_____________________________________________________________________________
 //	Accessor
+	
+	static public function getInstance() {
+		return self::$_oInstance;
+	}
 	
 	/**
 	 * @return CityRepository

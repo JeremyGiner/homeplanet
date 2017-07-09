@@ -28,13 +28,16 @@
 		<ul class="nav navbar-nav">
 			<li>
 				<p class="navbar-text">
-					Cart : {{ gameview.player.ext.cartUsed }} / {{ gameview.player.cart }}
-					<span class="icon ress-sprite ress-sprite-7-3"></span>
+					Contract : {{ gameview.player.ext.contract }} / {{ gameview.player.contractMax }}
+					<span class="icon ress-sprite ress-sprite-8-4"></span>
 				</p>
 			</li>
 			<li>
 				<p class="navbar-text">
 					Credit : {{ commun.credit( gameview.player.credit ) }}
+					<span title="Income">
+					 ( {{plus(gameview.player.income)}}{{ commun.credit( gameview.player.income ) }} )
+					</span>
 				</p>
 			</li>
 		</ul>

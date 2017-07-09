@@ -11,6 +11,7 @@ use homeplanet\Entity\attribute\ProductionInputType;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
+use homeplanet\Entity\attribute\Transporter;
 
 /**
  * @ORM\Entity
@@ -59,11 +60,28 @@ class PawnType {
 	protected $_aProdType;
 	
 	/**
+	 * @ORM\ManyToMany(
+	 *     targetEntity="homeplanet\Entity\attribute\Attribute",
+	 *     cascade={"persist"},
+	 *     indexBy="label",
+	 * )
+	 * @ORM\JoinTable(
+	 *     name="pawntype_attribute",
+	 *     joinColumns={@ORM\JoinColumn(name="pawntype_id", referencedColumnName="id")},
+	 *     inverseJoinColumns={@ORM\JoinColumn(name="attribute_id", referencedColumnName="id")}
+	 * )
+	 * @var \homeplanet\Entity\attribute\Attribute[]
+	 */
+	protected $_aAttribute;
+	
+	/**
 	 * @ORM\ManyToOne(targetEntity="PawnTypeCategory", inversedBy="_aPawnType")
 	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
 	 * @var PawnTypeCategory
 	 */
 	protected $_oCategory;
+	
+	protected $_aAttributeObject = null;
 	
 //_____________________________________________________________________________
 //	Constructor
@@ -86,6 +104,21 @@ class PawnType {
 	
 	public function getDescription() {
 		return $this->_sDescription;
+	}
+	
+	public function getAttribute( $s ) {
+		
+		if( $this->_aAttributeObject === null ) {
+			$this->_aAttributeObject = [];
+			foreach ( $this->_aAttribute as $key => $oAttribute ) {
+				//TODO
+				if( $key == 'transporter' )
+					$this->_aAttributeObject[$oAttribute->getType()->getLabel()] = new Transporter( explode( ':', $oAttribute->getValue() ) );
+			} 
+		}
+		return isset( $this->_aAttributeObject[$s] ) ?
+			$this->_aAttributeObject[$s] :
+			null;
 	}
 	
 	/**

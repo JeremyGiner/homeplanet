@@ -45,6 +45,7 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 	 * @return bool
 	*/
 	public function supportsNormalization($data, $format = null) {
+		
 		return $this->isEntity($data);
 	}
 	
@@ -62,7 +63,6 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 	 * @return object
 	 */
 	public function denormalize($data, $class, $format = null, array $context = array()) {
-		
 		$oRepo = $this->_oEntityManager->getRepository($data['class']);
 		
 		if( $oRepo === null )
@@ -81,6 +81,7 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 	 * @return bool
 	*/
 	public function supportsDenormalization($data, $type, $format = null) {
+		
 		if( !isset($data['class']) )
 			return false;
 		
@@ -91,7 +92,6 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 //	Subroutine
 	
 	/**
-	 * @param EntityManager $em
 	 * @param string|object $class
 	 *
 	 * @return boolean

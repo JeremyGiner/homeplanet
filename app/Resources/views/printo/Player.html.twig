@@ -11,6 +11,16 @@
 	<img src="{{ asset('img/placeholder.jpg') }}" title="avatar" />
 </div>
 <div class="col-xs-6">
+	<dl class="dl-horizontal">
+		<dt>Allegeance :</dt>
+		<dd>
+		{% if( o.allegeance is null ) %}
+			<small class="text-muted">No sovereign</small>
+		{% else %}
+			{{ printo( o.allegeance, {_suffix:'link'} ) }}
+		{% endif %}
+		</dd>
+	</dl> 
 	<p>
 		Player description : 
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin varius, enim quis cursus ultrices, nisl metus vehicula felis, in pharetra metus mi nec elit. In consequat massa ligula, vitae euismod lectus suscipit nec. Pellentesque iaculis lacinia eros at finibus. Phasellus leo metus, rhoncus auctor rhoncus at, sollicitudin vitae magna.

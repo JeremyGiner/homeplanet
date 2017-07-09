@@ -13,7 +13,8 @@ class TileValidatorRange implements ITileValidator {
 		$this->_iRange = $iRange;
 	}
 	
-	public function validate( Tile $oTile ) {
+	public function validate( Tile $oTile = null ) {
+		if( $oTile === null ) return false;
 		return 
 			$oTile->getLocation()->getDist($this->_oTileRef->getLocation()) 
 			<= $this->_iRange;

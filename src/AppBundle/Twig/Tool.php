@@ -40,6 +40,13 @@ class Tool extends \Twig_Extension {
 					'getIndexBy',
 				]
 			),
+			'plus' => new \Twig_SimpleFunction(
+					'plus',
+					[
+							$this,
+							'plus',
+					]
+			),
 		];
 	}
 //_____________________________________________________________________________
@@ -60,6 +67,12 @@ class Tool extends \Twig_Extension {
 	public function getIndexBy( array $aSubject, $sPropertyPath ) {
 	
 		return $this->getArrayTool()->indexBy($aSubject, $sPropertyPath);
+	}
+	
+	public function plus( $f ) {
+		if( $f >= 0 )
+			return '+';
+		return '';
 	}
 	
 //_____________________________________________________________________________

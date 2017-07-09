@@ -9,6 +9,30 @@
 /*!40101 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+-- Dumping data for table gigablaster.attribute: ~4 rows (approximately)
+/*!40000 ALTER TABLE `attribute` DISABLE KEYS */;
+INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
+	(1, 2, NULL);
+INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
+	(2, 3, 'land:3');
+INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
+	(3, 3, 'land:5');
+INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
+	(4, 3, 'naval:10');
+/*!40000 ALTER TABLE `attribute` ENABLE KEYS */;
+
+-- Dumping data for table gigablaster.attributetype: ~4 rows (approximately)
+/*!40000 ALTER TABLE `attributetype` DISABLE KEYS */;
+INSERT INTO `attributetype` (`id`, `label`) VALUES
+	(1, 'prod_slot');
+INSERT INTO `attributetype` (`id`, `label`) VALUES
+	(2, 'move');
+INSERT INTO `attributetype` (`id`, `label`) VALUES
+	(3, 'transport');
+INSERT INTO `attributetype` (`id`, `label`) VALUES
+	(4, 'stealth');
+/*!40000 ALTER TABLE `attributetype` ENABLE KEYS */;
+
 -- Dumping data for table gigablaster.city: ~0 rows (approximately)
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
@@ -17,15 +41,11 @@
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.event: ~0 rows (approximately)
-/*!40000 ALTER TABLE `event` DISABLE KEYS */;
-/*!40000 ALTER TABLE `event` ENABLE KEYS */;
-
 -- Dumping data for table gigablaster.gamestate: ~0 rows (approximately)
 /*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
 /*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.influencemodifier: ~2 rows (approximately)
+-- Dumping data for table gigablaster.influencemodifier: ~0 rows (approximately)
 /*!40000 ALTER TABLE `influencemodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `influencemodifier` ENABLE KEYS */;
 
@@ -45,64 +65,64 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 /*!40000 ALTER TABLE `notification` DISABLE KEYS */;
 /*!40000 ALTER TABLE `notification` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawn: ~8 rows (approximately)
+-- Dumping data for table gigablaster.pawn: ~2 rows (approximately)
 /*!40000 ALTER TABLE `pawn` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.pawntype: ~26 rows (approximately)
 /*!40000 ALTER TABLE `pawntype` DISABLE KEYS */;
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(1, 1, 'farm', 100, 'Produce wheats, honey, fruits and vegetables');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(2, 1, 'wood cutter', 100, 'Produce wood log');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(3, 1, 'mine', 100, 'Produce iron and gold');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(5, 1, 'quarry', 1000000000, 'Produce stone');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(6, 1, 'hunting camp', 100, 'Produce meat');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(7, 1, 'fishing boat', 100, 'Produce fish and crustacean');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(8, 1, 'herb collector', 1000000000, NULL);
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(30, 1, 'restaurant', 100, 'Produce delicacy and sell food');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(100, 2, 'sawmill', 100, 'Produce wood plank');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(101, 2, 'windmill', 100, 'Produce floor');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(103, 2, 'smelter', 100, 'Smelt and refine metals');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(200, 3, 'bakery', 100, 'Produce bread and delicacy');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(201, 3, 'blacksmith', 100, 'Produce sword');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(202, 3, 'art workshop', 100, 'Produce jewelry, painting and watch');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(203, 3, 'stable', 100, 'Produce horse');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(204, 3, 'apothecary', 100, 'Produce medicine and soap');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(205, 3, 'tailor', 100, 'Produce outfit');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(206, 3, 'workshop', 100, 'Produce tools, books and toys');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(207, 3, 'carpenter', 100, 'Produce furniture');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(208, 3, 'building crew', 100, 'Produce housing');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(209, 3, 'bookbinder', 100, 'Produce book');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(1000, 4, 'cart', 0, 'A basic mean of transportation for resources.');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(1001, 4, 'wagon', 100, 'A four-wheeled vehicle pulled by draught animals.\r\nCan carry ressources further away than a cart.');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(1002, 4, 'boat', 200, 'A sailing vessel that carries ressources across sea and rivers.');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(2000, 5, 'traveling merchant', 100, 'A merchant able to sell and buy a wide variety of ressources in small quantity.\r\nIn addition he is also able to travel from town to town.');
-INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `description`) VALUES
-	(2001, 5, 'market stall', 100, 'A merchant able to sell end product.');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(1, 1, 'farm', 100, 1, 'Produce wheats, honey, fruits and vegetables');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(2, 1, 'wood cutter', 100, 1, 'Produce wood log');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(3, 1, 'mine', 100, 1, 'Produce iron and gold');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(5, 1, 'quarry', 1000000000, 1, 'Produce stone');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(6, 1, 'hunting camp', 100, 1, 'Produce meat');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(7, 1, 'fishing boat', 100, 1, 'Produce fish and crustacean');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(8, 1, 'herb collector', 1000000000, 1, NULL);
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(30, 1, 'restaurant', 100, 1, 'Produce delicacy and sell food');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(100, 2, 'sawmill', 100, 1, 'Produce wood plank');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(101, 2, 'windmill', 100, 1, 'Produce floor');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(103, 2, 'smelter', 100, 1, 'Smelt and refine metals');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(200, 3, 'bakery', 100, 1, 'Produce bread and delicacy');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(201, 3, 'blacksmith', 100, 1, 'Produce sword');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(202, 3, 'art workshop', 100, 1, 'Produce jewelry, painting and watch');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(203, 3, 'stable', 100, 1, 'Produce horse');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(204, 3, 'apothecary', 100, 1, 'Produce medicine and soap');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(205, 3, 'tailor', 100, 1, 'Produce outfit');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(206, 3, 'workshop', 100, 1, 'Produce tools, books and toys');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(207, 3, 'carpenter', 100, 1, 'Produce furniture');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(208, 3, 'building crew', 100, 1, 'Produce housing');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(209, 3, 'bookbinder', 100, 1, 'Produce book');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(1000, 4, 'cart', 0, 1, 'A basic mean of transportation for resources.');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(1001, 4, 'wagon', 100, 1, 'A four-wheeled vehicle pulled by draught animals.\r\nCan carry ressources further away than a cart.');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(1002, 4, 'boat', 200, 1, 'A sailing vessel that carries ressources across sea and rivers.');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(2000, 5, 'traveling merchant', 100, 1, 'A merchant able to sell and buy a wide variety of ressources in small quantity.\r\nIn addition he is also able to travel from town to town.');
+INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
+	(2001, 5, 'market stall', 100, 1, 'A merchant able to sell end product.');
 /*!40000 ALTER TABLE `pawntype` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.pawntypecategory: ~5 rows (approximately)
@@ -118,6 +138,16 @@ INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(5, 'merchant');
 /*!40000 ALTER TABLE `pawntypecategory` ENABLE KEYS */;
+
+-- Dumping data for table gigablaster.pawntype_attribute: ~3 rows (approximately)
+/*!40000 ALTER TABLE `pawntype_attribute` DISABLE KEYS */;
+INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
+	(1000, 2);
+INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
+	(1001, 3);
+INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
+	(1002, 4);
+/*!40000 ALTER TABLE `pawntype_attribute` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.pawntype_prodtype_assoc: ~289 rows (approximately)
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` DISABLE KEYS */;
@@ -701,33 +731,29 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1002, 4141);
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawn_location_assoc: ~8 rows (approximately)
+-- Dumping data for table gigablaster.pawn_location_assoc: ~2 rows (approximately)
 /*!40000 ALTER TABLE `pawn_location_assoc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn_location_assoc` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.player: ~3 rows (approximately)
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
-	(1, 1, 'Lord toto', 10680, 0, 1);
-INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
-	(2, 2, 'Mastert itit', 100, 0, 5);
-INSERT INTO `player` (`user_id`, `id`, `name`, `credit`, `income`, `cart`) VALUES
-	(4, 5, 'test', 100, 0, 1);
+INSERT INTO `player` (`id`, `user_id`, `name`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
+	(1, 1, 'Lord toto', 9980, 0, 1, NULL);
+INSERT INTO `player` (`id`, `user_id`, `name`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
+	(2, 2, 'Mastert itit', 100, 0, 5, NULL);
+INSERT INTO `player` (`id`, `user_id`, `name`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
+	(5, 4, 'test', 100, 0, 1, NULL);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.population: ~0 rows (approximately)
 /*!40000 ALTER TABLE `population` DISABLE KEYS */;
 /*!40000 ALTER TABLE `population` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.post: 0 rows
-/*!40000 ALTER TABLE `post` DISABLE KEYS */;
-/*!40000 ALTER TABLE `post` ENABLE KEYS */;
-
--- Dumping data for table gigablaster.prod: ~7 rows (approximately)
+-- Dumping data for table gigablaster.prod: ~2 rows (approximately)
 /*!40000 ALTER TABLE `prod` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prod` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prodinput: ~7 rows (approximately)
+-- Dumping data for table gigablaster.prodinput: ~1 rows (approximately)
 /*!40000 ALTER TABLE `prodinput` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prodinput` ENABLE KEYS */;
 
@@ -1773,10 +1799,12 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 /*!40000 ALTER TABLE `relationshipmodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `relationshipmodifier` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.relationshiptype: 1 rows
+-- Dumping data for table gigablaster.relationshiptype: 2 rows
 /*!40000 ALTER TABLE `relationshiptype` DISABLE KEYS */;
 INSERT INTO `relationshiptype` (`id`, `label`, `description`, `value`) VALUES
 	(1, 'gift', 'Sovereign have been given a gift.', 10);
+INSERT INTO `relationshiptype` (`id`, `label`, `description`, `value`) VALUES
+	(2, 'allegeance', 'Allegeance pleage to this soveriegn', 100);
 /*!40000 ALTER TABLE `relationshiptype` ENABLE KEYS */;
 
 -- Dumping data for table gigablaster.rescategory: ~10 rows (approximately)
@@ -2042,11 +2070,11 @@ INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
-	('player_ext', 'SELECT \r\n	player.id as player_id,\r\n	IFNULL(tcartused.value,0) as cart_used,\r\n	IFNULL(trevenue.value,0)\r\n	- IFNULL(tcharge.value,0)\r\n	AS income\r\nFROM player\r\n\r\n# JOIN cart owned by player\r\nLEFT JOIN (\r\n	SELECT\r\n		 pawn.player_id,\r\n		 IFNULL(SUM(pawn.grade), 0) as value\r\n	FROM pawn\r\n	JOIN pawntype ON pawntype.id = pawn.type_id \r\n	WHERE pawntype.category_id = 4 #transporter\r\n	GROUP BY pawn.player_id\r\n) as tcartused ON tcartused.player_id = player.id\r\n\r\n# JOIN sold product\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				* sold.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN sold ON sold.seller_id = pawn.id\r\n	JOIN demand \r\n		ON demand.city_id = sold.buyer_id\r\n		AND demand.ressource_id = sold.ressource_id\r\n	JOIN ressource ON ressource.id = sold.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as trevenue ON trevenue.player_id = player.id\r\n\r\n#JOIN buy\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				#* prodtype_buyer.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN prod ON prod.pawn_id = pawn.id\r\n	JOIN prodtype ON prodtype.id = prod.prodtype_id\r\n	JOIN city \r\n		ON  city.location_x = prod.location_x\r\n		AND city.location_y = prod.location_y\r\n	JOIN demand \r\n		ON demand.city_id = city.id \r\n		AND demand.ressource_id = prodtype.ressource_id\r\n	JOIN ressource ON ressource.id = demand.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as tcharge ON tcharge.player_id = player.id\r\n	\r\n');
+	('player_ext', 'SELECT \r\n	player.id as player_id,\r\n	IFNULL(tcontract.value,0) as contract,\r\n	IFNULL(trevenue.value,0)\r\n	- IFNULL(tcharge.value,0)\r\n	AS income\r\nFROM player\r\n\r\n# JOIN contract owned by player\r\nLEFT JOIN (\r\n	SELECT\r\n		 pawn.player_id,\r\n		 IFNULL(SUM(pawn.grade), 0) as value\r\n	FROM pawn\r\n	JOIN pawntype ON pawntype.id = pawn.type_id \r\n	GROUP BY pawn.player_id\r\n) as tcontract ON tcontract.player_id = player.id\r\n\r\n# JOIN sold product\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				* sold.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN sold ON sold.seller_id = pawn.id\r\n	JOIN demand \r\n		ON demand.city_id = sold.buyer_id\r\n		AND demand.ressource_id = sold.ressource_id\r\n	JOIN ressource ON ressource.id = sold.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as trevenue ON trevenue.player_id = player.id\r\n\r\n#JOIN buy\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				#* prodtype_buyer.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN prod ON prod.pawn_id = pawn.id\r\n	JOIN prodtype ON prodtype.id = prod.prodtype_id\r\n	JOIN city \r\n		ON  city.location_x = prod.location_x\r\n		AND city.location_y = prod.location_y\r\n	JOIN demand \r\n		ON demand.city_id = city.id \r\n		AND demand.ressource_id = prodtype.ressource_id\r\n	JOIN ressource ON ressource.id = demand.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as tcharge ON tcharge.player_id = player.id\r\n	\r\n');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('city_distance', 'SELECT \r\n	c0.id as city0_id,\r\n	c1.id as city1_id,\r\n	abs(c1.location_x - c0.location_x)\r\n	+abs(c1.location_y - c0.location_y) as dist\r\nFROM city as c0\r\nLEFT JOIN city as c1 ON c1.id != c0.id\r\n');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
-	('relationship', 'SELECT \r\n	*\r\nFROM relationshipmodifier');
+	('relationship', 'SELECT \r\n	relationshipmodifier.player_id,\r\n	relationshipmodifier.sovereign_id,\r\n	relationshipmodifier.type_id\r\nFROM relationshipmodifier\r\n\r\nUNION\r\n\r\nSELECT \r\n	player.id,\r\n	player.allegeance,\r\n	2 #allegeance\r\nFROM player\r\nWHERE player.allegeance IS NOT NULL');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('influence_relationship', 'SELECT \r\n	city.id as city_id,\r\n	relationship.sovereign_id,\r\n	SUM(sold.quantity) as value\r\nFROM city\r\nJOIN sold ON sold.buyer_id = city.id\r\nJOIN pawn ON pawn.id = sold.seller_id\r\nJOIN relationship ON relationship.player_id = pawn.player_id\r\nGROUP BY city.id, relationship.sovereign_id');
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES

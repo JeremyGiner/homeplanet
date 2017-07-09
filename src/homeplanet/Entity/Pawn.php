@@ -114,7 +114,7 @@ class Pawn {
 		return $this->_iGrade;
 	}
 	/**
-	 * @return EntityLocation[]
+	 * @return PawnLocation[]
 	 */
 	public function getPawnLocationAr() {
 		return $this->_aPosition->toArray();
@@ -129,6 +129,7 @@ class Pawn {
 		}
 		return $a;
 	}
+	
 	
 	/**
 	 * @return Production[]
@@ -145,6 +146,10 @@ class Pawn {
 		return $this->_oPopulation;
 	}
 	
+	public function getAttribute( $s ) {
+		return $this->_oType->getAttribute( $s );
+	}
+	
 	
 //_____________________________________________________________________________
 //	Modifier
@@ -156,6 +161,13 @@ class Pawn {
 	
 	public function addLocation( Location $oLoc ) {
 		$this->_aPosition->add( new PawnLocation($this, $oLoc));
+		return $this;
+	}
+	
+	public function resetLocation() {
+		
+		$this->_aPosition->clear();
+		
 		return $this;
 	}
 	

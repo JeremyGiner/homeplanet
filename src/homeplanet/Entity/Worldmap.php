@@ -50,22 +50,53 @@ class Worldmap {
 	 * @return Tile
 	 */
 	public function getTile( $x, $y ) {
-		$sKey = $x.':'.$y;
 		
-		if( !isset($this->_aTile[ $sKey ] ) ) {
-			$oLoc = new Location($x,$y);
-			$this->loadRegion($oLoc->getRegionX(), $oLoc->getRegionY());
-		}
-		return $this->_aTile[ $sKey ];
+		$oLocation = new Location($x,$y);
+		
+		return $this->getTileByLocation($oLocation);
 	}
+	/**
+	 * 
+	 * 
+	 * @param Location $oLocation
+	 * @return Tile
+	 */
+	public function getTileByLocation( Location $oLocation ) {
+		$sKey = $oLocation->__toString();
+	
+		if( !isset($this->_aTile[ $sKey ] ) ) {
+			$this->loadRegion($oLocation->getRegionX(), $oLocation->getRegionY());
+		}
+		return isset($this->_aTile[ $sKey ] ) ?
+			$this->_aTile[ $sKey ] :
+			null;
+	}
+	
+	public function getNeighbor( Tile $oTile ) {
+		
+		
+		$x = $oTile->getLocation()->getX();
+		$y = $oTile->getLocation()->getY();
+		$a = [
+				$this->getTile( $x+1, $y ),
+				$this->getTile( $x, $y+1 ),
+				$this->getTile( $x-1, $y ),
+				$this->getTile( $x, $y-1 ),
+		];
+		
+		// Filter null
+		$a = array_filter($a, function( $o ) { return $o !== null; } );
+		
+		return $a;
+	} 
 	
 	public function getGame() {
 		return $this->_oGame;
 	}
 	
 	public function loadRegion( $iRegionX, $iRegionY ) {
-		
-		
+		if( $iRegionX < 0 || $iRegionY < 0 || $iRegionX > 13 || $iRegionY > 13  )
+			return;
 		// Cache config
 		$cache = new FilesystemAdapter();
 		//$cache->clear();

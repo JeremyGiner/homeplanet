@@ -13,8 +13,10 @@ use Doctrine\ORM\EntityRepository;
 use homeplanet\tool\TileValidatorRange;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
+use homeplanet\Entity\attribute\Location;
+use AppBundle\validator\ValidatorInArray;
 
-class TradeRouteCreationForm extends MultistepType {
+class TransportSetForm extends MultistepType {
 	
 	
 //_____________________________________________________________________________
@@ -26,7 +28,6 @@ class TradeRouteCreationForm extends MultistepType {
 		$oResolver->setDefaults([
 			'gameview' => null,
 			'game' => null,
-			'repo' => null,
 			'validation_groups' => function (FormInterface $form) {
 				//TODO
 				//var_dump( $form->getConfig()->getOption('step') );
@@ -41,14 +42,12 @@ class TradeRouteCreationForm extends MultistepType {
 			$oData, 
 			$aOption 
 	) {
-		/* @var $oData TradeRouteFactory */
+		/* @var $oData TransportSet */
+		
 		switch( $iStep ) {
 			case 0 :
-				$a = [];
-				for($i = 1; $i<=$oData->getPlayer()->getContractRemaining(); $i++)
-					$a[$i] = $i;
+				$oPawn = $oData->getPawn();
 				$oBuilder
-					->add('name', TextType::class, ['label' => 'Name', 'required' => false])
 					->add('location_begin', LocationType::class,[
 						'gameview' => $aOption['gameview']
 					])
@@ -56,35 +55,56 @@ class TradeRouteCreationForm extends MultistepType {
 						'class' => ProductionType::class,
 						'label' => 'Cargo type',
 						'choice_label' => 'ressource.label',
-						'query_builder' => function (EntityRepository $er) {
+						'query_builder' => function (EntityRepository $er) use ($oPawn ){
 							return $er->createQueryBuilder('prodtype')
 								->join('prodtype._aPawnType', 'pawntype')
 								->join('prodtype._oRessource', 'ressource')
-								->where('pawntype._iId = 10'/* trade route */);
+								->where('pawntype._iId = '.$oPawn->getType()->getId())
+							;
 						},
 					])
+					/*
 					->add('level', ChoiceType::class, [
-						'choices' => $a,
+						'choices' => range(1,pawn.grade), // get range entity grade
 						'label' => 'Quantity',
 					])
+					*/
 					->add('submit', SubmitType::class, [
 						'label' => 'Next',
 						'attr' => ['class' => 'btn-primary pull-right'], 
 					]);
 			return true;
 			case 1 :
+				$oTileBegin = $aOption['game']->getWorldmap()->getTile(
+					$oData->getLocationBegin()->getX(),
+					$oData->getLocationBegin()->getY()
+				);
+				
+				// TODO: get pathfinder from transport attribute
+				$oPathfinder = $oData->getPawn()
+					->getAttribute('transport')
+					->getPathfinder();
+				$oPathfinder->propagate( $oData->getLocationBegin() );
+				$oWorldmap = $oPathfinder->getWorldmap();
+				$aMapping = $oPathfinder->getMapping();
+				$aValidTile = [];
+				if( $aMapping !== null )
+					$aValidTile = array_map(function( $s ) use( $oWorldmap ) { 
+						return $oWorldmap->getTileByLocation( Location::getFromString($s) );
+					} , array_keys( $aMapping ) );
+				
 				$oBuilder
 					->add('location_end', LocationType::class,[
 						'label' => ' end',
 						'data' => $oData->getLocationBegin(),
 						'gameview' => $aOption['gameview'],
+						'validator' => new ValidatorInArray( $aValidTile )
+							/*
 						'validator' => new TileValidatorRange(
-							$aOption['game']->getWorldmap()->getTile(
-								$oData->getLocationBegin()->getX(),
-								$oData->getLocationBegin()->getY()
-							), 
+							$oTileBegin, 
 							3
 						)
+						*/
 					])
 					->add('confirm', SubmitType::class, [
 						'label' => 'Confirm',

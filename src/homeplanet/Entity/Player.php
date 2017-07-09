@@ -50,15 +50,22 @@ class Player {
 	protected $_iIncome;
 	
 	/**
-	 * @ORM\Column(type="integer", name="cart")
+	 * @ORM\Column(type="integer", name="contract_max")
 	 */
-	protected $_iCart;
+	protected $_iContractMax;
 	
 	/**
 	 * @ORM\OneToOne(targetEntity="PlayerExt",mappedBy="_oPlayer")
 	 * @var PlayerExt
 	 */
 	protected $_oPlayerExt;
+	
+	/**
+	 * @ORM\OneToOne(targetEntity="Sovereign")
+	 * @ORM\JoinColumn(name="allegeance", referencedColumnName="id")
+	 * @var Sovereign
+	 */
+	protected $_oAllegeance;
 	
 	
 //_____________________________________________________________________________
@@ -96,17 +103,26 @@ class Player {
 		return $this->_iIncome;
 	}
 	
-	public function getCart() {
-		return $this->_iCart;
+	public function getContractMax() {
+		return $this->_iContractMax;
 	}
 	
 	public function getExt() {
 		return $this->_oPlayerExt;
 	}
 	
-	public function getCartRemaining() {
-		return $this->_iCart - $this->_oPlayerExt->getCartUsed();
+	public function getContractPrice() {
+		return $this->_iContractMax * $this->_iContractMax * 100;
 	}
+	
+	public function getContractRemaining() {
+		return $this->_iContractMax - $this->_oPlayerExt->getContractUsed();
+	}
+	
+	public function getAllegeance() {
+		return $this->_oAllegeance;
+	}
+	
 	
 //_____________________________________________________________________________
 //	Modifier
@@ -123,6 +139,11 @@ class Player {
 	
 	public function setCart( $i ) {
 		$this->_iCart = $i;		
+		return $this;
+	}
+	
+	public function increaseContractMax() {
+		$this->_iContractMax++;
 		return $this;
 	}
 

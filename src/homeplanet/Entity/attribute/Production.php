@@ -116,6 +116,26 @@ class Production {
 		}
 		return $o;
 	}
+	static public function createTransport(
+			Pawn $oPawn,
+			Location $oLocationBegin,
+			Location $oLocationEnd,
+			ProductionType $oProdType
+	) {
+		$o = new Production($oPawn, $oLocationEnd, $oProdType );
+		foreach( $oProdType->getProdInputTypeAr() as $oProdInputType ) {
+			$o->_aProdInput->add(
+					new ProductionInput(
+							$o,
+							$oLocationBegin,
+							$oProdInputType
+					)
+			);
+	
+		}
+		
+		return $o;
+	}
 	
 //______________________________________________________________________________
 //	Accessor
