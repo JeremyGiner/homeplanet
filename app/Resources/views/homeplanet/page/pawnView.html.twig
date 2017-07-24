@@ -14,7 +14,10 @@
 			{% if form_prodtype is defined %}
 				<hr/>
 				{% form_theme form_prodtype 'bootstrap_3_horizontal_layout.html.twig' %}
-				{{ form(form_prodtype) }}
+				{% if( form_prodtype_recap != null ) %}
+					{{ form( form_prodtype_recap ) }}
+				{% endif %}
+				{{ form( form_prodtype ) }}
 			{% endif %}
 			{% if form_delete is defined %}
 				<hr/>
