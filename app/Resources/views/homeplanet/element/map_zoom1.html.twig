@@ -26,3 +26,9 @@
 	{% endfor %}
 </tbody>
 </table>
+<script>
+// hajust speed boost
+var aElement = document.getElementsByClassName('hajust-square');
+for( var i; i<aElement.length; i++ )
+    aElement[i].style.height = aElement[i].offsetWidth;
+</script>
