@@ -13,8 +13,11 @@ use homeplanet\tool\pathfinder\IsEndReachedByMaxHeat;
 use homeplanet\Entity\attribute\ProductionType;
 use Symfony\Component\Serializer\Annotation\Groups;
 use homeplanet\Entity\Worldmap;
+use homeplanet\Entity\attribute\Transporter;
 
-
+/**
+ * @Assert\GroupSequence({"TransportSet","step1"})
+ */
 class TransportSet {
 	
 	/**
@@ -25,6 +28,7 @@ class TransportSet {
 	
 	/**
 	 * @Groups({"serialisable"})
+	 * @Assert\NotBlank(groups={"step1"})
 	 * @var Location
 	 */
 	protected $_oLocationBegin;
@@ -37,6 +41,7 @@ class TransportSet {
 	
 	/**
 	 * @Groups({"serialisable"})
+	 * @Assert\NotBlank(groups={"step1"})
 	 * @var ProductionType
 	 */
 	protected $_oProductionType;
@@ -100,7 +105,23 @@ class TransportSet {
 
 	/**
 	 * @Assert\IsTrue(
-	 *     message = "not enought money",
+	 *     message="Invalid location",
+	 *     groups={"step1"}
+	 * )
+	 */
+	function isLocationBeginValid() {
+		/* @var $oTransporter Transporter */
+		$oTransporter = $this->getPawn()->getAttribute('transport');
+		
+		$oPathfinder = $oTransporter->getPathfinder();
+		$oTile = $oPathfinder->getWorldmap()->getTileByLocation( $this->_oLocationBegin );
+		
+		return $oTransporter->getTileValidator()->validate( $oTile );
+	}
+	
+	/**
+	 * @Assert\IsTrue(
+	 *     message="not enought money",
 	 *     groups={"Buy"}
 	 * )
 	 */

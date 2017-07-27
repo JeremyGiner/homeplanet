@@ -2,8 +2,16 @@
 	homeplanet\Form\LocaionType rendering #}
 
 {% block location_widget %}
-	<input id="{{ id }}" name="{{ full_name }}" type="text" value="{{ value }}">
-	<button class="btn btn-default" type="button" onclick="$('#{{ id }}_modal').modal('show')">Select</button>
+	<input id="{{ id }}" name="{{ full_name }}" type="hidden" value="{{ value }}">
+	<button 
+		class="btn btn-default" 
+		type="button" 
+		{%- if disabled %} 
+			disabled="disabled"
+		{% else %}
+			onclick="$('#{{ id }}_modal').modal('show')"
+		{% endif -%}
+	>{{ value }}</button>
 	{% embed 'bootstrap/modal.html.twig' 
 		with {id: id~'_modal', iTargetInputId: id}
 	 %}
@@ -17,13 +25,12 @@
 							$('#{{ id }} .mapz0-wrapper').ajaxUpdate(
 								'{{ url('ajax_map_z0',{location: (x*13)~':'~(y*13)}) }}',
 								{
-									validator: 'TileValidatorRange',
-									param: {
-										validator_serialized: '{{ validator_serialized is defined ? validator_serialized|escape('js') : null }}',
-										tile_ref: '6:3',
-										range: 3
-									}
+								{% if validator is defined %}
+									validator: '{{ validator_class|e('js') }}',
+									validator_param: {{ validator_param  }},
+								{% endif %}
 								}
+								
 							);
 						"
 					></div>
@@ -38,6 +45,7 @@
 					&& $(event.target).attr('data-valid') == 'false'
 				) return false;
 				$('#{{ iTargetInputId }}').val( $(event.target).attr('data-location') );
+				$('#{{ iTargetInputId }}+button').html( $(event.target).attr('data-location') );
 				$('#{{ id }}').modal('hide');
 			"
 		>

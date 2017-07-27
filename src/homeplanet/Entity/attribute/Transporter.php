@@ -38,9 +38,17 @@ class Transporter {
 //_____________________________________________________________________________
 //	Accessor
 	
+	
+	public function getTileValidator() {
+		return $this->_sType == 'land' ? 
+			new TileValidatorLand() : 
+			new TileValidatorNaval( $oWorldmap )
+		;
+	}
+	
 	/**
 	 * 
-	 * @return Pathfinder
+	 * @return PathfinderWorldmap
 	 */
 	function getPathfinder() {
 		if( $this->_oPathfinder === null ) {
@@ -49,7 +57,7 @@ class Transporter {
 			$oWorldmap = Game::getInstance()->getWorldmap();
 			$this->_oPathfinder = new PathfinderWorldmap(
 				$oWorldmap, 
-				new GetNeighborByValidator( $oWorldmap, $this->_sType == 'land' ? new TileValidatorLand() : new TileValidatorNaval( $oWorldmap ) ), 
+				new GetNeighborByValidator( $oWorldmap, $this->getTileValidator() ), 
 				new GetDifficultyDefault(), 
 				new IsEndReachedByMaxHeat( $this->_iRange -1 ) //$this->_oPawn->getAttribute() )
 			);
