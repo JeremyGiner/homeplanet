@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormInterface;
 use homeplanet\Entity\attribute\Location;
 use AppBundle\validator\ValidatorInArray;
+use homeplanet\Entity\attribute\Transporter;
 
 class TransportSetForm extends MultistepType {
 	
@@ -47,9 +48,14 @@ class TransportSetForm extends MultistepType {
 		switch( $iStep ) {
 			case 0 :
 				$oPawn = $oData->getPawn();
+				
+				/* @var $oTransporter Transporter */
+				$oTransporter = $oData->getPawn()->getAttribute('transport');
+				
 				$oBuilder
 					->add('location_begin', LocationType::class,[
-						'gameview' => $aOption['gameview']
+						'gameview' => $aOption['gameview'],
+						'validator' => $oTransporter->getTileValidator(),
 					])
 					->add('production_type', EntityType::class, [
 						'class' => ProductionType::class,

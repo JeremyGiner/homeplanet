@@ -241,35 +241,7 @@ class PlanetController extends BaseController {
 		], $oResponse );
 	}
 	
-	/**
-	 * @Route("/ajax/map_z0", name="ajax_map_z0")
-	 */
-	function mapAction( Request $oRequest ) {
-		$this->_handleRequest($oRequest);
-		
-		$oValidator = (new TileValidatorResolver())->resolve(
-				$oRequest->query->get('validator'), 
-				$oRequest->query->get('param')+[
-					'worldmap' => $this->_oGame->getWorldmap(),
-				]
-		);
-		
-		//var_dump($oValidator);
-		//exit();
-		
-		return $this->render( 
-			'homeplanet/element/map_zoom0.html.twig', 
-			[
-				'gameview' => [
-					'location' => $this->_oLocation,
-					'game' => $this->_oGame,
-					'map' => $this->_oGame->getWorldmap(),
-				],
-				'map_mod' => true,
-				'validator' => $oValidator,
-			]
-		);
-	}
+
 	
 //_____________________________________________________________________________
 	

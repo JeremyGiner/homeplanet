@@ -4,18 +4,29 @@ namespace homeplanet\tool;
 
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\Worldmap;
+use AppBundle\validator\ValidatorInArray;
+use homeplanet\tool\TileValidatorLand;
+use homeplanet\tool\TileValidatorNaval;
+use homeplanet\tool\TileValidatorRange;
 
 class TileValidatorResolver {
 	
-	public function resolve( $sName, $aOption ) {
-		switch( $sName ) {
-			case 'TileValidatorRange' :
+	public function resolve( $sClassName, $mParam, Worldmap $oWorldmap ) {
+		switch( $sClassName ) {
+			case ValidatorInArray::class :
+				return new ValidatorInArray( json_decode($mParam) );
+			case TileValidatorLand::class :
+			case TileValidatorNaval::class :
+				return new $sClassName( $oWorldmap );
+			case TileValidatorRange::class :
 				
-				return unserialize( $aOption['validator_serialized'] );
+				throw new \Exception('TODO: update');
 				
-				$oWorldmap = $aOption['worldmap'];
+				return unserialize( $mParam['validator_serialized'] );
 				
-				$oLocation = Location::getFromString( $aOption['tile_ref'] );
+				$oWorldmap = $mParam['worldmap'];
+				
+				$oLocation = Location::getFromString( $mParam['tile_ref'] );
 				$oTileRef = $oWorldmap->getTile(
 						$oLocation->getX(), 
 						$oLocation->getY()
@@ -23,9 +34,9 @@ class TileValidatorResolver {
 				
 				return new TileValidatorRange(
 					$oTileRef, 
-					$aOption['range']
+					$mParam['range']
 				);
 		}
-		throw new Exception('Invalid name ['.$sName.']');
+		throw new \Exception('Invalid name ['.$sClassName.']');
 	}
 }
