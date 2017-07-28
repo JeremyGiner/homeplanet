@@ -31,6 +31,10 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Tests\ButtonTest;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use homeplanet\tool\TileValidatorResolver;
+use AppBundle\PropertyAccess\PropertyAccessorAggregate;
+use AppBundle\PropertyAccess\AppBundle\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
+
 
 /**
  *
@@ -99,8 +103,112 @@ class PlanetController extends BaseController {
 	
 //_____________________________________________________________________________
 
-	
-
+	/**
+	 * @Route("/test", name="test")
+	 */
+	public function test( Request $oRequest ) {
+		
+		$this->_handleRequest( $oRequest );
+		
+		$oEntityManager = $this->getDoctrine()->getManager();
+		
+		$oUser = $this->getUser();
+		
+		// Get location
+		$oLocation = $this->_oLocation;
+		
+		// Check game
+		$oGame = $this->_oGame;
+		
+		$oPlayer = $oGame->getPlayer(1);
+		
+		//________________
+		
+		/*
+		$remaining = 'id[id]';
+		
+		preg_match(
+				'/^(([^\.\[]++)|\[([^\]]*+)\])(.*)/', 
+				$remaining, 
+				$matches
+		);
+		
+		var_dump($remaining);
+		var_dump($matches);
+		
+		if ('' !== $matches[2]) {
+			$element = $matches[2];
+			$isIndex[] = false;
+		} else {
+			$element = $matches[3];
+			$isIndex[] = true;
+		}
+		
+		var_dump($element);
+		var_dump($isIndex);
+		*/
+		
+		//________________
+		
+		
+		$accessor = \Symfony\Component\PropertyAccess\PropertyAccess::createPropertyAccessor();
+		//$accessor = new PropertyAccessorAggregate();
+		
+		$aPawn = $oGame->getPawnRepo()->getPawnAr_byPlayer($oPlayer);
+		
+		//var_dump($aPawn);
+		
+		$s = '[].productionAr[].type.ressource.id';
+		//$s = 'type.prodTypeAr[].ressource';
+		
+		//$a = $accessor->getValue( $aPawn, $s );
+		
+		
+		
+		
+		$mSubject = $aPawn;
+		
+		
+		$a = explode( '[]', $s );
+		$aPopertyPath = [];
+		foreach( $a as $s ) {
+			
+			if( $s == '' ) {
+				$aPopertyPath[] = null;
+				continue;
+			} 
+			
+			if( $s[0] === '.' )
+				$s = substr($s, 1);
+			
+			$aPopertyPath[] = new PropertyPath($s);
+		}
+		
+		$mSubjectCurrent = $mSubject;
+		end($a);
+		$lastKey = key($a);
+		foreach( $aPopertyPath as $key => $oPopertyPath ) {
+			
+			if( $oPopertyPath === null ) {
+				//$mSubjectCurrent = $mSubjectCurrent;
+				continue;
+			}
+			
+			$aTmp = [];
+			foreach ( $mSubjectCurrent as $o ) {
+				$v = $accessor->getValue($o, $oPopertyPath);
+				
+				if( $lastKey === $key )
+					$aTmp[] = $v;
+				else
+					$aTmp = array_merge( $v, $aTmp );
+			}
+			
+			$mSubjectCurrent = $aTmp;
+		}
+		
+		var_dump($mSubjectCurrent);
+	}
 	
 //_____________________________________________________________________________
 

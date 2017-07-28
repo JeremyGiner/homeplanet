@@ -114,6 +114,8 @@ class BaseController extends Controller {
 			$a[ (string)$oCity->getLocation() ] = $oCity;
 		}
 		$aCity = $a;
+		
+		$oGameSate = $oGame->getState();
 			
 		return [
 				'player' => $oGame->getPlayer(),
@@ -124,6 +126,21 @@ class BaseController extends Controller {
 				'entityAr' => $oGame->getPawnAr_byLocation($oLocation),
 				'overcrowd' => $aOvercrowd,
 				'city' => $aCity,
+				'year' => $oGameSate->getYear(),
+				'month' => $oGameSate->getMonth(),
+		];
+	}
+	
+	// TODO : create class
+	function _createViewMin( Game $oGame, Location $oLocation ) {
+		
+		$oGameSate = $oGame->getState();
+		
+		return [
+				'player' => $oGame->getPlayer(),
+				'location' => $oLocation,
+				'year' => $oGameSate->getYear(),
+				'month' => $oGameSate->getMonth(),
 		];
 	}
 }
