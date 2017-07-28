@@ -1,16 +1,17 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.7.14 - MySQL Community Server (GPL)
--- Server OS:                    Win64
--- HeidiSQL Version:             9.3.0.4984
+-- Hôte :                        127.0.0.1
+-- Version du serveur:           5.7.14 - MySQL Community Server (GPL)
+-- SE du serveur:                Win64
+-- HeidiSQL Version:             9.4.0.5125
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping structure for table gigablaster.attribute
+-- Export de la structure de la table homeplanet. attribute
 CREATE TABLE IF NOT EXISTS `attribute` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type_id` int(10) unsigned NOT NULL,
@@ -18,22 +19,54 @@ CREATE TABLE IF NOT EXISTS `attribute` (
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   CONSTRAINT `FK_attribute_attributetype` FOREIGN KEY (`type_id`) REFERENCES `attributetype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.attributetype
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. attributetype
 CREATE TABLE IF NOT EXISTS `attributetype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. character
+CREATE TABLE IF NOT EXISTS `character` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `occupation` varchar(50) NOT NULL,
+  `personality` varchar(50) NOT NULL,
+  `appearance` varchar(50) NOT NULL,
+  `label` varchar(50) NOT NULL,
+  `location_x` int(11) NOT NULL,
+  `location_y` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `location_x_location_y` (`location_x`,`location_y`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. character_expression
+CREATE TABLE IF NOT EXISTS `character_expression` (
+  `character_id` int(10) unsigned NOT NULL,
+  `expression_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`character_id`,`expression_id`),
+  KEY `FK_character_expression_expression` (`expression_id`),
+  CONSTRAINT `FK_character_expression_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_character_expression_expression` FOREIGN KEY (`expression_id`) REFERENCES `expression` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. character_knowledge
+CREATE TABLE IF NOT EXISTS `character_knowledge` (
+  `character_id` int(10) unsigned NOT NULL,
+  `knowledge_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`character_id`,`knowledge_id`),
+  KEY `FK_character_knowledge_knowledge` (`knowledge_id`),
+  CONSTRAINT `FK_character_knowledge_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_character_knowledge_knowledge` FOREIGN KEY (`knowledge_id`) REFERENCES `knowledge` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- Dumping structure for table gigablaster.city
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. city
 CREATE TABLE IF NOT EXISTS `city` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL DEFAULT '',
@@ -45,10 +78,22 @@ CREATE TABLE IF NOT EXISTS `city` (
   KEY `label` (`label`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. conversation
+CREATE TABLE IF NOT EXISTS `conversation` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `character0_id` int(10) unsigned NOT NULL,
+  `character1_id` int(10) unsigned NOT NULL,
+  `state` text,
+  PRIMARY KEY (`id`),
+  KEY `FK_conversation_character` (`character0_id`),
+  KEY `FK_conversation_character_2` (`character1_id`),
+  CONSTRAINT `FK_conversation_character` FOREIGN KEY (`character0_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_conversation_character_2` FOREIGN KEY (`character1_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-
--- Dumping structure for table gigablaster.demand
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. demand
 CREATE TABLE IF NOT EXISTS `demand` (
   `city_id` int(10) unsigned NOT NULL,
   `ressource_id` int(10) unsigned NOT NULL,
@@ -62,10 +107,18 @@ CREATE TABLE IF NOT EXISTS `demand` (
   CONSTRAINT `FK_demand_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. expression
+CREATE TABLE IF NOT EXISTS `expression` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  `effect` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
-
--- Dumping structure for table gigablaster.influencemodifier
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. influencemodifier
 CREATE TABLE IF NOT EXISTS `influencemodifier` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `sovereign_id` int(10) unsigned NOT NULL,
@@ -82,21 +135,26 @@ CREATE TABLE IF NOT EXISTS `influencemodifier` (
   CONSTRAINT `FK_sovereign_city_sovereign` FOREIGN KEY (`sovereign_id`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.influencetype
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. influencetype
 CREATE TABLE IF NOT EXISTS `influencetype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   `value` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. knowledge
+CREATE TABLE IF NOT EXISTS `knowledge` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  `type` enum('gossip','rumor') NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.pawn
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. pawn
 CREATE TABLE IF NOT EXISTS `pawn` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `player_id` int(10) unsigned DEFAULT NULL,
@@ -109,10 +167,8 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.pawntype
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. pawntype
 CREATE TABLE IF NOT EXISTS `pawntype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `category_id` int(10) unsigned NOT NULL DEFAULT '1',
@@ -123,22 +179,18 @@ CREATE TABLE IF NOT EXISTS `pawntype` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `FK_pawntype_pawntypecategory` FOREIGN KEY (`category_id`) REFERENCES `pawntypecategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2002 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.pawntypecategory
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. pawntypecategory
 CREATE TABLE IF NOT EXISTS `pawntypecategory` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.pawntype_attribute
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. pawntype_attribute
 CREATE TABLE IF NOT EXISTS `pawntype_attribute` (
   `pawntype_id` int(10) unsigned NOT NULL,
   `attribute_id` int(10) unsigned NOT NULL,
@@ -148,10 +200,8 @@ CREATE TABLE IF NOT EXISTS `pawntype_attribute` (
   CONSTRAINT `FK_pawntype_attribute_pawntype` FOREIGN KEY (`pawntype_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.pawntype_prodtype_assoc
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. pawntype_prodtype_assoc
 CREATE TABLE IF NOT EXISTS `pawntype_prodtype_assoc` (
   `pawntype_id` int(11) unsigned NOT NULL,
   `prodtype_id` int(11) unsigned NOT NULL,
@@ -161,10 +211,8 @@ CREATE TABLE IF NOT EXISTS `pawntype_prodtype_assoc` (
   CONSTRAINT `FK_pawntype_prodtype_assoc_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.pawn_location_assoc
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. pawn_location_assoc
 CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
   `pawn_id` int(10) unsigned NOT NULL,
   `location_x` int(10) NOT NULL,
@@ -173,12 +221,11 @@ CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
   CONSTRAINT `FK_entity_location_assoc_entity` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.player
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. player
 CREATE TABLE IF NOT EXISTS `player` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `character_id` int(10) unsigned DEFAULT NULL,
   `user_id` int(10) unsigned NOT NULL,
   `name` varchar(250) NOT NULL,
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
@@ -188,14 +235,14 @@ CREATE TABLE IF NOT EXISTS `player` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `FK_player_sovereign` (`allegeance`),
+  KEY `FK_player_character` (`character_id`),
+  CONSTRAINT `FK_player_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_sovereign` FOREIGN KEY (`allegeance`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.population
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. population
 CREATE TABLE IF NOT EXISTS `population` (
   `city_id` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL,
@@ -204,10 +251,8 @@ CREATE TABLE IF NOT EXISTS `population` (
   CONSTRAINT `FK_population_city` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.prod
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. prod
 CREATE TABLE IF NOT EXISTS `prod` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pawn_id` int(10) unsigned NOT NULL,
@@ -224,10 +269,8 @@ CREATE TABLE IF NOT EXISTS `prod` (
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.prodinput
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. prodinput
 CREATE TABLE IF NOT EXISTS `prodinput` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `prod_id` int(10) unsigned NOT NULL,
@@ -241,10 +284,8 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
   CONSTRAINT `FK_prodinput_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.prodinputtype
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. prodinputtype
 CREATE TABLE IF NOT EXISTS `prodinputtype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ressource_id` int(10) unsigned NOT NULL,
@@ -253,12 +294,10 @@ CREATE TABLE IF NOT EXISTS `prodinputtype` (
   PRIMARY KEY (`id`),
   KEY `FK_prodinputtype_ressource` (`ressource_id`),
   CONSTRAINT `FK_prodinputtype_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41411 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.prodtype
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. prodtype
 CREATE TABLE IF NOT EXISTS `prodtype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ressource_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -267,12 +306,10 @@ CREATE TABLE IF NOT EXISTS `prodtype` (
   PRIMARY KEY (`id`),
   KEY `FK_prodtype_ressource` (`ressource_id`),
   CONSTRAINT `FK_prodtype_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4142 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.prodtype_prodinputtype_assoc
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. prodtype_prodinputtype_assoc
 CREATE TABLE IF NOT EXISTS `prodtype_prodinputtype_assoc` (
   `prodtype_id` int(11) unsigned NOT NULL,
   `prodinputtype_id` int(11) unsigned NOT NULL,
@@ -282,10 +319,8 @@ CREATE TABLE IF NOT EXISTS `prodtype_prodinputtype_assoc` (
   CONSTRAINT `FK_prodtype_prodinputtype_assoc_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.relationshipmodifier
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. relationshipmodifier
 CREATE TABLE IF NOT EXISTS `relationshipmodifier` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `player_id` int(10) unsigned NOT NULL,
@@ -299,33 +334,27 @@ CREATE TABLE IF NOT EXISTS `relationshipmodifier` (
   CONSTRAINT `FK_relationshipmodifier_sovereign` FOREIGN KEY (`sovereign_id`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.relationshiptype
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. relationshiptype
 CREATE TABLE IF NOT EXISTS `relationshiptype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) DEFAULT NULL,
   `description` text NOT NULL,
   `value` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.rescategory
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. rescategory
 CREATE TABLE IF NOT EXISTS `rescategory` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(250) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.ressource
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. ressource
 CREATE TABLE IF NOT EXISTS `ressource` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(250) NOT NULL DEFAULT '0',
@@ -335,12 +364,10 @@ CREATE TABLE IF NOT EXISTS `ressource` (
   PRIMARY KEY (`id`),
   KEY `natural` (`natural`),
   KEY `baseprice` (`baseprice`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.ressource_rescategory
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. ressource_rescategory
 CREATE TABLE IF NOT EXISTS `ressource_rescategory` (
   `rescat_id` int(10) unsigned NOT NULL,
   `res_id` int(10) unsigned NOT NULL,
@@ -350,10 +377,8 @@ CREATE TABLE IF NOT EXISTS `ressource_rescategory` (
   CONSTRAINT `FK_ressource_rescategory_ressource` FOREIGN KEY (`res_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.sovereign
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. sovereign
 CREATE TABLE IF NOT EXISTS `sovereign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) DEFAULT NULL,
@@ -364,50 +389,42 @@ CREATE TABLE IF NOT EXISTS `sovereign` (
   KEY `FK_sovereign_city` (`capital`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster.user
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. user
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `player_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_shadow` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='toto@gmail.com\r\npass';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='toto@gmail.com\r\npass';
 
--- Data exporting was unselected.
-
-
--- Dumping structure for table gigablaster._view_note
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. _view_note
 CREATE TABLE IF NOT EXISTS `_view_note` (
   `view_name` varchar(50) DEFAULT NULL,
   `formated` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='view query properly formated';
 
--- Data exporting was unselected.
-
-
--- Dumping structure for view gigablaster.city_distance
--- Creating temporary table to overcome VIEW dependency errors
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la vue homeplanet. city_distance
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `city_distance` (
 	`city0_id` INT(10) UNSIGNED NOT NULL,
 	`city1_id` INT(10) UNSIGNED NULL,
 	`dist` BIGINT(13) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.city_sovereign
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. city_sovereign
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `city_sovereign` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
 	`sovereign_id` INT(11) UNSIGNED NULL,
 	`sum_value` DECIMAL(60,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.influence
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. influence
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `influence` (
 	`city_id` INT(11) UNSIGNED NOT NULL,
 	`sovereign_id` INT(11) UNSIGNED NOT NULL,
@@ -415,27 +432,24 @@ CREATE TABLE `influence` (
 	`value` DECIMAL(38,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.influence_relationship
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. influence_relationship
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `influence_relationship` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
 	`sovereign_id` INT(10) UNSIGNED NOT NULL,
 	`value` DECIMAL(38,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.influence_sum
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. influence_sum
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `influence_sum` (
 	`city_id` INT(10) UNSIGNED NOT NULL,
 	`sovereign_id` INT(11) UNSIGNED NULL,
 	`sum_value` DECIMAL(60,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.overcrowd
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. overcrowd
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `overcrowd` (
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
 	`location_x` INT(10) UNSIGNED NOT NULL,
@@ -443,18 +457,16 @@ CREATE TABLE `overcrowd` (
 	`quantity` DECIMAL(32,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.player_ext
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. player_ext
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `player_ext` (
 	`player_id` INT(10) UNSIGNED NOT NULL,
 	`contract` DECIMAL(32,0) NOT NULL,
 	`income` DOUBLE NOT NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.prodinput_sum
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. prodinput_sum
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `prodinput_sum` (
 	`player_id` INT(10) UNSIGNED NULL,
 	`location_x` INT(10) UNSIGNED NOT NULL,
@@ -463,9 +475,8 @@ CREATE TABLE `prodinput_sum` (
 	`quantity` DECIMAL(42,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.prod_sum
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. prod_sum
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `prod_sum` (
 	`player_id` INT(10) UNSIGNED NULL,
 	`location_x` INT(11) NOT NULL,
@@ -474,9 +485,8 @@ CREATE TABLE `prod_sum` (
 	`quantity` DECIMAL(16,0) NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.relationship
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. relationship
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `relationship` (
 	`id` INT(10) UNSIGNED NOT NULL,
 	`player_id` INT(10) UNSIGNED NOT NULL,
@@ -484,9 +494,8 @@ CREATE TABLE `relationship` (
 	`type_id` INT(10) UNSIGNED NOT NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for view gigablaster.sold
--- Creating temporary table to overcome VIEW dependency errors
+-- Export de la structure de la vue homeplanet. sold
+-- Création d'une table temporaire pour palier aux erreurs de dépendances de VIEW
 CREATE TABLE `sold` (
 	`seller_id` INT(10) UNSIGNED NOT NULL,
 	`buyer_id` INT(10) UNSIGNED NOT NULL,
@@ -494,8 +503,7 @@ CREATE TABLE `sold` (
 	`quantity` DECIMAL(16,0) NOT NULL
 ) ENGINE=MyISAM;
 
-
--- Dumping structure for procedure gigablaster.city_spawn
+-- Export de la structure de la procédure homeplanet. city_spawn
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `city_spawn`()
 BEGIN
@@ -548,8 +556,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.cleanup
+-- Export de la structure de la procédure homeplanet. cleanup
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `cleanup`()
 BEGIN
@@ -567,8 +574,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.credit_update
+-- Export de la structure de la procédure homeplanet. credit_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `credit_update`()
 BEGIN
@@ -577,8 +583,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.demand_update_pricemodifier
+-- Export de la structure de la procédure homeplanet. demand_update_pricemodifier
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `demand_update_pricemodifier`()
 BEGIN
@@ -616,8 +621,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.demand_update_value
+-- Export de la structure de la procédure homeplanet. demand_update_value
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `demand_update_value`()
 BEGIN
@@ -688,8 +692,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.income_update
+-- Export de la structure de la procédure homeplanet. income_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `income_update`()
 BEGIN
@@ -712,8 +715,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.influence_military_update
+-- Export de la structure de la procédure homeplanet. influence_military_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `influence_military_update`()
 BEGIN
@@ -740,8 +742,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.population_growth_update
+-- Export de la structure de la procédure homeplanet. population_growth_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `population_growth_update`()
 BEGIN
@@ -761,8 +762,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.population_quantity_update
+-- Export de la structure de la procédure homeplanet. population_quantity_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `population_quantity_update`()
 BEGIN
@@ -771,8 +771,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.prod_percent_update
+-- Export de la structure de la procédure homeplanet. prod_percent_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_percent_update`()
 BEGIN
@@ -932,8 +931,7 @@ Update BUY prod percent */
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.prod_update_single
+-- Export de la structure de la procédure homeplanet. prod_update_single
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_update_single`()
 BEGIN
@@ -1181,8 +1179,7 @@ UNTIL c = 0 END REPEAT;
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.reset
+-- Export de la structure de la procédure homeplanet. reset
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `reset`()
 BEGIN
@@ -1192,8 +1189,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.sovereign_budget_update
+-- Export de la structure de la procédure homeplanet. sovereign_budget_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sovereign_budget_update`()
 BEGIN
@@ -1212,8 +1208,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.sovereign_spawn
+-- Export de la structure de la procédure homeplanet. sovereign_spawn
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sovereign_spawn`()
 BEGIN
@@ -1257,8 +1252,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for procedure gigablaster.turn
+-- Export de la structure de la procédure homeplanet. turn
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `turn`()
 BEGIN
@@ -1281,8 +1275,7 @@ BEGIN
 END//
 DELIMITER ;
 
-
--- Dumping structure for function gigablaster.get_prod_ratio
+-- Export de la structure de la fonction homeplanet. get_prod_ratio
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` FUNCTION `get_prod_ratio`(`inputQ` INT, `grade` INT, `inputTotal` INT, `suppliedTotal` INT) RETURNS float
 BEGIN
@@ -1305,71 +1298,61 @@ Calc prod :
 END//
 DELIMITER ;
 
-
--- Dumping structure for view gigablaster.city_distance
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. city_distance
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `city_distance`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_distance` AS select `c0`.`id` AS `city0_id`,`c1`.`id` AS `city1_id`,(abs((`c1`.`location_x` - `c0`.`location_x`)) + abs((`c1`.`location_y` - `c0`.`location_y`))) AS `dist` from (`city` `c0` left join `city` `c1` on((`c1`.`id` <> `c0`.`id`)));
 
-
--- Dumping structure for view gigablaster.city_sovereign
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. city_sovereign
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `city_sovereign`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_sovereign` AS select `t`.`city_id` AS `city_id`,min(`t`.`sovereign_id`) AS `sovereign_id`,`t`.`sum_value` AS `sum_value` from (`gigablaster`.`influence_sum` `t` join (select `influence_sum`.`city_id` AS `city_id`,max(`influence_sum`.`sum_value`) AS `max_value` from `gigablaster`.`influence_sum` group by `influence_sum`.`city_id`) `tmax` on(((`tmax`.`city_id` = `t`.`city_id`) and (`t`.`sum_value` = `tmax`.`max_value`)))) group by `t`.`city_id`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `city_sovereign` AS select `t`.`city_id` AS `city_id`,min(`t`.`sovereign_id`) AS `sovereign_id`,`t`.`sum_value` AS `sum_value` from (`homeplanet`.`influence_sum` `t` join (select `influence_sum`.`city_id` AS `city_id`,max(`influence_sum`.`sum_value`) AS `max_value` from `homeplanet`.`influence_sum` group by `influence_sum`.`city_id`) `tmax` on(((`tmax`.`city_id` = `t`.`city_id`) and (`t`.`sum_value` = `tmax`.`max_value`)))) group by `t`.`city_id`;
 
-
--- Dumping structure for view gigablaster.influence
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. influence
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `influence`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `influence` AS select `influencemodifier`.`city_id` AS `city_id`,`influencemodifier`.`sovereign_id` AS `sovereign_id`,`influencemodifier`.`type_id` AS `type_id`,`influencemodifier`.`value` AS `value` from `influencemodifier` union select `influence_relationship`.`city_id` AS `city_id`,`influence_relationship`.`sovereign_id` AS `sovereign_id`,4 AS `4`,`influence_relationship`.`value` AS `value` from `influence_relationship`;
 
-
--- Dumping structure for view gigablaster.influence_relationship
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. influence_relationship
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `influence_relationship`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `influence_relationship` AS select `city`.`id` AS `city_id`,`relationship`.`sovereign_id` AS `sovereign_id`,sum(`sold`.`quantity`) AS `value` from (((`city` join `sold` on((`sold`.`buyer_id` = `city`.`id`))) join `pawn` on((`pawn`.`id` = `sold`.`seller_id`))) join `relationship` on((`relationship`.`player_id` = `pawn`.`player_id`))) group by `city`.`id`,`relationship`.`sovereign_id`;
 
-
--- Dumping structure for view gigablaster.influence_sum
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. influence_sum
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `influence_sum`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `influence_sum` AS select `city`.`id` AS `city_id`,`influence`.`sovereign_id` AS `sovereign_id`,sum(`influence`.`value`) AS `sum_value` from (`city` left join `influence` on((`influence`.`city_id` = `city`.`id`))) group by `city`.`id`,`influence`.`sovereign_id`;
 
-
--- Dumping structure for view gigablaster.overcrowd
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. overcrowd
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `overcrowd`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `overcrowd` AS select `prodinputtype`.`ressource_id` AS `ressource_id`,`prodinput`.`location_x` AS `location_x`,`prodinput`.`location_y` AS `location_y`,sum(`prodinputtype`.`quantity`) AS `quantity` from ((`prodinput` join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `ressource` on(((`ressource`.`id` = `prodinputtype`.`ressource_id`) and (`ressource`.`natural` = 1)))) group by `prodinputtype`.`ressource_id`,`prodinput`.`location_x`,`prodinput`.`location_y`;
 
-
--- Dumping structure for view gigablaster.player_ext
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. player_ext
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `player_ext`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `gigablaster`.`player`.`id` AS `player_id`,ifnull(`tcontract`.`value`,0) AS `contract`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`gigablaster`.`player` left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`gigablaster`.`pawn`.`grade`),0) AS `value` from (`gigablaster`.`pawn` join `gigablaster`.`pawntype` on((`gigablaster`.`pawntype`.`id` = `gigablaster`.`pawn`.`type_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcontract` on((`tcontract`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`gigablaster`.`pawn` join `gigablaster`.`sold` on((`sold`.`seller_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `sold`.`buyer_id`) and (`gigablaster`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `sold`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `gigablaster`.`player`.`id`))) left join (select `gigablaster`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`gigablaster`.`demand`.`price_modifier` * `gigablaster`.`ressource`.`baseprice`)),0) AS `value` from (((((`gigablaster`.`pawn` join `gigablaster`.`prod` on((`gigablaster`.`prod`.`pawn_id` = `gigablaster`.`pawn`.`id`))) join `gigablaster`.`prodtype` on((`gigablaster`.`prodtype`.`id` = `gigablaster`.`prod`.`prodtype_id`))) join `gigablaster`.`city` on(((`gigablaster`.`city`.`location_x` = `gigablaster`.`prod`.`location_x`) and (`gigablaster`.`city`.`location_y` = `gigablaster`.`prod`.`location_y`)))) join `gigablaster`.`demand` on(((`gigablaster`.`demand`.`city_id` = `gigablaster`.`city`.`id`) and (`gigablaster`.`demand`.`ressource_id` = `gigablaster`.`prodtype`.`ressource_id`)))) join `gigablaster`.`ressource` on((`gigablaster`.`ressource`.`id` = `gigablaster`.`demand`.`ressource_id`))) group by `gigablaster`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `gigablaster`.`player`.`id`)));
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `homeplanet`.`player`.`id` AS `player_id`,ifnull(`tcontract`.`value`,0) AS `contract`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`homeplanet`.`player` left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`homeplanet`.`pawn`.`grade`),0) AS `value` from (`homeplanet`.`pawn` join `homeplanet`.`pawntype` on((`homeplanet`.`pawntype`.`id` = `homeplanet`.`pawn`.`type_id`))) group by `homeplanet`.`pawn`.`player_id`) `tcontract` on((`tcontract`.`player_id` = `homeplanet`.`player`.`id`))) left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`homeplanet`.`demand`.`price_modifier` * `homeplanet`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`homeplanet`.`pawn` join `homeplanet`.`sold` on((`sold`.`seller_id` = `homeplanet`.`pawn`.`id`))) join `homeplanet`.`demand` on(((`homeplanet`.`demand`.`city_id` = `sold`.`buyer_id`) and (`homeplanet`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `homeplanet`.`ressource` on((`homeplanet`.`ressource`.`id` = `sold`.`ressource_id`))) group by `homeplanet`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `homeplanet`.`player`.`id`))) left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`homeplanet`.`demand`.`price_modifier` * `homeplanet`.`ressource`.`baseprice`)),0) AS `value` from (((((`homeplanet`.`pawn` join `homeplanet`.`prod` on((`homeplanet`.`prod`.`pawn_id` = `homeplanet`.`pawn`.`id`))) join `homeplanet`.`prodtype` on((`homeplanet`.`prodtype`.`id` = `homeplanet`.`prod`.`prodtype_id`))) join `homeplanet`.`city` on(((`homeplanet`.`city`.`location_x` = `homeplanet`.`prod`.`location_x`) and (`homeplanet`.`city`.`location_y` = `homeplanet`.`prod`.`location_y`)))) join `homeplanet`.`demand` on(((`homeplanet`.`demand`.`city_id` = `homeplanet`.`city`.`id`) and (`homeplanet`.`demand`.`ressource_id` = `homeplanet`.`prodtype`.`ressource_id`)))) join `homeplanet`.`ressource` on((`homeplanet`.`ressource`.`id` = `homeplanet`.`demand`.`ressource_id`))) group by `homeplanet`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `homeplanet`.`player`.`id`)));
 
-
--- Dumping structure for view gigablaster.prodinput_sum
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. prodinput_sum
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `prodinput_sum`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prodinput_sum` AS select `pawn`.`player_id` AS `player_id`,`prodinput`.`location_x` AS `location_x`,`prodinput`.`location_y` AS `location_y`,`prodinputtype`.`ressource_id` AS `ressource_id`,sum((`prodinputtype`.`quantity` * `prod`.`grade`)) AS `quantity` from (((`prodinput` join `prod` on((`prod`.`id` = `prodinput`.`prod_id`))) join `pawn` on((`pawn`.`id` = `prod`.`pawn_id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) group by `pawn`.`player_id`,`prodinput`.`location_x`,`prodinput`.`location_y`,`prodinputtype`.`ressource_id`;
 
-
--- Dumping structure for view gigablaster.prod_sum
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. prod_sum
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `prod_sum`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prod_sum` AS select `pawn`.`player_id` AS `player_id`,`prod`.`location_x` AS `location_x`,`prod`.`location_y` AS `location_y`,`prodtype`.`ressource_id` AS `ressource_id`,floor(sum((`prodtype`.`quantity` * `prod`.`percent_max`))) AS `quantity` from ((`prod` join `prodtype` on((`prodtype`.`id` = `prod`.`prodtype_id`))) join `pawn` on((`pawn`.`id` = `prod`.`pawn_id`))) group by `prod`.`location_x`,`prod`.`location_y`,`prodtype`.`ressource_id`,`pawn`.`player_id`;
 
-
--- Dumping structure for view gigablaster.relationship
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. relationship
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `relationship`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `relationship` AS select `relationshipmodifier`.`id` AS `id`,`relationshipmodifier`.`player_id` AS `player_id`,`relationshipmodifier`.`sovereign_id` AS `sovereign_id`,`relationshipmodifier`.`type_id` AS `type_id` from `relationshipmodifier`;
 
-
--- Dumping structure for view gigablaster.sold
--- Removing temporary table and create final VIEW structure
+-- Export de la structure de la vue homeplanet. sold
+-- Suppression de la table temporaire et création finale de la structure d'une vue
 DROP TABLE IF EXISTS `sold`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,floor((`prodinputtype`.`quantity` * `prod`.`percent_max`)) AS `quantity` from (((((((`player` join `pawn` `seller` on((`seller`.`player_id` = `player`.`id`))) join `prod` on((`prod`.`pawn_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`)))) join `demand` on(((`demand`.`city_id` = `buyer`.`id`) and (`demand`.`ressource_id` = `prodinputtype`.`ressource_id`))));
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

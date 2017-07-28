@@ -1,0 +1,40 @@
+{#
+required var:
+	@var string atlas_label 
+	@var string atlas_path 
+	@var int atlas_res_x 
+	@var int atlas_res_y
+	@var int width
+	@var int height
+	@var int width_inner 70 
+	@var int height_inner 47
+	@var int offset_x 10
+	@var int offset_y 10
+	
+{% set width_inner = width_inner|default( width / (atlas_res_x) ) %}
+{% set height_inner =  height_inner|default( height / (atlas_res_y) ) %}
+#}
+
+@CHARSET "UTF-8";
+
+.{{ atlas_label|raw }} {
+	background-image: url('{{ atlas_path|raw }}');
+	background-size: {{ (width/width_inner)*100 }}% {{ (height/height_inner)*100 }}%;
+}
+
+.{{ atlas_label|raw }}-0 {
+	background-image: none;
+}
+
+{% for x in 0..(atlas_res_x-1) %}
+{% for y in 0..(atlas_res_y-1) %}
+.{{ atlas_label|raw }}-{{ x }}-{{ y }} {
+	{# Get pos in percent of total size of left top corner #}
+	{% set pos_x = width_inner*x + offset_x*(x*2+1) %}
+	{% set pos_y = height_inner*y + offset_y*(y*2+1) %}
+	background-position: {{ pos_x * 100 / ( width - width_inner ) }}% {{ pos_y * 100 / ( height - height_inner ) }}%;
+}
+{% endfor %}
+{% endfor %}
+
+	

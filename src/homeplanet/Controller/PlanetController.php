@@ -31,6 +31,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Tests\ButtonTest;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use homeplanet\tool\TileValidatorResolver;
+use homeplanet\Entity\Conversation;
 
 /**
  *
@@ -137,6 +138,24 @@ class PlanetController extends BaseController {
 			break;
 		}
 		return $this->redirect( $this->generateUrl('play') );
+	}
+	
+	/**
+	 * @Route("/test_conversation", name="test_conversation")
+	 */
+	public function testConversationAction( Request $oRequest ) {
+		
+		$this->_handleRequest($oRequest);
+		
+		$oConversation = $this->getGame()->getEntityManager()->find(Conversation::class, 1);
+		
+		return $this->render( 
+			'homeplanet/page/conversation.html.twig', 
+			[
+				'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
+				'conversation' => $oConversation,
+			]
+		);
 	}
 
 //_____________________________________________________________________________
