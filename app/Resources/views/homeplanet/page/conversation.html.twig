@@ -8,7 +8,7 @@
 </div>
 <div class="panel-body">
     <div class="row">
-    <div class="col-xs-2">
+    <div class="col-xs-6 col-md-2 pull-left">
         {{ conversation.character0.label }} (initiative)
         <img src="" />
         <table class="table">
@@ -35,7 +35,34 @@
         </tbody>
         </table>
     </div>
-    <div class="col-xs-8">
+    <div class="col-xs-6 col-md-2 pull-right text-right">
+        {{ conversation.character1.label }}
+        <img src="" />
+        <table class="table">
+        <thead>
+            <tr><th colspan="99" class="text-center">Points</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <th class="text-right">Persuasion</th>
+            </tr>
+            <tr>
+                <td>2</td>
+                <th class="text-right">Coertion</th>
+            </tr>
+            <tr>
+                <td>2</td>
+                <th class="text-right">Convince</thd>
+            </tr>
+            <tr>
+                <td>1</td>
+                <th class="text-right">Charm</th>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+    <div class="col-xs-12 col-md-8 pull-left">
         <table class="table">
         <thead>
             <tr><td colspan="99" class="text-center">Subject</td></tr>
@@ -74,7 +101,19 @@
             </tr>
             <tr class="active TODO-animation">
                 <td colspan="99" class="">
+                    <form>
                     <div class="row">
+                    <div class="col-xs-12 text-center">
+                        <div class="btn-group btn-group-justified" data-toggle="buttons">
+                    {% for expression in conversation.character0.expressionAr  %}
+                            <label class="btn btn-default clickable">
+                                <input class="radio-button-input" type="radio" name="move" />
+                                {{ expression.label }}
+                            </label>
+                    {% endfor %}
+                        </div>
+                    </div>
+                    <hr />
                     {% for expression in conversation.character0.expressionAr  %}
                     <div class="col-xs-3">
                         {{ printo( expression ) }}
@@ -99,47 +138,21 @@
                         <div class="label label-default">Move3</div>
                     </div>
                     </div>
-                    <form>
-                        <button class="btn btn-primary pull-right">
-                            End turn
-                        </button>
+                    <button class="btn btn-primary pull-right">
+                        End turn
+                    </button>
                     </form>
                 </td>
             </tr>
         </tbody>
         </table>
     </div>
-    <div class="col-xs-2 text-right">
-        {{ conversation.character1.label }}
-        <img src="" />
-        <table class="table">
-        <thead>
-            <tr><th colspan="99" class="text-center">Points</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <th class="text-right">Persuasion</th>
-            </tr>
-            <tr>
-                <td>2</td>
-                <th class="text-right">Coertion</th>
-            </tr>
-            <tr>
-                <td>2</td>
-                <th class="text-right">Convince</thd>
-            </tr>
-            <tr>
-                <td>1</td>
-                <th class="text-right">Charm</th>
-            </tr>
-        </tbody>
-        </table>
-    </div>
+
     <div class="col-xs-12">
         <hr />
-        Hand
-        
+        <button class="btn btn-danger pull-right">
+            Quit
+        </button>
     </div>
     </div>
 </div>
