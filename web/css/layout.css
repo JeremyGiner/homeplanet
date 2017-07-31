@@ -118,6 +118,10 @@ label.list-group-item {
 	font-weight: initial;
 }
 
+.navbar-nocollapse>.navbar-header>.navbar-nav {
+	margin: 0;
+}
+
 /*_____________________________________
 	 */
 
