@@ -41,7 +41,16 @@ CREATE TABLE IF NOT EXISTS `character` (
   `location_y` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `location_x_location_y` (`location_x`,`location_y`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. characternamereference
+CREATE TABLE IF NOT EXISTS `characternamereference` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `fname` varchar(50) NOT NULL,
+  `lname` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=201 DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. character_expression
@@ -76,7 +85,15 @@ CREATE TABLE IF NOT EXISTS `city` (
   UNIQUE KEY `location_x_location_y_unique` (`location_x`,`location_y`),
   KEY `location_x_location_y` (`location_x`,`location_y`),
   KEY `label` (`label`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- Les données exportées n'étaient pas sélectionnées.
+-- Export de la structure de la table homeplanet. citynamereference
+CREATE TABLE IF NOT EXISTS `citynamereference` (
+  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=601 DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. conversation
@@ -133,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `influencemodifier` (
   CONSTRAINT `FK_sovereign_city_entity` FOREIGN KEY (`city_id`) REFERENCES `city` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_sovereign_city_influencetype` FOREIGN KEY (`type_id`) REFERENCES `influencetype` (`id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_sovereign_city_sovereign` FOREIGN KEY (`sovereign_id`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. influencetype
@@ -165,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   KEY `FK_entity_player` (`player_id`),
   KEY `FK_entity_entitytype` (`type_id`),
   CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. pawntype
@@ -267,7 +284,7 @@ CREATE TABLE IF NOT EXISTS `prod` (
   KEY `FK_prod_pawn` (`pawn_id`),
   CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. prodinput
@@ -282,7 +299,7 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
   KEY `FK_prodinput_prodinputtype` (`prodinputtype_id`),
   CONSTRAINT `FK_prodinput_prod` FOREIGN KEY (`prod_id`) REFERENCES `prod` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prodinput_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. prodinputtype
@@ -387,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `sovereign` (
   `budget` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_sovereign_city` (`capital`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- Les données exportées n'étaient pas sélectionnées.
 -- Export de la structure de la table homeplanet. user
@@ -536,8 +553,8 @@ BEGIN
 			IF bDone = 1 THEN LEAVE loopy; END IF;
 			
 			START TRANSACTION;
-				INSERT INTO city(location_x,location_y)
-				VALUES (location_x,location_y);
+				INSERT INTO city(location_x, location_y, label)
+				VALUES (location_x, location_y, 	(SELECT citynamereference.label FROM citynamereference ORDER BY RAND() LIMIT 1) );
 				
 				SET city_id = LAST_INSERT_ID();
 				
@@ -1237,8 +1254,8 @@ BEGIN
 		IF bDone = 1 THEN LEAVE loopy; END IF;
 		
 		START TRANSACTION;
-			INSERT INTO sovereign(capital)
-			VALUES (city_id);
+			INSERT INTO sovereign(label,capital)
+			VALUES (generate_character_name(),city_id);
 			
 			SET sovereign_id = LAST_INSERT_ID();
 			
@@ -1272,6 +1289,33 @@ BEGIN
 	CALL `sovereign_budget_update`();
 	CALL `influence_military_update`();
 	CALL `sovereign_spawn`();
+END//
+DELIMITER ;
+
+-- Export de la structure de la fonction homeplanet. generate_character_name
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` FUNCTION `generate_character_name`() RETURNS varchar(100) CHARSET utf8
+BEGIN
+
+
+RETURN (SELECT 
+	CONCAT( 
+		t_fname.fname,
+		' ',
+		t_lname.lname
+	)
+FROM (
+	SELECT *
+	FROM characternamereference 
+	ORDER BY RAND()
+	LIMIT 1
+) as t_fname
+JOIN (
+	SELECT *
+	FROM characternamereference 
+	ORDER BY RAND()
+	LIMIT 1
+) as t_lname);
 END//
 DELIMITER ;
 

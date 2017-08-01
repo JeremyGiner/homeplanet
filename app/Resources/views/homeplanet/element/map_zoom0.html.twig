@@ -1,11 +1,15 @@
 
+{% set region_x = region_x|default( gameview.location.getRegionX() ) %}
+{% set region_y = region_y|default( gameview.location.getRegionY() ) %}
+
 <table class="map hajust-square">
 <tbody>
 	{# Print Region #}
-	{% for y in (gameview.location.getRegionY()+1)*13-1..(gameview.location.getRegionY())*13 %}
+	{% for y in ((region_y+1)*13-1)..(region_y*13) %}
 	<tr>
-		{% for x in (gameview.location.getRegionX())*13..(gameview.location.getRegionX()+1)*13-1 %}
+		{% for x in ((region_x)*13)..(region_x+1)*13-1 %}
 			{% set oTile = gameview.map.getTile( x, y ) %}
+			{% set hightlighted = gameview.location.x == x and gameview.location.y == y ? 'map-cell-highlight' : '' %}
 			<td class="" style="background-color: #{{ oTile.getColorHex() }}">
 				{# draw city #}
 				{% set city = gameview.city[ x~':'~y ]|default(null) %}
@@ -15,7 +19,6 @@
 				{% set aPawn = gameview.game.getPawnAr_byLocation( oTile.getLocation() ) %}
 				
 				{% for oPawn in aPawn %}
-					
 					{% if oPawn.getType().getLabel() != 'city' %}
 						<div class="map-cell sprite">P</div>
 					{% endif %}
@@ -28,7 +31,7 @@
 						'data-valid='~((validator.validate(oTile)?'true':'false'))~'' }}
 					></div>
 				{% else %}
-					<a class="map-cell" href="?location={{ oTile.getLocation() }}">
+					<a class="map-cell {{ hightlighted }}" href="?location={{ oTile.getLocation() }}">
 					</a>
 				{% endif %}
 					

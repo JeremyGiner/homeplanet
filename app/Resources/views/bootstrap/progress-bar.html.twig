@@ -1,9 +1,9 @@
 {% set value = value|default(0) %}
 {% set label = label|default(value~'%') %}
 <div class="progress">
-	<div class="progress-bar" role="progressbar" aria-valuenow="{{ value }}"
+	<div class="progress-bar {{ type is defined ? 'progress-bar-'~type }}" role="progressbar" aria-valuenow="{{ value }}"
 		aria-valuemin="0" aria-valuemax="100" style="width:{{ value }}%"
 	>
-		{{ label }}
+		{{ label|raw }}
 	</div>
 </div> 
