@@ -83,7 +83,10 @@ class OverviewController extends BaseController {
 			'homeplanet/page/overview.html.twig', 
 			[
 				'user' => $this->getUser(),
-				'gameview' => $this->_createViewMin($oGame, $oLocation),
+				'gameview' => [
+					'player' =>  $oGame->getPlayer(),
+				],
+				
 			]
 		);
 	}

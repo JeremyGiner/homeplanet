@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               5.7.14 - MySQL Community Server (GPL)
--- Server OS:                    Win64
+-- Hôte :                        127.0.0.1
+-- Version du serveur:           5.7.14 - MySQL Community Server (GPL)
+-- SE du serveur:                Win64
 -- HeidiSQL Version:             9.4.0.5125
 -- --------------------------------------------------------
 
@@ -11,7 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping data for table gigablaster.attribute: ~4 rows (approximately)
+-- Export de données de la table homeplanet.attribute : ~4 rows (environ)
 /*!40000 ALTER TABLE `attribute` DISABLE KEYS */;
 INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
 	(1, 2, NULL),
@@ -20,7 +20,7 @@ INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
 	(4, 3, 'naval:10');
 /*!40000 ALTER TABLE `attribute` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.attributetype: ~4 rows (approximately)
+-- Export de données de la table homeplanet.attributetype : ~4 rows (environ)
 /*!40000 ALTER TABLE `attributetype` DISABLE KEYS */;
 INSERT INTO `attributetype` (`id`, `label`) VALUES
 	(1, 'prod_slot'),
@@ -29,21 +29,7 @@ INSERT INTO `attributetype` (`id`, `label`) VALUES
 	(4, 'stealth');
 /*!40000 ALTER TABLE `attributetype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.budgetplan: ~0 rows (approximately)
-/*!40000 ALTER TABLE `budgetplan` DISABLE KEYS */;
-/*!40000 ALTER TABLE `budgetplan` ENABLE KEYS */;
-
--- Dumping data for table gigablaster.budgetplantype: ~5 rows (approximately)
-/*!40000 ALTER TABLE `budgetplantype` DISABLE KEYS */;
-INSERT INTO `budgetplantype` (`id`, `label`) VALUES
-	(1, 'military : defence'),
-	(2, 'military : offence'),
-	(3, 'public services'),
-	(4, 'research'),
-	(5, 'culture');
-/*!40000 ALTER TABLE `budgetplantype` ENABLE KEYS */;
-
--- Dumping data for table gigablaster.character: ~4 rows (approximately)
+-- Export de données de la table homeplanet.character : ~4 rows (environ)
 /*!40000 ALTER TABLE `character` DISABLE KEYS */;
 INSERT INTO `character` (`id`, `occupation`, `personality`, `appearance`, `label`, `location_x`, `location_y`) VALUES
 	(1, 'merchant', 'none', 'normal', 'Sir Toto', 7, 7),
@@ -52,7 +38,7 @@ INSERT INTO `character` (`id`, `occupation`, `personality`, `appearance`, `label
 	(5, 'merchant', 'none', 'normal', 'test', 7, 7);
 /*!40000 ALTER TABLE `character` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.character_expression: ~3 rows (approximately)
+-- Export de données de la table homeplanet.character_expression : ~3 rows (environ)
 /*!40000 ALTER TABLE `character_expression` DISABLE KEYS */;
 INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(1, 1),
@@ -60,25 +46,25 @@ INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(1, 3);
 /*!40000 ALTER TABLE `character_expression` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.character_knowledge: ~0 rows (approximately)
+-- Export de données de la table homeplanet.character_knowledge : ~0 rows (environ)
 /*!40000 ALTER TABLE `character_knowledge` DISABLE KEYS */;
 /*!40000 ALTER TABLE `character_knowledge` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.city: ~0 rows (approximately)
+-- Export de données de la table homeplanet.city : ~0 rows (environ)
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.conversation: ~1 rows (approximately)
+-- Export de données de la table homeplanet.conversation : ~1 rows (environ)
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 INSERT INTO `conversation` (`id`, `character0_id`, `character1_id`, `state`) VALUES
 	(1, 1, 4, NULL);
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.demand: ~0 rows (approximately)
+-- Export de données de la table homeplanet.demand : ~0 rows (environ)
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.expression: ~3 rows (approximately)
+-- Export de données de la table homeplanet.expression : ~3 rows (environ)
 /*!40000 ALTER TABLE `expression` DISABLE KEYS */;
 INSERT INTO `expression` (`id`, `label`, `description`, `effect`) VALUES
 	(1, 'joke', '+charm ', NULL),
@@ -86,17 +72,11 @@ INSERT INTO `expression` (`id`, `label`, `description`, `effect`) VALUES
 	(3, 'threat', '+coerce', NULL);
 /*!40000 ALTER TABLE `expression` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.gamestate: 1 rows
-/*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
-INSERT INTO `gamestate` (`id`, `turn`, `label`) VALUES
-	(1, 3, 'Avalon');
-/*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
-
--- Dumping data for table gigablaster.influencemodifier: ~0 rows (approximately)
+-- Export de données de la table homeplanet.influencemodifier : ~0 rows (environ)
 /*!40000 ALTER TABLE `influencemodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `influencemodifier` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.influencetype: ~4 rows (approximately)
+-- Export de données de la table homeplanet.influencetype : ~4 rows (environ)
 /*!40000 ALTER TABLE `influencetype` DISABLE KEYS */;
 INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(1, 'economic', 10),
@@ -105,18 +85,15 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.knowledge: ~0 rows (approximately)
+-- Export de données de la table homeplanet.knowledge : ~0 rows (environ)
 /*!40000 ALTER TABLE `knowledge` DISABLE KEYS */;
 /*!40000 ALTER TABLE `knowledge` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawn: ~2 rows (approximately)
+-- Export de données de la table homeplanet.pawn : ~0 rows (environ)
 /*!40000 ALTER TABLE `pawn` DISABLE KEYS */;
-INSERT INTO `pawn` (`id`, `player_id`, `type_id`, `label`, `grade`) VALUES
-	(1, 1, 2, NULL, 1),
-	(2, 1, 1000, NULL, 1);
 /*!40000 ALTER TABLE `pawn` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawntype: ~26 rows (approximately)
+-- Export de données de la table homeplanet.pawntype : ~26 rows (environ)
 /*!40000 ALTER TABLE `pawntype` DISABLE KEYS */;
 INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
 	(1, 1, 'farm', 100, 1, 'Produce wheats, honey, fruits and vegetables'),
@@ -147,7 +124,7 @@ INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`,
 	(2001, 5, 'market stall', 100, 1, 'A merchant able to sell end product.');
 /*!40000 ALTER TABLE `pawntype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawntypecategory: ~5 rows (approximately)
+-- Export de données de la table homeplanet.pawntypecategory : ~5 rows (environ)
 /*!40000 ALTER TABLE `pawntypecategory` DISABLE KEYS */;
 INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(1, 'tech zero'),
@@ -157,7 +134,7 @@ INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(5, 'merchant');
 /*!40000 ALTER TABLE `pawntypecategory` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawntype_attribute: ~3 rows (approximately)
+-- Export de données de la table homeplanet.pawntype_attribute : ~3 rows (environ)
 /*!40000 ALTER TABLE `pawntype_attribute` DISABLE KEYS */;
 INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
 	(1000, 2),
@@ -165,7 +142,7 @@ INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
 	(1002, 4);
 /*!40000 ALTER TABLE `pawntype_attribute` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawntype_prodtype_assoc: ~289 rows (approximately)
+-- Export de données de la table homeplanet.pawntype_prodtype_assoc : ~289 rows (environ)
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` DISABLE KEYS */;
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1, 1002),
@@ -459,40 +436,31 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1002, 4141);
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.pawn_location_assoc: ~2 rows (approximately)
+-- Export de données de la table homeplanet.pawn_location_assoc : ~0 rows (environ)
 /*!40000 ALTER TABLE `pawn_location_assoc` DISABLE KEYS */;
-INSERT INTO `pawn_location_assoc` (`pawn_id`, `location_x`, `location_y`) VALUES
-	(1, 7, 7),
-	(2, 7, 7);
 /*!40000 ALTER TABLE `pawn_location_assoc` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.player: ~3 rows (approximately)
+-- Export de données de la table homeplanet.player : ~3 rows (environ)
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` (`id`, `user_id`, `name`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
-	(1, 1, 'Lord toto', 9880, 0, 1, NULL),
-	(2, 2, 'Mastert itit', 100, 0, 5, NULL),
-	(5, 4, 'test', 100, 0, 1, NULL);
+INSERT INTO `player` (`id`, `character_id`, `user_id`, `name`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
+	(1, 1, 1, 'Lord toto', 9980, 0, 1, NULL),
+	(2, 2, 2, 'Mastert itit', 100, 0, 5, NULL),
+	(5, 5, 4, 'test', 100, 0, 1, NULL);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.population: ~0 rows (approximately)
+-- Export de données de la table homeplanet.population : ~0 rows (environ)
 /*!40000 ALTER TABLE `population` DISABLE KEYS */;
 /*!40000 ALTER TABLE `population` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prod: ~2 rows (approximately)
+-- Export de données de la table homeplanet.prod : ~0 rows (environ)
 /*!40000 ALTER TABLE `prod` DISABLE KEYS */;
-INSERT INTO `prod` (`id`, `pawn_id`, `prodtype_id`, `location_x`, `location_y`, `percent_max`, `grade`, `updated`) VALUES
-	(1, 1, 1004, 7, 7, 0, 1, 1),
-	(2, 2, 4002, 7, 7, 0, 1, 1);
 /*!40000 ALTER TABLE `prod` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prodinput: ~2 rows (approximately)
+-- Export de données de la table homeplanet.prodinput : ~0 rows (environ)
 /*!40000 ALTER TABLE `prodinput` DISABLE KEYS */;
-INSERT INTO `prodinput` (`id`, `prod_id`, `prodinputtype_id`, `location_x`, `location_y`) VALUES
-	(1, 1, 10040, 7, 7),
-	(2, 2, 40020, 7, 7);
 /*!40000 ALTER TABLE `prodinput` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prodinputtype: ~192 rows (approximately)
+-- Export de données de la table homeplanet.prodinputtype : ~192 rows (environ)
 /*!40000 ALTER TABLE `prodinputtype` DISABLE KEYS */;
 INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'wood to plank'),
@@ -689,7 +657,7 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(41410, 141, 1, 'transport: weapon');
 /*!40000 ALTER TABLE `prodinputtype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prodtype: ~169 rows (approximately)
+-- Export de données de la table homeplanet.prodtype : ~169 rows (environ)
 /*!40000 ALTER TABLE `prodtype` DISABLE KEYS */;
 INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'pinewood cuter'),
@@ -863,7 +831,7 @@ INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(4141, 141, 1, 'transport: weapon');
 /*!40000 ALTER TABLE `prodtype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.prodtype_prodinputtype_assoc: ~152 rows (approximately)
+-- Export de données de la table homeplanet.prodtype_prodinputtype_assoc : ~152 rows (environ)
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` DISABLE KEYS */;
 INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) VALUES
 	(1002, 10020),
@@ -1020,18 +988,18 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(4141, 41410);
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.relationshipmodifier: ~0 rows (approximately)
+-- Export de données de la table homeplanet.relationshipmodifier : ~0 rows (environ)
 /*!40000 ALTER TABLE `relationshipmodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `relationshipmodifier` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.relationshiptype: 2 rows
+-- Export de données de la table homeplanet.relationshiptype : 2 rows
 /*!40000 ALTER TABLE `relationshiptype` DISABLE KEYS */;
 INSERT INTO `relationshiptype` (`id`, `label`, `description`, `value`) VALUES
 	(1, 'gift', 'Sovereign have been given a gift.', 10),
 	(2, 'allegeance', 'Allegeance pleage to this soveriegn', 100);
 /*!40000 ALTER TABLE `relationshiptype` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.rescategory: ~10 rows (approximately)
+-- Export de données de la table homeplanet.rescategory : ~10 rows (environ)
 /*!40000 ALTER TABLE `rescategory` DISABLE KEYS */;
 INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(5, 'basic food'),
@@ -1046,7 +1014,7 @@ INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(13, 'tradable');
 /*!40000 ALTER TABLE `rescategory` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.ressource: ~43 rows (approximately)
+-- Export de données de la table homeplanet.ressource : ~43 rows (environ)
 /*!40000 ALTER TABLE `ressource` DISABLE KEYS */;
 INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) VALUES
 	(1, 'Credit(sell/buy)', 1, 0, NULL),
@@ -1094,7 +1062,7 @@ INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) V
 	(141, 'weapon', 1, 0, NULL);
 /*!40000 ALTER TABLE `ressource` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.ressource_rescategory: ~63 rows (approximately)
+-- Export de données de la table homeplanet.ressource_rescategory : ~63 rows (environ)
 /*!40000 ALTER TABLE `ressource_rescategory` DISABLE KEYS */;
 INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 2),
@@ -1162,11 +1130,11 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 141);
 /*!40000 ALTER TABLE `ressource_rescategory` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.sovereign: ~0 rows (approximately)
+-- Export de données de la table homeplanet.sovereign : ~0 rows (environ)
 /*!40000 ALTER TABLE `sovereign` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sovereign` ENABLE KEYS */;
 
--- Dumping data for table gigablaster.user: ~3 rows (approximately)
+-- Export de données de la table homeplanet.user : ~3 rows (environ)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 	(1, 'Toto', 'toto@gmail.com', '$2y$12$905JS5gAdmNS.c5VM10ksObhf9sBsWDnl8opgKS6kBJlZ6qxyPIPS'),
@@ -1174,18 +1142,9 @@ INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 	(4, 'Tester', 'test@toto.com', '$2y$12$dwCvQDoF5yd2korjJGsojuxIaWohx4txT1d2PWcynqQJz.omjnELK');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
--- Dumping data for table gigablaster._view_note: 18 rows
+-- Export de données de la table homeplanet._view_note : 9 rows
 /*!40000 ALTER TABLE `_view_note` DISABLE KEYS */;
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
-	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id'),
-	('player_ext', 'SELECT \r\n	player.id as player_id,\r\n	IFNULL(tcontract.value,0) as contract,\r\n	IFNULL(trevenue.value,0)\r\n	- IFNULL(tcharge.value,0)\r\n	AS income\r\nFROM player\r\n\r\n# JOIN contract owned by player\r\nLEFT JOIN (\r\n	SELECT\r\n		 pawn.player_id,\r\n		 IFNULL(SUM(pawn.grade), 0) as value\r\n	FROM pawn\r\n	JOIN pawntype ON pawntype.id = pawn.type_id \r\n	GROUP BY pawn.player_id\r\n) as tcontract ON tcontract.player_id = player.id\r\n\r\n# JOIN sold product\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				* sold.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN sold ON sold.seller_id = pawn.id\r\n	JOIN demand \r\n		ON demand.city_id = sold.buyer_id\r\n		AND demand.ressource_id = sold.ressource_id\r\n	JOIN ressource ON ressource.id = sold.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as trevenue ON trevenue.player_id = player.id\r\n\r\n#JOIN buy\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				#* prodtype_buyer.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN prod ON prod.pawn_id = pawn.id\r\n	JOIN prodtype ON prodtype.id = prod.prodtype_id\r\n	JOIN city \r\n		ON  city.location_x = prod.location_x\r\n		AND city.location_y = prod.location_y\r\n	JOIN demand \r\n		ON demand.city_id = city.id \r\n		AND demand.ressource_id = prodtype.ressource_id\r\n	JOIN ressource ON ressource.id = demand.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as tcharge ON tcharge.player_id = player.id\r\n	\r\n'),
-	('city_distance', 'SELECT \r\n	c0.id as city0_id,\r\n	c1.id as city1_id,\r\n	abs(c1.location_x - c0.location_x)\r\n	+abs(c1.location_y - c0.location_y) as dist\r\nFROM city as c0\r\nLEFT JOIN city as c1 ON c1.id != c0.id\r\n'),
-	('relationship', 'SELECT \r\n	relationshipmodifier.player_id,\r\n	relationshipmodifier.sovereign_id,\r\n	relationshipmodifier.type_id\r\nFROM relationshipmodifier\r\n\r\nUNION\r\n\r\nSELECT \r\n	player.id,\r\n	player.allegeance,\r\n	2 #allegeance\r\nFROM player\r\nWHERE player.allegeance IS NOT NULL'),
-	('influence_relationship', 'SELECT \r\n	city.id as city_id,\r\n	relationship.sovereign_id,\r\n	SUM(sold.quantity) as value\r\nFROM city\r\nJOIN sold ON sold.buyer_id = city.id\r\nJOIN pawn ON pawn.id = sold.seller_id\r\nJOIN relationship ON relationship.player_id = pawn.player_id\r\nGROUP BY city.id, relationship.sovereign_id'),
-	('influence', '	SELECT \r\n		influencemodifier.city_id,\r\n		influencemodifier.sovereign_id,\r\n		influencemodifier.type_id,\r\n		influencemodifier.value\r\n	FROM influencemodifier\r\nUNION\r\n	SELECT\r\n		influence_relationship.city_id,\r\n		influence_relationship.sovereign_id,\r\n		4, #provider\r\n		influence_relationship.value\r\n	FROM influence_relationship'),
-	('city_sovereign', 'SELECT \r\n	`t`.`city_id` AS `city_id`,\r\n	MIN(`t`.`sovereign_id`) AS `sovereign_id`,\r\n	`t`.`sum_value` AS `sum_value` \r\nFROM `gigablaster`.`influence_sum` `t` \r\nJOIN (\r\n	SELECT \r\n		`influence_sum`.`city_id` AS `city_id`,\r\n		MAX(`influence_sum`.`sum_value`) AS `max_value` \r\n	FROM `gigablaster`.`influence_sum` \r\n	GROUP BY `influence_sum`.`city_id`\r\n) `tmax` \r\n	ON `tmax`.`city_id` = `t`.`city_id`\r\n	AND `t`.`sum_value` = `tmax`.`max_value`\r\nGROUP BY `t`.`city_id`'),
-	('prod_sum', 'SELECT \r\n	pawn.player_id,\r\n	prod.location_x AS location_x,\r\n	prod.location_y AS location_y,\r\n	prodtype.ressource_id AS ressource_id, \r\n	FLOOR(SUM((prodtype.quantity * prod.percent_max ))) AS quantity\r\nFROM prod\r\nJOIN prodtype ON prodtype.id = prod.prodtype_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nGROUP BY prod.location_x,prod.location_y,prodtype.ressource_id,pawn.player_id'),
-	('prodinput_sum', 'SELECT \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id,\r\n	SUM(prodinputtype.quantity * prod.grade) as quantity\r\nFROM prodinput\r\nJOIN prod ON prod.id = prodinput.prod_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nGROUP BY \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id'),
 	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id'),
 	('player_ext', 'SELECT \r\n	player.id as player_id,\r\n	IFNULL(tcontract.value,0) as contract,\r\n	IFNULL(trevenue.value,0)\r\n	- IFNULL(tcharge.value,0)\r\n	AS income\r\nFROM player\r\n\r\n# JOIN contract owned by player\r\nLEFT JOIN (\r\n	SELECT\r\n		 pawn.player_id,\r\n		 IFNULL(SUM(pawn.grade), 0) as value\r\n	FROM pawn\r\n	JOIN pawntype ON pawntype.id = pawn.type_id \r\n	GROUP BY pawn.player_id\r\n) as tcontract ON tcontract.player_id = player.id\r\n\r\n# JOIN sold product\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				* sold.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN sold ON sold.seller_id = pawn.id\r\n	JOIN demand \r\n		ON demand.city_id = sold.buyer_id\r\n		AND demand.ressource_id = sold.ressource_id\r\n	JOIN ressource ON ressource.id = sold.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as trevenue ON trevenue.player_id = player.id\r\n\r\n#JOIN buy\r\nLEFT JOIN (\r\n	SELECT \r\n		pawn.player_id as player_id,\r\n		IFNULL(\r\n			SUM(\r\n				demand.price_modifier \r\n				* ressource.baseprice \r\n				#* prodtype_buyer.quantity \r\n			),\r\n			0\r\n		) as value\r\n	FROM pawn\r\n	JOIN prod ON prod.pawn_id = pawn.id\r\n	JOIN prodtype ON prodtype.id = prod.prodtype_id\r\n	JOIN city \r\n		ON  city.location_x = prod.location_x\r\n		AND city.location_y = prod.location_y\r\n	JOIN demand \r\n		ON demand.city_id = city.id \r\n		AND demand.ressource_id = prodtype.ressource_id\r\n	JOIN ressource ON ressource.id = demand.ressource_id\r\n	GROUP BY pawn.player_id\r\n) as tcharge ON tcharge.player_id = player.id\r\n	\r\n'),
 	('city_distance', 'SELECT \r\n	c0.id as city0_id,\r\n	c1.id as city1_id,\r\n	abs(c1.location_x - c0.location_x)\r\n	+abs(c1.location_y - c0.location_y) as dist\r\nFROM city as c0\r\nLEFT JOIN city as c1 ON c1.id != c0.id\r\n'),

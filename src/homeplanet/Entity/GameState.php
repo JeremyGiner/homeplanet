@@ -23,10 +23,10 @@ class GameState {
 	protected $_iTurn;
 	
 	/**
-	 * @ORM\Column(type="string", name="label")
-	 * @var string
+	 * @ORM\Column(type="datetime", name="time_origin")
+	 * @var \DateTime
 	 */
-	protected $_sLabel;
+	protected $_oTimeOrigin;
 	
 //_____________________________________________________________________________
 //	Constructor
@@ -50,14 +50,7 @@ class GameState {
 		return $this->_iTurn;
 	}
 	
-	public function getLabel() {
-		return $this->_sLabel;
-	}
-	
-	public function getMonth() {
-		return $this->_iTurn % 14 + 1;
-	}
-	public function getYear() {
-		return floor( $this->_iTurn / 14 ) + 100;
+	public function getTimeOrigin() {
+		return $this->_oTimeOrigin;
 	}
 }

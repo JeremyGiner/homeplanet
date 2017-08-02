@@ -19,7 +19,6 @@ use homeplanet\Entity\PawnType;
 use homeplanet\Entity\attribute\ProductionInputType;
 use homeplanet\Repository\PawnRepository;
 use homeplanet\Repository\ProductionRepository;
-use homeplanet\Entity\GameState;
 
 class Game {
 	/**
@@ -108,13 +107,6 @@ JOIN pawntype._aProdType prodtype
 	 */
 	public function getPawnRepo() {
 		return $this->_oEntityManager->getRepository(Pawn::class);
-	}
-	/**
-	 * 
-	 * @return GameState
-	 */
-	public function getState() {
-		return $this->_oEntityManager->find( GameState::class, 1 );
 	}
 	
 	/**
