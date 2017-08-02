@@ -98,6 +98,17 @@ class BaseController extends Controller {
 			$oLocation->getY()
 		);
 		
+		$a = [];
+		foreach ( $aOvercrowd as $oOvercrowd ) {
+			
+			$sLocation = $oOvercrowd->getLocation()->__toString();
+			if( ! isset( $a[ $sLocation ] ) )
+				$a[ $sLocation ] = array();
+			
+			$a[ $sLocation ][ $oOvercrowd->getRessourceId() ] = $oOvercrowd->getQuantity();
+		}
+		$aOvercrowd = $a;
+		
 		// Get cities
 		$aCity = $oGame->getCityRepo()->findByArea(
 			$oLocation->getRegionY()*13, //Bottom

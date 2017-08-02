@@ -52,4 +52,8 @@ class Overcrowd {
 	public function getRessourceId() {
 		return $this->_iRessourceId;
 	}
+	
+	public function getLocation() {
+		return new Location($this->_iLocationX, $this->_iLocationY);
+	}
 }

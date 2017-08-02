@@ -1,0 +1,27 @@
+<div class="row">
+<div class="col-xs-12 col-sm-6">
+	<h4>Terrain</h4>
+	<ul>
+		<li>Elevation : {{ o.elevation }}</li>
+		<li>Temperature : {{ o.temperature }}</li>
+		<li>Humidity : {{ o.humidity }}</li>
+	</ul>
+</div>
+<div class="col-xs-12 col-sm-6">
+	<h4>Ressources</h4>
+	{% for iRessId, iRessQuantity in o.getRessNatQuantityAr() %}
+	{#
+		{{ iRessId }} {{ iRessQuantity }}
+	#}
+		{{ printo(param.gameview.game.getRessource(iRessId)) }}
+		{% set overcrowd = param.gameview.overcrowd[o.location|trans ][iRessId]|default(0) %}
+		{{ max(0,iRessQuantity - overcrowd) }}
+		{% if ( overcrowd != 0 ) %}
+			<span class="text-muted small">
+				( {{ iRessQuantity }} - {{ overcrowd }} )
+			</span>
+		{% endif %}
+		<br>
+	{% endfor %}
+</div>
+</div>

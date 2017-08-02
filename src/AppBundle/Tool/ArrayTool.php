@@ -66,7 +66,7 @@ class ArrayTool {
 		return $mSubjectCurrent;
 	}
 	
-	public function indexBy( array $aSubject, $sPropertyPath ) {
+	public function indexBy( array $aSubject, $sPropertyPath, $bUniq = false ) {
 		
 		$oPropertyPath = new PropertyPath( $sPropertyPath );
 		
@@ -75,8 +75,10 @@ class ArrayTool {
 			$key = $this->accessor->getValue($m, $oPropertyPath);
 			
 			//TODO check if $key can be index of array
-			
-			$a[ $key ][] = $m;
+			if( $bUniq ) 
+				$a[ $key ] = $m;
+			else 
+				$a[ $key ][] = $m;
 		}
 		return $a;
 	}
@@ -91,7 +93,7 @@ class ArrayTool {
 	public static function STaggregate( $mSubject, $sPropertyPath ) {
 		$o = new ArrayTool();
 		
-		return $o->aggregate($mSubject, $sPropertyPath);
+		return $o->aggregate($mSubject, $sPropertyPath );
 		
 	}
 	
@@ -100,9 +102,9 @@ class ArrayTool {
 	 * @param array $mSubject
 	 * @param string $sPropertyPath
 	 */
-	public static function STindexBy( array $aSubject, $sPropertyPath ) {
+	public static function STindexBy( array $aSubject, $sPropertyPath, $bUniq = false ) {
 		$o = new ArrayTool();
 		
-		return $o->indexBy( $aSubject, $sPropertyPath);
+		return $o->indexBy( $aSubject, $sPropertyPath, $bUniq );
 	}
 }

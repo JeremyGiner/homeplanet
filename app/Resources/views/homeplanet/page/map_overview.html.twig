@@ -4,21 +4,33 @@
 <div class="row">
 <div class="col-xs-12">
 	{% embed 'bootstrap/panel.html.twig' %}
-    	
+	
 	{% block header %}
 		World map ( {{ gameview.location }} )
 	{% endblock %}
-    
+
 	{% block content %}
-		{% embed 'homeplanet/element/map.html.twig' 
-			with {location: gameview.location}
-		 %}{% endembed %}
+		{% embed 'homeplanet/element/map.html.twig'%}{% endembed %}
 	{% endblock %}
 	
 	{% endembed %}
 	
-	{% include 'homeplanet/panel/location_detail.html.twig' %}
+	{% embed 'bootstrap/panel.html.twig' %}
+
+	{% set x = gameview.location.getX() %}
+	{% set y = gameview.location.getY() %}
+	{% block header %}
+		Location detail ({{ gameview.location  }})
+	{% endblock %}
+
+	{% block content %}
+		{% set oTile = gameview.map.getTile( x, y ) %}
+		{{ printo(oTile, { gameview: gameview } ) }}
 		
+	{% endblock %}
+	
+	{% endembed %}
+			
 	{% if city != null %}
 	{% embed 'bootstrap/panel.html.twig' %}
 	{% block header %}

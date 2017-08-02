@@ -37,6 +37,10 @@
 	background-color: green;
 }*/
 
+.map .map-cell-highlight {
+	border: 1px inset yellow;
+}
+
 .map .sprite {
 	width: 100%;
 	height: 100%;
