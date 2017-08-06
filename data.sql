@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- Hôte :                        127.0.0.1
--- Version du serveur:           5.7.14 - MySQL Community Server (GPL)
--- SE du serveur:                Win64
+-- Host:                         127.0.0.1
+-- Server version:               5.7.14 - MySQL Community Server (GPL)
+-- Server OS:                    Win64
 -- HeidiSQL Version:             9.4.0.5125
 -- --------------------------------------------------------
 
@@ -11,7 +11,7 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Export de données de la table homeplanet.attribute : ~4 rows (environ)
+-- Dumping data for table homeplanet.attribute: ~4 rows (approximately)
 /*!40000 ALTER TABLE `attribute` DISABLE KEYS */;
 INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
 	(1, 2, NULL),
@@ -20,7 +20,7 @@ INSERT INTO `attribute` (`id`, `type_id`, `value`) VALUES
 	(4, 3, 'naval:10');
 /*!40000 ALTER TABLE `attribute` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.attributetype : ~4 rows (environ)
+-- Dumping data for table homeplanet.attributetype: ~4 rows (approximately)
 /*!40000 ALTER TABLE `attributetype` DISABLE KEYS */;
 INSERT INTO `attributetype` (`id`, `label`) VALUES
 	(1, 'prod_slot'),
@@ -29,7 +29,21 @@ INSERT INTO `attributetype` (`id`, `label`) VALUES
 	(4, 'stealth');
 /*!40000 ALTER TABLE `attributetype` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.character : ~4 rows (environ)
+-- Dumping data for table homeplanet.budgetplan: ~0 rows (approximately)
+/*!40000 ALTER TABLE `budgetplan` DISABLE KEYS */;
+/*!40000 ALTER TABLE `budgetplan` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.budgetplantype: ~5 rows (approximately)
+/*!40000 ALTER TABLE `budgetplantype` DISABLE KEYS */;
+INSERT INTO `budgetplantype` (`id`, `label`) VALUES
+	(1, 'military : defence'),
+	(2, 'military : offence'),
+	(3, 'public services'),
+	(4, 'research'),
+	(5, 'culture');
+/*!40000 ALTER TABLE `budgetplantype` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.character: ~4 rows (approximately)
 /*!40000 ALTER TABLE `character` DISABLE KEYS */;
 INSERT INTO `character` (`id`, `occupation`, `personality`, `appearance`, `label`, `location_x`, `location_y`) VALUES
 	(1, 'merchant', 'none', 'normal', 'Sir Toto', 7, 7),
@@ -38,7 +52,7 @@ INSERT INTO `character` (`id`, `occupation`, `personality`, `appearance`, `label
 	(5, 'merchant', 'none', 'normal', 'test', 7, 7);
 /*!40000 ALTER TABLE `character` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.characternamereference : 200 rows
+-- Dumping data for table homeplanet.characternamereference: 200 rows
 /*!40000 ALTER TABLE `characternamereference` DISABLE KEYS */;
 INSERT INTO `characternamereference` (`id`, `fname`, `lname`) VALUES
 	(1, 'PENELOPE', 'GUINESS'),
@@ -243,7 +257,7 @@ INSERT INTO `characternamereference` (`id`, `fname`, `lname`) VALUES
 	(200, 'THORA', 'TEMPLE');
 /*!40000 ALTER TABLE `characternamereference` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.character_expression : ~3 rows (environ)
+-- Dumping data for table homeplanet.character_expression: ~3 rows (approximately)
 /*!40000 ALTER TABLE `character_expression` DISABLE KEYS */;
 INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(1, 1),
@@ -251,15 +265,15 @@ INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(1, 3);
 /*!40000 ALTER TABLE `character_expression` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.character_knowledge : ~0 rows (environ)
+-- Dumping data for table homeplanet.character_knowledge: ~0 rows (approximately)
 /*!40000 ALTER TABLE `character_knowledge` DISABLE KEYS */;
 /*!40000 ALTER TABLE `character_knowledge` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.city : ~1 rows (environ)
+-- Dumping data for table homeplanet.city: ~0 rows (approximately)
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
 /*!40000 ALTER TABLE `city` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.citynamereference : ~600 rows (environ)
+-- Dumping data for table homeplanet.citynamereference: ~600 rows (approximately)
 /*!40000 ALTER TABLE `citynamereference` DISABLE KEYS */;
 INSERT INTO `citynamereference` (`id`, `label`) VALUES
 	(1, 'A Corua (La Corua)'),
@@ -864,17 +878,17 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 	(600, 'Ziguinchor');
 /*!40000 ALTER TABLE `citynamereference` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.conversation : ~1 rows (environ)
+-- Dumping data for table homeplanet.conversation: ~1 rows (approximately)
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 INSERT INTO `conversation` (`id`, `character0_id`, `character1_id`, `state`) VALUES
 	(1, 1, 4, NULL);
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.demand : ~22 rows (environ)
+-- Dumping data for table homeplanet.demand: ~0 rows (approximately)
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.expression : ~3 rows (environ)
+-- Dumping data for table homeplanet.expression: ~3 rows (approximately)
 /*!40000 ALTER TABLE `expression` DISABLE KEYS */;
 INSERT INTO `expression` (`id`, `label`, `description`, `effect`) VALUES
 	(1, 'joke', '+charm ', NULL),
@@ -882,11 +896,17 @@ INSERT INTO `expression` (`id`, `label`, `description`, `effect`) VALUES
 	(3, 'threat', '+coerce', NULL);
 /*!40000 ALTER TABLE `expression` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.influencemodifier : ~1 rows (environ)
+-- Dumping data for table homeplanet.gamestate: 1 rows
+/*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
+INSERT INTO `gamestate` (`id`, `turn`, `label`) VALUES
+	(1, 3, 'Avalon');
+/*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.influencemodifier: ~0 rows (approximately)
 /*!40000 ALTER TABLE `influencemodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `influencemodifier` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.influencetype : ~4 rows (environ)
+-- Dumping data for table homeplanet.influencetype: ~4 rows (approximately)
 /*!40000 ALTER TABLE `influencetype` DISABLE KEYS */;
 INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(1, 'economic', 10),
@@ -895,15 +915,15 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.knowledge : ~0 rows (environ)
+-- Dumping data for table homeplanet.knowledge: ~0 rows (approximately)
 /*!40000 ALTER TABLE `knowledge` DISABLE KEYS */;
 /*!40000 ALTER TABLE `knowledge` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.pawn : ~1 rows (environ)
+-- Dumping data for table homeplanet.pawn: ~0 rows (approximately)
 /*!40000 ALTER TABLE `pawn` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.pawntype : ~26 rows (environ)
+-- Dumping data for table homeplanet.pawntype: ~26 rows (approximately)
 /*!40000 ALTER TABLE `pawntype` DISABLE KEYS */;
 INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
 	(1, 1, 'farm', 100, 1, 'Produce wheats, honey, fruits and vegetables'),
@@ -934,7 +954,7 @@ INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`,
 	(2001, 5, 'market stall', 100, 1, 'A merchant able to sell end product.');
 /*!40000 ALTER TABLE `pawntype` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.pawntypecategory : ~5 rows (environ)
+-- Dumping data for table homeplanet.pawntypecategory: ~5 rows (approximately)
 /*!40000 ALTER TABLE `pawntypecategory` DISABLE KEYS */;
 INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(1, 'tech zero'),
@@ -944,7 +964,7 @@ INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(5, 'merchant');
 /*!40000 ALTER TABLE `pawntypecategory` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.pawntype_attribute : ~3 rows (environ)
+-- Dumping data for table homeplanet.pawntype_attribute: ~3 rows (approximately)
 /*!40000 ALTER TABLE `pawntype_attribute` DISABLE KEYS */;
 INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
 	(1000, 2),
@@ -952,7 +972,7 @@ INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
 	(1002, 4);
 /*!40000 ALTER TABLE `pawntype_attribute` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.pawntype_prodtype_assoc : ~289 rows (environ)
+-- Dumping data for table homeplanet.pawntype_prodtype_assoc: ~289 rows (approximately)
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` DISABLE KEYS */;
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1, 1002),
@@ -1246,11 +1266,11 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1002, 4141);
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.pawn_location_assoc : ~1 rows (environ)
+-- Dumping data for table homeplanet.pawn_location_assoc: ~0 rows (approximately)
 /*!40000 ALTER TABLE `pawn_location_assoc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn_location_assoc` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.player : ~3 rows (environ)
+-- Dumping data for table homeplanet.player: ~3 rows (approximately)
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
 INSERT INTO `player` (`id`, `character_id`, `user_id`, `name`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
 	(1, 1, 1, 'Lord toto', 9880, 0, 1, NULL),
@@ -1258,19 +1278,19 @@ INSERT INTO `player` (`id`, `character_id`, `user_id`, `name`, `credit`, `income
 	(5, 5, 4, 'test', 100, 0, 1, NULL);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.population : ~1 rows (environ)
+-- Dumping data for table homeplanet.population: ~0 rows (approximately)
 /*!40000 ALTER TABLE `population` DISABLE KEYS */;
 /*!40000 ALTER TABLE `population` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.prod : ~1 rows (environ)
+-- Dumping data for table homeplanet.prod: ~0 rows (approximately)
 /*!40000 ALTER TABLE `prod` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prod` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.prodinput : ~1 rows (environ)
+-- Dumping data for table homeplanet.prodinput: ~0 rows (approximately)
 /*!40000 ALTER TABLE `prodinput` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prodinput` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.prodinputtype : ~192 rows (environ)
+-- Dumping data for table homeplanet.prodinputtype: ~192 rows (approximately)
 /*!40000 ALTER TABLE `prodinputtype` DISABLE KEYS */;
 INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'wood to plank'),
@@ -1467,7 +1487,7 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(41410, 141, 1, 'transport: weapon');
 /*!40000 ALTER TABLE `prodinputtype` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.prodtype : ~169 rows (environ)
+-- Dumping data for table homeplanet.prodtype: ~169 rows (approximately)
 /*!40000 ALTER TABLE `prodtype` DISABLE KEYS */;
 INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'pinewood cuter'),
@@ -1641,7 +1661,7 @@ INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(4141, 141, 1, 'transport: weapon');
 /*!40000 ALTER TABLE `prodtype` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.prodtype_prodinputtype_assoc : ~152 rows (environ)
+-- Dumping data for table homeplanet.prodtype_prodinputtype_assoc: ~152 rows (approximately)
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` DISABLE KEYS */;
 INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) VALUES
 	(1002, 10020),
@@ -1798,18 +1818,18 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(4141, 41410);
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.relationshipmodifier : ~0 rows (environ)
+-- Dumping data for table homeplanet.relationshipmodifier: ~0 rows (approximately)
 /*!40000 ALTER TABLE `relationshipmodifier` DISABLE KEYS */;
 /*!40000 ALTER TABLE `relationshipmodifier` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.relationshiptype : 2 rows
+-- Dumping data for table homeplanet.relationshiptype: 2 rows
 /*!40000 ALTER TABLE `relationshiptype` DISABLE KEYS */;
 INSERT INTO `relationshiptype` (`id`, `label`, `description`, `value`) VALUES
 	(1, 'gift', 'Sovereign have been given a gift.', 10),
 	(2, 'allegeance', 'Allegeance pleage to this soveriegn', 100);
 /*!40000 ALTER TABLE `relationshiptype` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.rescategory : ~10 rows (environ)
+-- Dumping data for table homeplanet.rescategory: ~10 rows (approximately)
 /*!40000 ALTER TABLE `rescategory` DISABLE KEYS */;
 INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(5, 'basic food'),
@@ -1824,7 +1844,7 @@ INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(13, 'tradable');
 /*!40000 ALTER TABLE `rescategory` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.ressource : ~43 rows (environ)
+-- Dumping data for table homeplanet.ressource: ~43 rows (approximately)
 /*!40000 ALTER TABLE `ressource` DISABLE KEYS */;
 INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) VALUES
 	(1, 'Credit(sell/buy)', 1, 0, NULL),
@@ -1872,7 +1892,7 @@ INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) V
 	(141, 'weapon', 1, 0, NULL);
 /*!40000 ALTER TABLE `ressource` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.ressource_rescategory : ~63 rows (environ)
+-- Dumping data for table homeplanet.ressource_rescategory: ~63 rows (approximately)
 /*!40000 ALTER TABLE `ressource_rescategory` DISABLE KEYS */;
 INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 2),
@@ -1940,11 +1960,11 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 141);
 /*!40000 ALTER TABLE `ressource_rescategory` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.sovereign : ~1 rows (environ)
+-- Dumping data for table homeplanet.sovereign: ~0 rows (approximately)
 /*!40000 ALTER TABLE `sovereign` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sovereign` ENABLE KEYS */;
 
--- Export de données de la table homeplanet.user : ~3 rows (environ)
+-- Dumping data for table homeplanet.user: ~3 rows (approximately)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 	(1, 'Toto', 'toto@gmail.com', '$2y$12$905JS5gAdmNS.c5VM10ksObhf9sBsWDnl8opgKS6kBJlZ6qxyPIPS'),
@@ -1952,7 +1972,7 @@ INSERT INTO `user` (`id`, `player_name`, `email`, `password_shadow`) VALUES
 	(4, 'Tester', 'test@toto.com', '$2y$12$dwCvQDoF5yd2korjJGsojuxIaWohx4txT1d2PWcynqQJz.omjnELK');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
--- Export de données de la table homeplanet._view_note : 9 rows
+-- Dumping data for table homeplanet._view_note: 9 rows
 /*!40000 ALTER TABLE `_view_note` DISABLE KEYS */;
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id'),
