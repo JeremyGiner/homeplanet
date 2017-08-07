@@ -32,6 +32,8 @@ use Symfony\Component\Form\Tests\ButtonTest;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use homeplanet\tool\TileValidatorResolver;
 use homeplanet\Entity\Conversation;
+use homeplanet\Form\ConversationExpressionChoiceForm;
+use homeplanet\Form\ConversationExpressionChoice;
 
 /**
  *
@@ -147,13 +149,21 @@ class PlanetController extends BaseController {
 		
 		$this->_handleRequest($oRequest);
 		
+		/* @var $oConversation Conversation */
 		$oConversation = $this->getGame()->getEntityManager()->find(Conversation::class, 1);
+		
+		
+		$oFormExpression = $this->createForm( 
+			ConversationExpressionChoiceForm::class, 
+			new ConversationExpressionChoice( $oConversation->getCharacter0(), $oConversation->getCharacter0()->getExpressionAr()[1] )
+		);
 		
 		return $this->render( 
 			'homeplanet/page/conversation.html.twig', 
 			[
 				'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
 				'conversation' => $oConversation,
+				'form' => $oFormExpression->createView(),
 			]
 		);
 	}
