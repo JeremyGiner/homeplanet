@@ -71,17 +71,29 @@ class Conversation {
 	public function getCharacter1() {
 		return $this->_oCharacter1;
 	}
-	
+	/**
+	 * State of the conversation
+	 * @return array
+	 * ['initiative'] int character id
+	 * [points] int[][] indexed by character index then by persuade(0), coerce(1), ...
+	 * [log] 
+	 */
 	public function getState() {
 		return $this->_aState;
 	}
 	
+	public function getCharacterIndex( Character $oCharacter ) {
+		if( $oCharacter == $this->getCharacter0() ) return 0;
+		if( $oCharacter == $this->getCharacter1() ) return 1;
+		throw new Exception('Character is not in this conversation');
+	}
 	
 //_____________________________________________________________________________
 //	Modifier
-
+	
 	public function setState( array $aState ) {
-		return $this->_aState = $aState;
+		$this->_aState = $aState;
+		return $this;
 	}
 	
 	public function processExpression( Expression $oExp0, Expression $oExp1 ) {

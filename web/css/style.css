@@ -110,34 +110,6 @@ body {
 	background-color: lightblue;
 }*/
 
-.panel {
-	border-style: solid;
-	border-color: black;
-}
-.panel>.panel-header {
-	font-size: 1.5em;
-	font-weight: bold;
-	
-	/*bg-dark*/
-	color: white;
-	background-color: rgb(38, 38, 38);
-}
-
-.panel>.panel-content {
-	
-	background-color: white;
-}
-
-h4 {
-	border-bottom: 1px solid grey;
-}
-
-.panel-heading {
-	background-color: #262626;
-	color: white;
-	font-weight: bold;
-}
-
 /*
 TODO use Less
 */

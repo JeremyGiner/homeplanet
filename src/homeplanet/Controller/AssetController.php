@@ -433,7 +433,7 @@ class AssetController extends BaseController {
 						'entity' => $oPawn,
 						'player' => $oGame->getContextPlayer(),
 						'game' => $oGame,
-				],// + $this->_createViewMin($oGame, $this->_oLocation ),
+				] + $this->_createViewMin($oGame, $this->_oLocation ),
 				'form_prodtype' => $oFormProd->createView(),
 				'form_prodtype_recap' => $oFormProdRecap == null ? null : $oFormProdRecap->createView(),
 				'form_delete' => $oFormSell->createView(),

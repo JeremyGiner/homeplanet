@@ -2,24 +2,22 @@
 
 
 {% block page_content %}
-<div class="container">
-	<div class="row">
-		<div class="col-xs-12 col-sm-6 col-sm-offset-3">
-		{% embed 'bootstrap/panel.html.twig' %}
-	    			
-			{% block header %}Connexion{% endblock %}
-	    	
-			{% block content %}
-				{#
-					{% form_theme form 'form/theme-main.html.twig' %}
-				#}
-				{% form_theme form 'bootstrap_3_layout.html.twig' %}
-				{{ form_start(form) }}
-					{{ form_widget(form) }}
-				{{ form_end(form) }}
-			{% endblock %}
-		{% endembed %}
-		</div>
+<div class="row">
+	<div class="col-12 col-sm-6 offset-sm-3">
+	{% embed 'bootstrap/panel.html.twig' %}
+    			
+		{% block header %}Connexion{% endblock %}
+    	
+		{% block content %}
+			{#
+				{% form_theme form 'form/theme-main.html.twig' %}
+			#}
+			{% form_theme form 'bootstrap_3_layout.html.twig' %}
+			{{ form_start(form) }}
+				{{ form_widget(form) }}
+			{{ form_end(form) }}
+		{% endblock %}
+	{% endembed %}
 	</div>
 </div>
 	

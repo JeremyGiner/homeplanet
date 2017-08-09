@@ -3,12 +3,12 @@
 {% block page_content %}
 
 <div class="panel panel-default">
-<div class="panel-heading">
+<div class="card-header">
     Conversation
 </div>
-<div class="panel-body">
+<div class="card-block">
     <div class="row">
-    <div class="col-xs-6 col-md-2 pull-left">
+    <div class="col-6 col-md-2 pull-left">
         {{ conversation.character0.label }} (initiative)
         <img src="" />
         <table class="table">
@@ -35,7 +35,7 @@
         </tbody>
         </table>
     </div>
-    <div class="col-xs-6 col-md-2 pull-right text-right">
+    <div class="col-6 col-md-2 pull-right text-right">
         {{ conversation.character1.label }}
         <img src="" />
         <table class="table">
@@ -62,7 +62,7 @@
         </tbody>
         </table>
     </div>
-    <div class="col-xs-12 col-md-8 pull-left">
+    <div class="col-12 col-md-8 pull-left">
         <table class="table">
         <thead>
             <tr><td colspan="99" class="text-center">Subject</td></tr>
@@ -103,10 +103,10 @@
                 <td colspan="99" class="">
                     <form>
                     <div class="row">
-                    <div class="col-xs-12 text-center">
+                    <div class="col-12 text-center">
                         <div class="btn-group btn-group-justified" data-toggle="buttons">
                     {% for expression in conversation.character0.expressionAr  %}
-                            <label class="btn btn-default clickable">
+                            <label class="btn btn-secondary clickable">
                                 <input class="radio-button-input" type="radio" name="move" />
                                 {{ expression.label }}
                             </label>
@@ -115,11 +115,11 @@
                     </div>
                     <hr />
                     {% for expression in conversation.character0.expressionAr  %}
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         {{ printo( expression ) }}
                     </div>
                     {% endfor %}
-                    <div class="col-xs-3">
+                    <div class="col-3">
                         <div class="well small">
                             Move1 
                             <div class="pull-right">
@@ -131,10 +131,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-2">
                         <div class="label label-default">Move2</div>
                     </div>
-                    <div class="col-xs-2">
+                    <div class="col-2">
                         <div class="label label-default">Move3</div>
                     </div>
                     </div>
@@ -149,7 +149,7 @@
         </table>
     </div>
 
-    <div class="col-xs-12">
+    <div class="col-12">
         <hr />
         <button class="btn btn-danger pull-right">
             Quit

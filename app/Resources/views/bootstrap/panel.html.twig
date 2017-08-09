@@ -1,11 +1,11 @@
-<div id="{% block CSSId %}{% endblock %}" class="panel {% block CSSClass %}{% endblock %}">
+<div id="{% block CSSId %}{% endblock %}" class="card {% block CSSClass %}{% endblock %}">
 	{% set _block = block('header') %}
 	{% if _block is not empty %}
-	<header class="panel-heading">
+	<header class="card-header">
 	    {{ _block|raw }}
 	</header>
 	{% endif %}
-	<div class="panel-body">
+	<div class="card-block">
 		{% block content %}{% endblock %}
 	</div>
 </div>

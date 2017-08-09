@@ -47,12 +47,6 @@ Temporary Items
 .apdisk
 
 #______________________________________________________________________________
-# Symfony 3 cache directory
-var/cache
-var/logs
-var/sessions
-
-#______________________________________________________________________________
 # Eclipse 
 # source: https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore
 
@@ -106,6 +100,9 @@ local.properties
 
 # Code Recommenders
 .recommenders/
+
+#______________________________________________________________________________
+# Symfony
 
 # Cache and logs (Symfony2)
 /app/cache/*

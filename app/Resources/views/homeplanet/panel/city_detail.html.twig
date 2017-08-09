@@ -3,7 +3,7 @@
 {% block header %}City detail ({{ gameview.location  }}){% endblock %}
 {% block content %}
 	{% if city == null %}
-		<a class="btn btn-default" href="?location={{ gameview.location }}&amp;action=city_create">Create city</a>
+		<a class="btn btn-secondary" href="?location={{ gameview.location }}&amp;action=city_create">Create city</a>
 	{% else %}
 		{{ printo(city) }}
 	{% endif %}

@@ -1,5 +1,5 @@
 <div class="row">
-<div class="col-xs-12 col-sm-6">
+<div class="col-12 col-sm-6">
 	<h4>Terrain</h4>
 	<ul>
 		<li>Elevation : {{ o.elevation }}</li>
@@ -7,7 +7,7 @@
 		<li>Humidity : {{ o.humidity }}</li>
 	</ul>
 </div>
-<div class="col-xs-12 col-sm-6">
+<div class="col-12 col-sm-6">
 	<h4>Ressources</h4>
 	{% for iRessId, iRessQuantity in o.getRessNatQuantityAr() %}
 	{#

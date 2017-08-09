@@ -152,11 +152,33 @@ class PlanetController extends BaseController {
 		/* @var $oConversation Conversation */
 		$oConversation = $this->getGame()->getEntityManager()->find(Conversation::class, 1);
 		
-		
+		// Create form
+		$oExpressionChoice = new ConversationExpressionChoice( 
+			$oConversation->getCharacter0(),
+			$oConversation->getCharacter0()->getExpressionAr()[1] 
+		);
 		$oFormExpression = $this->createForm( 
 			ConversationExpressionChoiceForm::class, 
-			new ConversationExpressionChoice( $oConversation->getCharacter0(), $oConversation->getCharacter0()->getExpressionAr()[1] )
+			$oExpressionChoice
 		);
+		
+		$oFormExpression->handleRequest( $oRequest );
+		if( $oFormExpression->isSubmitted() && $oFormExpression->isValid() ) {
+			
+			$a = (new ConversationExpressionChoice( 
+				$oConversation->getCharacter1(),
+				null
+			))->getExpressionAr();
+			$oExpressionOopponent = 
+			
+			$oConversation->processExpression(
+				$oExpressionChoice->getExpression(), 
+				$oExpressionChoice->getExpression()
+			);
+			
+			
+			$this->redirect( $this->generateUrl('test_conversation') );
+		}
 		
 		return $this->render( 
 			'homeplanet/page/conversation.html.twig', 

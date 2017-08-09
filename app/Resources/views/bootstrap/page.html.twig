@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{% block title %}Welcome!{% endblock %}</title>
+{#
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 <!-- Optional theme -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-
+#}
 		<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 		<link href="{{ asset('css/reset.css') }}" rel="stylesheet" type="text/css" />
 		<link href="{{ asset('css/layout.css') }}" rel="stylesheet" type="text/css" />
@@ -26,11 +27,27 @@
 		{% block stylesheets %}{% endblock %}
 	</head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}
+			{% block body %}{% endblock %}
+			{% block javascripts %}
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+{#
 <!-- Latest compiled and minified JavaScript -->
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+#}
+{#
+{% javascripts 
+	'asset/bootstrap/js/dist/alert.js' 
+	'asset/bootstrap/js/dist/button.js' 
+	'asset/bootstrap/js/dist/collapse.js' 
+	'asset/bootstrap/js/dist/dropdown.js' 
+	'asset/bootstrap/js/dist/tab.js' 
+	'asset/bootstrap/js/dist/utils.js' 
+%}
+	<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+#}
+<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <script type="text/javascript" src="{{ asset('js/gigablaster.js') }}"></script>
         {% endblock %}
     </body>

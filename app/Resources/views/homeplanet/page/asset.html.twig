@@ -2,7 +2,7 @@
 
 {% block page_content %}
 <div class="row">
-<div class="col-xs-12">
+<div class="col-12">
 	{% embed 'bootstrap/panel.html.twig' %}
 	{% block header %}
 		Buy asset
@@ -15,23 +15,23 @@
 </div>
 {% for sLocation, aPawn in aPawnByloc %}
 {% set oLocation = aLocation[sLocation] %}
-<div class="col-xs-12">
+<div class="col-12">
 	{% embed 'bootstrap/panel.html.twig' %}
 	{% block header %}
 		<div class="row">
-		<div class="col-xs-3">
+		<div class="col-3">
 			{{ printo( worldmap.tile( oLocation.x, oLocation.y ), {
 				'_suffix': 'link',
 				'city': aCity[sLocation]|default(null),
 			} ) }}
 		</div>
-		<div class="col-xs-6">
+		<div class="col-6">
 			{% for iRessId, iQuantity in aFluxByLocation[sLocation]|default([]) %}
 				{{iQuantity>0?'+'}}{{ iQuantity }}
 				{{ printo(gameview.game.getRessource(iRessId)) }}<br>
 			{% endfor %}
 		</div>
-		<div class="col-xs-3">
+		<div class="col-3">
 			<a class="btn btn-small btn-primary pull-right" 
 				href="{{ url('asset_create',{location: sLocation}) }}"
 			>

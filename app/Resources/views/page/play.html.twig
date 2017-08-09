@@ -8,7 +8,7 @@
 
 {% block page_content %}
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-12">
 	{% embed 'bootstrap/panel.html.twig' %}
 	{% block header %}
 		{{ gameview.player.getName() }}
@@ -36,11 +36,11 @@
 		{% for oPawn in pawnAr %}
 			<li class="list-group-item">
 				<div class="row">
-				<div class="col-xs-2">
-					<img class="img-responsive" src="{{ 
+				<div class="col-2">
+					<img class="img-fluid" src="{{ 
 						commun.icon_entitytype(oPawn.getType()) }}">
 				</div>
-				<div class="col-xs-8">
+				<div class="col-8">
 					{{ printo(oPawn) }}
 					{{ form(form_entity_delete_ar[oPawn.getId()]) }}
 				</div>
@@ -52,7 +52,7 @@
 	
 	{% endembed %}
 	</div>
-	<div class="col-xs-12">
+	<div class="col-12">
 	{% embed 'bootstrap/panel.html.twig' %}
     	
 	{% block header %}
@@ -67,7 +67,7 @@
 	
 	{% endembed %}
 	</div>
-	<div class="col-xs-12">
+	<div class="col-12">
 	{% include 'homeplanet/panel/city_detail.html.twig' %}
 	
 	</div>

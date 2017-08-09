@@ -10,11 +10,11 @@
 }) %} {{ attrname }}="{{ attrvalue }}"{% endfor %} 
 	for="{{ id }}"
 >
-	<div class="row">
-	<div class="col-xs-4 col-sm-2" style="padding-right:0">
-		<img class="img-responsive" src="{{ commun.icon_entitytype(label_printo) }}">
+	<div class="row w-100">
+	<div class="col-4 col-sm-2" style="padding-right:0">
+		<img class="img-fluid" src="{{ commun.icon_entitytype(label_printo) }}">
 	</div>
-	<div class="col-xs-8 col-sm-10">
+	<div class="col-8 col-sm-10">
 		<header class="list-group-item-heading">
 			<strong>
 				{{ label_printo.label|trans({}, translation_domain)|capitalize }}

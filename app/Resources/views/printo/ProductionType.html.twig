@@ -10,17 +10,17 @@
 	<br>
 {% else %}
 	<div class="row">
-	<div class="col-xs-5">
+	<div class="col-5">
 		{% for oProdInputType in o.getProdInputTypeAr() %}
 			- {{ oProdInputType.getQuantity() }} 
 			{{ printo(oProdInputType.getRessource()) }}
 			<br>
 		{% endfor %}
 	</div>
-	<div class="col-xs-2">
+	<div class="col-2">
 		&rarr;
 	</div>
-	<div class="col-xs-5">
+	<div class="col-5">
 		+ {{ o.getQuantity() }} 
 		{{ printo(o.getRessource()) }}
 	</div>

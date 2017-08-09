@@ -32,7 +32,7 @@
 	{% include 'element/navbar.html.twig' with {navbar: navbar, user: user} only %}
 	{% block post_navbar %}
 	{% endblock %}
-	<div id="content" class="container fadeIn">
+	<div id="content" class="container fadeIn mb-5">
 		{% block page_content %}
 			{% embed 'bootstrap/panel.html.twig' %}		
 				{% block header %}Home{% endblock %}
@@ -60,6 +60,12 @@
 
 {% block stylesheets %}
 {{ parent() }}
+
+{% stylesheets filter="scssphp" output="css/app.css"
+    "asset/scss/*.scss"
+%}
+    <link rel="stylesheet" href="{{ asset_url }}" />
+{% endstylesheets %}
 <link href="{{ asset('css/planet.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('css/ressource_atlas.css') }}" rel="stylesheet" type="text/css" />
 {% endblock %}

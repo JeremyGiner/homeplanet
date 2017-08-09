@@ -1,46 +1,31 @@
 {% extends 'homeplanet/page/game.html.twig' %}
 
 {% block page_content %}
-<div class="row">
-<div class="col-xs-12">
-	{% embed 'bootstrap/panel.html.twig' %}
-	
-	{% block header %}
+
+<div class="card">
+	<div class="card-header">
 		World map ( {{ gameview.location }} )
-	{% endblock %}
-
-	{% block content %}
+	</div>
+	<div class="card-block">
 		{% embed 'homeplanet/element/map.html.twig'%}{% endembed %}
-	{% endblock %}
-	
-	{% endembed %}
-	
-	{% embed 'bootstrap/panel.html.twig' %}
-
-	{% set x = gameview.location.getX() %}
-	{% set y = gameview.location.getY() %}
-	{% block header %}
+	</div>
+	<div class="card-header">
 		Location detail ({{ gameview.location  }})
-	{% endblock %}
-
-	{% block content %}
+	</div>
+	<div class="card-block">
+		{% set x = gameview.location.getX() %}
+		{% set y = gameview.location.getY() %}
 		{% set oTile = gameview.map.getTile( x, y ) %}
 		{{ printo(oTile, { gameview: gameview } ) }}
-		
-	{% endblock %}
-	
-	{% endembed %}
-			
+	</div>
 	{% if city != null %}
-	{% embed 'bootstrap/panel.html.twig' %}
-	{% block header %}
+	<div class="card-header">
 		City at {{ gameview.location }}
-	{% endblock %}
-	{% block content %}
+	</div>
+	<div class="card-block">
 		{{ printo(city) }}
-	{% endblock %}
-	{% endembed %}
+	</div>	
 	{% endif %}
 </div>
-</div>
-{% endblock %}
+
+{% endblock page_content %}
