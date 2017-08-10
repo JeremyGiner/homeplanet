@@ -16,8 +16,8 @@
 {% for sLocation, aPawn in aPawnByloc %}
 {% set oLocation = aLocation[sLocation] %}
 <div class="col-12">
-	{% embed 'bootstrap/panel.html.twig' %}
-	{% block header %}
+	<div class="card">
+	<div class="card-header">
 		<div class="row">
 		<div class="col-3">
 			{{ printo( worldmap.tile( oLocation.x, oLocation.y ), {
@@ -32,24 +32,22 @@
 			{% endfor %}
 		</div>
 		<div class="col-3">
-			<a class="btn btn-small btn-primary pull-right" 
+			<a class="btn btn-small btn-primary btn-sm pull-right" 
 				href="{{ url('asset_create',{location: sLocation}) }}"
 			>
 				Buy asset
 			</a>
 		</div>
 		</div>
-	{% endblock %}
-	{% block content %}
-		<ul class="list-group">
-		{% for oPawn in aPawn %}
-			<a class="list-group-item" href="{{ path('asset_view',{id:oPawn.id}) }}">
-				{{ printo( oPawn ) }}
-			</a>
-		{% endfor %}
-		</ul>
-	{% endblock %}
-	{% endembed %}
+	</div>
+	<ul class="list-group list-group-flush">
+	{% for oPawn in aPawn %}
+		<a class="list-group-item list-group-item-action" href="{{ path('asset_view',{id:oPawn.id}) }}">
+			{{ printo( oPawn ) }}
+		</a>
+	{% endfor %}
+	</ul>
+	</div>
 </div>
 {% endfor %}
 </div>

@@ -1,7 +1,7 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
 {# require o var #}
 <div class="row">
-<div class="col-12 col-sm-6">
+<div class="col-12 col-md-6">
 {% if( o.type.ressource.id == 1 ) %}
 	Sell : 
 	{% for oProdInputType in o.type.getProdInputTypeAr() %}
@@ -28,7 +28,7 @@
 	</div>
 {% endif %}
 </div>
-<div class="col-12 col-sm-6">
+<div class="col-12 col-md-6">
 {% if o.ratio < o.grade %}
 {% if( o.getType().getRessource().getId() == 1 ) %}
 		<p class="bg-danger">

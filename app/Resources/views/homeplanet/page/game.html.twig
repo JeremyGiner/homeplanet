@@ -24,21 +24,21 @@
 			{% endfor %}
 		</ul>
 	</div>
-				<span class="navbar-text">
-					Contract : {{ gameview.player.ext.contract }} / {{ gameview.player.contractMax }}
-					<span class="icon ress-sprite ress-sprite-8-4"></span>
-				</span>
-				<span class="navbar-text">
-					Credit : {{ commun.credit( gameview.player.credit ) }}
-					<span title="Income">
-					 ( {{plus(gameview.player.income)}}{{ commun.credit( gameview.player.income ) }} )
-					</span>
-				</span>
-				<span class="navbar-text">
-					<span title="Year">{{ gameview.year }}</span>
-					<span title="Month">{{ gameview.month }}</span>
-					<span class="icon ress-sprite ress-sprite-8-4"></span>
-				</span>
+	<span class="navbar-text">
+		Contract : {{ gameview.player.ext.contract }} / {{ gameview.player.contractMax }}
+		<span class="icon ress-sprite ress-sprite-8-4"></span>
+	</span>
+	<span class="navbar-text">
+		Credit : {{ commun.credit( gameview.player.credit ) }}
+		<span title="Income">
+		 ( {{plus(gameview.player.income)}}{{ commun.credit( gameview.player.income ) }} )
+		</span>
+	</span>
+	<span class="navbar-text">
+		<span title="Year">{{ gameview.year }}</span>
+		<span title="Month">{{ gameview.month }}</span>
+		<span class="icon ress-sprite ress-sprite-8-4"></span>
+	</span>
 </nav>
 </div>
 

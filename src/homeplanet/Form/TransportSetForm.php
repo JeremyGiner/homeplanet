@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormInterface;
 use homeplanet\Entity\attribute\Location;
 use AppBundle\validator\ValidatorInArray;
 use homeplanet\Entity\attribute\Transporter;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 
 class TransportSetForm extends MultistepType {
 	
@@ -31,8 +32,10 @@ class TransportSetForm extends MultistepType {
 			'game' => null,
 			'validation_groups' => function (FormInterface $form) {
 				//TODO
-				//var_dump( $form->getConfig()->getOption('step') );
-				return ['form_step1'];
+				$step = $form->getConfig()->getOption('step');
+				if( $step == 0 )
+					return new GroupSequence( ['Default','step1'] );
+				return ['Default','step3'];
 			}
 		]);
 	}
@@ -54,6 +57,7 @@ class TransportSetForm extends MultistepType {
 				
 				$oBuilder
 					->add('location_begin', LocationType::class,[
+						'label' => 'Start',
 						'gameview' => $aOption['gameview'],
 						'validator' => $oTransporter->getTileValidator(),
 					])
@@ -77,7 +81,7 @@ class TransportSetForm extends MultistepType {
 					*/
 					->add('submit', SubmitType::class, [
 						'label' => 'Next',
-						'attr' => ['class' => 'btn-primary pull-right'], 
+						'attr' => ['class' => 'btn-primary'], 
 					]);
 			return true;
 			case 1 :
@@ -101,7 +105,7 @@ class TransportSetForm extends MultistepType {
 				
 				$oBuilder
 					->add('location_end', LocationType::class,[
-						'label' => ' end',
+						'label' => 'Destination',
 						'data' => $oData->getLocationBegin(),
 						'gameview' => $aOption['gameview'],
 						'validator' => new ValidatorInArray( $aValidTile )
@@ -114,7 +118,7 @@ class TransportSetForm extends MultistepType {
 					])
 					->add('confirm', SubmitType::class, [
 						'label' => 'Confirm',
-						'attr' => ['class' => 'btn-primary pull-right'],
+						'attr' => ['class' => 'btn-primary'],
 					]);
 			return true;
 		}

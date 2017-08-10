@@ -1,6 +1,7 @@
 <a class="btn-group btn-group-sm" href="{{ url('map_overview',{location: o.location~''}) }}">
 	<div class="btn btn-secondary">
-		<span class="glyphicon glyphicon-map-marker"></spaN>
+		<span class="fa fa-map-marker"></span>
+		&nbsp;
 		{{ o.location }} 
 	</div>
 	<div class="btn" data-tooltip="#tip-first" data-placement="right"
@@ -12,7 +13,7 @@
 		&nbsp;
 	</div>
 </a>
-<div id="tip-first" class="tip-content hidden" style="color: black;">
+<div id="tip-first" class="tooltip tooltip-top" style="color: black;">
 	<ul class="list-group">
 	{% set game = o.worldmap.game %}
 	{% for iRessId, iRessQuantity in o.getRessNatQuantityAr() %}

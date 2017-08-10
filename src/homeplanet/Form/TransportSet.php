@@ -16,7 +16,6 @@ use homeplanet\Entity\Worldmap;
 use homeplanet\Entity\attribute\Transporter;
 
 /**
- * @Assert\GroupSequence({"TransportSet","step1"})
  */
 class TransportSet {
 	
@@ -34,7 +33,7 @@ class TransportSet {
 	protected $_oLocationBegin;
 	/**
 	 * @Groups({"serialisable"})
-	 * @Assert\NotBlank()
+	 * @Assert\NotBlank(groups={"step2"})
 	 * @var Location
 	 */
 	protected $_oLocationEnd;
@@ -122,10 +121,10 @@ class TransportSet {
 	/**
 	 * @Assert\IsTrue(
 	 *     message="not enought money",
-	 *     groups={"Buy"}
+	 *     groups={"step2"}
 	 * )
 	 */
-	function isLocationValid() {
+	function isLocationEndValid() {
 		if( $this->_oLocationEnd === null ) return false;
 		$oPathfinder = $this->getPawn()->getAttribute('transport')->getPathfinder();
 		$oPathfinder->propagate( $this->_oLocationBegin );
@@ -133,5 +132,20 @@ class TransportSet {
 		if( $aMapping === null )
 			return false; 
 		return in_array( $this->_oLocationEnd->__toString(), $aMapping );
+	}
+	
+	/**
+	 * @Assert\IsTrue(
+	 *     message="Destination must be defferent from starting location",
+	 *     groups={"step2"}
+	 * )
+	 */
+	function isLocationDifferent() {
+		if( $this->_oLocationEnd === null ) return false;
+		if( $this->_oLocationBegin === null ) return false;
+		return !(
+			$this->_oLocationBegin->getX() == $this->_oLocationEnd->getX()
+			&& $this->_oLocationBegin->getY() == $this->_oLocationEnd->getY()
+		);
 	}
 }

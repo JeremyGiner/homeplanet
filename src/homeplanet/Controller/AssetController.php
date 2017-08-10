@@ -208,19 +208,20 @@ class AssetController extends BaseController {
 		if( $oPawn == null )
 			return $this->redirect( $this->generateUrl('asset') );
 		
+		$bTransporter = $oPawn->getAttribute('transport') !== null;
 		
 		//_____________________________
 		//	Form switch prod
 		
 		$oFormProd = null;
 		$oFormProdRecap = null;
-		if( $oPawn->getAttribute('transport') === null ) {
+		if( !$bTransporter ) {
 		
 			// TODO : form validation
 			$oFormProd = $this->createFormBuilder( array() )
 				->add('production_type', EntityType::class, [
 					'class' => ProductionType::class,
-					'label' => 'Production :',
+					'label' => 'Production',
 					'choice_label' => 'label',
 					'query_builder' => function (EntityRepository $er) use ($oPawn ){
 						return $er->createQueryBuilder('prodtype')
@@ -434,11 +435,15 @@ class AssetController extends BaseController {
 						'player' => $oGame->getContextPlayer(),
 						'game' => $oGame,
 				] + $this->_createViewMin($oGame, $this->_oLocation ),
-				'form_prodtype' => $oFormProd->createView(),
-				'form_prodtype_recap' => $oFormProdRecap == null ? null : $oFormProdRecap->createView(),
+				
 				'form_delete' => $oFormSell->createView(),
 				'form_upgrade' => $oFormUpgrade->createView(),
-			]
+			] + ( $bTransporter ? [
+				'form_prodtype_transporter' => $oFormProd->createView(),
+				'form_prodtype_recap' => $oFormProdRecap->createView(),
+			] : [
+				'form_prodtype' => $oFormProd->createView(),
+			])
 		);
 	
 	}

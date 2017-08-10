@@ -11,22 +11,36 @@
 		{% endblock %}
 		{% block content %}
 			{{ printo( gameview.entity ) }}
+{#____________________________________________________________________________#}
 			{% if form_prodtype is defined %}
 				<hr/>
-				{% form_theme form_prodtype 'bootstrap_3_horizontal_layout.html.twig' %}
+				{{ form_start(form_prodtype) }}
+					{{ form_errors(form_prodtype) }}
+					<div class="form-group row">
+						{{ form_label( form_prodtype.production_type, null, {'label_attr': {'class': 'col-2'} }) }}
+						{{ form_widget( form_prodtype.production_type, { 'attr': { 'class': 'col-8' } } ) }}
+						<div class="col-2">
+							{{ form_widget( form_prodtype.submit ) }}
+						</div>
+					</div>
+				{{ form_end(form_prodtype) }}
+			{% endif %}
+{#____________________________________________________________________________#}
+			{% if form_prodtype_transporter is defined %}
+				<hr/>
 				{% if( form_prodtype_recap != null ) %}
 					{{ form( form_prodtype_recap ) }}
 				{% endif %}
-				{{ form( form_prodtype ) }}
+				{{ form( form_prodtype_transporter ) }}
 			{% endif %}
+{#____________________________________________________________________________#}
 			{% if form_delete is defined %}
 				<hr/>
-				{% form_theme form_delete 'bootstrap_3_horizontal_layout.html.twig' %}
 				{{ form(form_delete) }}
 			{% endif %}
+{#____________________________________________________________________________#}
 			{% if form_upgrade is defined %}
 				<hr/>
-				{% form_theme form_delete 'bootstrap_3_horizontal_layout.html.twig' %}
 				{{ form(form_upgrade) }}
 			{% endif %}
 		{% endblock %}
