@@ -1,0 +1,13 @@
+{% if app.session is not null and app.session.started %}
+{% for label, messageAr in app.session.flashbag.all %}
+	{% set a = { 
+		error: 'danger', 
+		notice: 'info', 
+	} %}
+	<div class="alert alert-{{ a[ label ] is defined ? a[ label ] : label }}" role="alert">
+		{% for message in messageAr %}
+			{{ message }}
+		{% endfor %}
+	</div>
+{% endfor %}
+{% endif %}

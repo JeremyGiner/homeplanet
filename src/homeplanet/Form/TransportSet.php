@@ -120,7 +120,7 @@ class TransportSet {
 	
 	/**
 	 * @Assert\IsTrue(
-	 *     message="not enought money",
+	 *     message="No path found",
 	 *     groups={"step2"}
 	 * )
 	 */

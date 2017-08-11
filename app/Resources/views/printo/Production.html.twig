@@ -31,14 +31,16 @@
 <div class="col-12 col-md-6">
 {% if o.ratio < o.grade %}
 {% if( o.getType().getRessource().getId() == 1 ) %}
-		<p class="bg-danger">
+		<p class="alert alert-warning">
+			<span class="fa fa-exclamation float-left mr-3" style="font-size: 3em;"></span>
 			Working at 
 			{{ ((o.ratio/o.grade)*100)|round }}%
 			efficiency.<br>
 			Require ressources or buyer.
 		</p>
 {% else %}
-		<p class="bg-danger">
+		<p class="alert alert-warning">
+			<span class="fa fa-exclamation float-left mr-3" style="font-size: 3em;"></span>
 			Working at 
 			{{ ((o.ratio/o.grade)*100)|round }}%
 			efficiency.<br>

@@ -35,7 +35,7 @@ class TransportSetForm extends MultistepType {
 				$step = $form->getConfig()->getOption('step');
 				if( $step == 0 )
 					return new GroupSequence( ['Default','step1'] );
-				return ['Default','step3'];
+				return ['Default','step1','step2'];
 			}
 		]);
 	}

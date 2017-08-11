@@ -11,6 +11,7 @@ use homeplanet\Entity\Pawn;
 class PawnLocation {
 	
 	/**
+	 * @ORM\Id
 	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\Pawn")
 	 * @ORM\JoinColumn(name="pawn_id", referencedColumnName="id")
 	 * @var Pawn

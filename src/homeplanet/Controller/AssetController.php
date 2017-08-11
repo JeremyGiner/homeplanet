@@ -61,8 +61,6 @@ class AssetController extends BaseController {
 	 */
 	public function mainAction( Request $oRequest ) {
 		
-		
-		
 		$this->_handleRequest( $oRequest );
 		
 		$oPawnManager = $this->getDoctrine()->getManager();
@@ -147,7 +145,7 @@ class AssetController extends BaseController {
 		
 		$aLocation = [];
 		$aCoordonate = [];
-		foreach ( $aPawnByLocation as $sLocation => $oPawn ) {
+		foreach ( $aPawnByLocation as $sLocation => $aPawn ) {
 			$oLocation = Location::getFromString($sLocation);
 			$aLocation[ $sLocation ] = $oLocation;
 			$aCoordonate[] = [$oLocation->getX(),$oLocation->getY()];
@@ -248,12 +246,16 @@ class AssetController extends BaseController {
 						$oFormProd->getData()['production_type']
 				);
 				$oPawn->addProduction( $oProd );
+				$this->_oGame->updateProductionRatio($oProd);
+				
 				$oGame->getEntityManager()->flush();
 				
 				$oGame->getProductionRepo()->updateProduction();
 				
+				$this->addFlash('success', 'Production successfully changed.');
+				
 				//var_dump($oForm->getData()['production_type']);
-				return $this->redirect( $this->generateUrl('asset') );
+				return $this->redirect( $oRequest->getUri() );
 			}
 		
 		} else {
@@ -330,8 +332,10 @@ class AssetController extends BaseController {
 							$oData->getProductionType()
 					);
 					$oPawn->addProduction( $oProd );
-					$this->_oGame->getEntityManager()->flush();
 					
+					//$this->_oGame->updateProductionRatio($oProd);
+					
+					$this->_oGame->getEntityManager()->flush();
 					$this->_oGame->getProductionRepo()->updateProduction();
 					
 			
