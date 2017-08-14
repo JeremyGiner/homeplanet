@@ -1,15 +1,10 @@
 <?php
 namespace homeplanet\validator;
 
-
 use homeplanet\Entity\Conversation;
+use homeplanet\Entity\Character;
 
-class PointCost implements IConversationValidator {
-	
-	/**
-	 * @var Character
-	 */
-	private $_oCharacter;
+class PointCost /*implements IConversationValidator*/ {
 	
 	/**
 	 * @var interger
@@ -23,8 +18,7 @@ class PointCost implements IConversationValidator {
 	
 //_____________________________________________________________________________
 	
-	public function __construct( Character $oCharacter, $iType, $iCost ) {
-		$this->_oCharacter = $oCharacter;
+	public function __construct( $iType, $iCost ) {
 		$this->_iPointIndex = $iType;
 		$this->_iCost = $iCost;
 	}
@@ -32,9 +26,10 @@ class PointCost implements IConversationValidator {
 //_____________________________________________________________________________
 // Accessor
 	
-	public function getValueCurrent( Conversation $oConversation ) {
+	public function getValueCurrent( Conversation $oConversation, Character $oCharacter ) {
 		return $oConversation->getState()
-			[ $oConversation->getCharacterIndex( $this->_oCharacter ) ]
+			['point']
+			[ $oConversation->getCharacterIndex( $oCharacter ) ]
 			[ $this->_iPointIndex ]
 		;
 	}
@@ -50,7 +45,7 @@ class PointCost implements IConversationValidator {
 //_____________________________________________________________________________
 // Process
 	
-	public function validate( Conversation $oConversation ) {
-		return $this->getValueCurrent( $oConversation ) >= $this->_iCost;
+	public function validate( array $aContext ) {
+		return $this->getValueCurrent( $aContext[0], $aContext[1] ) >= $this->_iCost;
 	}
 }

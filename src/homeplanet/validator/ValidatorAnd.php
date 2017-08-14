@@ -13,6 +13,10 @@ class ValidatorAnd /*extends IExpressionValidator*/ {
 		$this->_a = $a;
 	}
 	
+	public function getValidatorAr() {
+		return $this->_a;
+	}
+	
 	public function validate( $o ) {
 		foreach( $validator as $this->_a )
 			if( !$validator->validate( $o ) ) return false;

@@ -35,7 +35,7 @@ class Expression {
 	/**
 	 * @ORM\Column(type="object", name="requirement")
 	 */
-	protected $_aRequirement;
+	protected $_oRequirement;
 	
 	/**
 	 * @ORM\Column(type="object", name="effect")
@@ -64,19 +64,21 @@ class Expression {
 		return $this->_sDescription;
 	}
 	
-	public function getEffect() {
+	public function getEffectAr() {
 		return $this->_aEffect;
 	}
 	
-	public function getRequirement( Character $oCharacter ) {
-		$o = new ValidatorAnd([
-			new PointCost($oCharacter, 0, 1),
-			new PointCost($oCharacter, 1, 1),
-		]);
-		return $o;
+	public function getRequirement() {
+		return $this->_oRequirement;
 	}
 	
 //_____________________________________________________________________________
 //	Modifier
 
+	public function setRequirement( $o ) {
+		$this->_oRequirement = $o;
+	}
+	public function setEffect( array $a ) {
+		$this->_aEffect = $a;
+	}
 }

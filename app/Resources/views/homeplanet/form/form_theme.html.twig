@@ -145,13 +145,14 @@
 	homeplanet\Form\RadioBtnGroupType rendering #}
 
 {% block radiobtngroup_widget %}
+{% spaceless %}
 	<div class="btn-group btn-group-justified" data-toggle="buttons" >
-{% for child in form %}
-		<label class="btn btn-secondary clickable {{ child.vars.checked ? 'active'}}">
+{% for child in form %}<label class="btn btn-secondary clickable {{ child.vars.checked ? 'active'}}">
 			{{ form_widget(child) }}
 			{{ translation_domain is same as(false) ? child.vars.label : child.vars.label|trans({}, translation_domain) }}
-		</label>
-{% endfor %}
+		</label
+		>{% endfor %}
 	</div>
+{% endspaceless %}
 {% endblock %}
 

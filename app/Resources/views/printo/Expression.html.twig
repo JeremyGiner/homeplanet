@@ -1,6 +1,14 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
-<div class="well">
-    <strong>{{ o.label }}</strong>
-    <p>{{ o.description }}</p>
+<div class="card card-expression small">
+<div class="card-block">
+	<strong>{{ o.label|capitalize }}</strong>
+	<div class="float-right">
+		{{ printo( o.requirement(), { 
+			character: param.character|default(null),
+			conversation: param.conversation|default(null),
+		} ) }}
+	</div>
+	<p>{{ o.description }}</p>
+</div>
 </div>
 

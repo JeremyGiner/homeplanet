@@ -882,6 +882,7 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 INSERT INTO `conversation` (`id`, `character0_id`, `character1_id`, `state`) VALUES
 	(1, 1, 4, NULL);
+	(1, 1, 4, 'a:3:{s:10:"initiative";i:0;s:5:"point";a:2:{i:0;a:4:{i:0;i:4;i:1;i:0;i:2;i:0;i:3;i:0;}i:1;a:4:{i:0;i:0;i:1;i:0;i:2;i:0;i:3;i:0;}}s:3:"log";a:4:{i:0;a:2:{i:0;i:2;i:1;i:2;}i:1;a:2:{i:0;i:2;i:1;i:2;}i:2;a:2:{i:0;i:2;i:1;i:2;}i:3;a:2:{i:0;i:2;i:1;i:2;}}}');
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.demand: ~0 rows (approximately)
@@ -894,6 +895,10 @@ INSERT INTO `expression` (`id`, `label`, `description`, `effect`) VALUES
 	(1, 'joke', '+charm ', NULL),
 	(2, 'statement', '+persuade', NULL),
 	(3, 'threat', '+coerce', NULL);
+INSERT INTO `expression` (`id`, `label`, `description`, `effect`, `requirement`) VALUES
+	(1, 'joke', '+charm ', NULL, 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:2:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:0;}i:1;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}'),
+	(2, 'statement', '+persuade', 'a:1:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}}', NULL),
+	(3, 'threat', '+coerce', NULL, NULL);
 /*!40000 ALTER TABLE `expression` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.gamestate: 1 rows

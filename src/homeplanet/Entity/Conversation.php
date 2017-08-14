@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use homeplanet\Entity\attribute\Location;
 use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
+use homeplanet\Entity\part\ConversationContext;
 
 /**
  * @ORM\Table(name="conversation")
@@ -97,9 +98,10 @@ class Conversation {
 	}
 	
 	public function processExpression( Expression $oExp0, Expression $oExp1 ) {
-		
-		$this->_aState = $oExp0->getEffect()->apply( $this->_aState );
-		$this->_aState = $oExp1->getEffect()->apply( $this->_aState );
+				
+		foreach( $oExp0->getEffectAr() as $oModifier )
+			$oModifier->modify( new ConversationContext($this, $this->getCharacter0() ) );
+		//$this->_aState = $oExp1->getEffect()->modify( $this );
 		
 		$this->_aState['log'][] = array( $oExp0->getId(), $oExp1->getId() );
 	}
@@ -109,7 +111,7 @@ class Conversation {
 	static public function getStateInitial() {
 		return [
 			'initiative' => 0,
-			'points' => [
+			'point' => [
 				0 => [ 0, 0, 0, 0 ],
 				1 => [ 0, 0, 0, 0 ],
 			],

@@ -1,161 +1,144 @@
 {% extends 'homeplanet/page/game.html.twig' %}
 
+{% set aPointLabel = [ 
+	'persuade', 
+	'coerce', 
+	'convince', 
+	'charm', 
+] %}
+
 {% block page_content %}
 
 <div class="panel panel-default">
 <div class="card-header">
-    Conversation
+	Conversation
 </div>
 <div class="card-block">
-    <div class="row">
-    <div class="col-6 col-md-2 pull-left">
-        {{ conversation.character0.label }} (initiative)
-        <img src="" />
-        <table class="table">
-        <thead>
-            <tr><th colspan="99" class="text-center">Points</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th class="">Persuade</th>
-                <td>1</td>
-            </tr>
-            <tr>
-                <th class="">Coerce</th>
-                <td>2</td>
-            </tr>
-            <tr>
-                <th class="">Convince</thd>
-                <td>2</td>
-            </tr>
-            <tr>
-                <th class="">Charm</th>
-                <td>1</td>
-            </tr>
-        </tbody>
-        </table>
-    </div>
-    <div class="col-6 col-md-2 pull-right text-right">
-        {{ conversation.character1.label }}
-        <img src="" />
-        <table class="table">
-        <thead>
-            <tr><th colspan="99" class="text-center">Points</th></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <th class="text-right">Persuasion</th>
-            </tr>
-            <tr>
-                <td>2</td>
-                <th class="text-right">Coertion</th>
-            </tr>
-            <tr>
-                <td>2</td>
-                <th class="text-right">Convince</thd>
-            </tr>
-            <tr>
-                <td>1</td>
-                <th class="text-right">Charm</th>
-            </tr>
-        </tbody>
-        </table>
-    </div>
-    <div class="col-12 col-md-8 pull-left">
-        <table class="table">
-        <thead>
-            <tr><td colspan="99" class="text-center">Subject</td></tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="">
-                    <span class="label label-default">Move1</span>
-                </td>
-                <td class="text-center">
-                    &larr;
-                </td>
-                <td class="text-right">
-                    <span class="label label-default">Move2</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="">
-                    <span class="label label-default">Move3</span>
-                </td>
-                <td class="text-center">
-                    &rarr;
-                </td>
-                <td class="text-right">
-                    <span class="label label-danger">Pass</span>
-                </td>
-            </tr>
-            <tr class="active TODO-animation">
-                <td class="">
-                </td>
-                <td class="text-center">
-                    &rarr;
-                </td>
-                <td class="text-center">
-                </td>
-            </tr>
-            <tr class="active TODO-animation">
-                <td colspan="99" class="">
-                    <form>
-                    <div class="row">
-                    <div class="col-12 text-center">
-                        <div class="btn-group btn-group-justified" data-toggle="buttons">
-                    {% for expression in conversation.character0.expressionAr  %}
-                            <label class="btn btn-secondary clickable">
-                                <input class="radio-button-input" type="radio" name="move" />
-                                {{ expression.label }}
-                            </label>
-                    {% endfor %}
-                        </div>
-                    </div>
-                    <hr />
-                    {% for expression in conversation.character0.expressionAr  %}
-                    <div class="col-3">
-                        {{ printo( expression ) }}
-                    </div>
-                    {% endfor %}
-                    <div class="col-3">
-                        <div class="well small">
-                            Move1 
-                            <div class="pull-right">
-                                1&nbsp;Persuade<br>
-                                2&nbsp;Convince
-                            </div>
-                            <div class="clearfix">
-                                -1 persuade to your opponent
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <div class="label label-default">Move2</div>
-                    </div>
-                    <div class="col-2">
-                        <div class="label label-default">Move3</div>
-                    </div>
-                    </div>
-                    <button class="btn btn-primary pull-right">
-                        End turn
-                    </button>
-                    </form>
-                    {{ form(form) }}
-                </td>
-            </tr>
-        </tbody>
-        </table>
-    </div>
+	<div class="row">
+	<div class="col-6 col-lg-2">
+		{{ conversation.character0.label }} (initiative)
+		<img src="" />
+		<table class="table">
+		<thead>
+			<tr><th colspan="99" class="text-center">Points</th></tr>
+		</thead>
+		<tbody>
+{% for i in 0..3 %}
+{% set value = conversation.state.point[0][i] %}
+			<tr>
+				<td class="">
+					<strong>{{ aPointLabel[ i ]|capitalize }}</strong>
+					<div class="text-muted d-inline-block float-right">
+						{% spaceless %}
+						{% for j in 0..5 %}
+						{% if( j < value ) %}
+							<span class="fa fa-circle color-aspect-{{i}}"></span>
+						{% else %}
+							<span class="fa fa-circle-thin color-aspect-{{i}}"></span>
+						{% endif %}
+						{% endfor %}
+						{% endspaceless %}
+					</div>
+				</td>
+			</tr>
+{% endfor %}
+		</tbody>
+		</table>
+	</div>
+	<div class="col-6 col-lg-2 push-lg-8 text-right">
+		{{ conversation.character1.label }}
+		<img src="" />
+		<table class="table">
+		<thead>
+			<tr><th colspan="99" class="text-center">Points</th></tr>
+		</thead>
+		<tbody>
+{% for i in 0..3 %}
+{% set value = conversation.state.point[1][i] %}
+			<tr>
+				<td class="text-right">
+					<strong>{{ aPointLabel[ i ]|capitalize }}</strong>
+					<div class="text-muted d-inline-block float-left">
+						{% spaceless %}
+						{% for j in 0..5 %}
+						{% if( j < value ) %}
+							<span class="fa fa-circle color-aspect-{{i}}"></span>
+						{% else %}
+							<span class="fa fa-circle-thin color-aspect-{{i}}"></span>
+						{% endif %}
+						{% endfor %}
+						{% endspaceless %}
+					</div>
+				</td>
+			</tr>
+{% endfor %}
+		</tbody>
+		</table>
+	</div>
+	<div class="col-12 col-lg-8 pull-lg-2">
+		<table class="table">
+		<thead>
+			<tr><td colspan="99" class="text-center">Subject</td></tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="">
+					<span class="label label-default">Move1</span>
+				</td>
+				<td class="text-center">
+					&larr;
+				</td>
+				<td class="text-right">
+					<span class="label label-default">Move2</span>
+				</td>
+			</tr>
+			<tr>
+				<td class="">
+					<span class="label label-default">Move3</span>
+				</td>
+				<td class="text-center">
+					&rarr;
+				</td>
+				<td class="text-right">
+					<span class="label label-danger">Pass</span>
+				</td>
+			</tr>
+			<tr class="active TODO-animation">
+				<td class="">
+				</td>
+				<td class="text-center">
+					&rarr;
+				</td>
+				<td class="text-center">
+				</td>
+			</tr>
+			<tr class="active TODO-animation">
+				<td colspan="99" class="">
+					<div class="row">
+					{% for expression in conversation.character0.expressionAr  %}
+					<div class="col-3">
+						{{ printo( expression, { 
+							conversation: conversation, 
+							character: conversation.character0, 
+						} ) }}
+					</div>
+					{% endfor %}
+					<div class="col-12">
+						{{ form(form) }}
+					</div>
+				</td>
+			</tr>
+		</tbody>
+		</table>
+	</div>
 
-    <div class="col-12">
-        <hr />
-        <button class="btn btn-danger pull-right">
-            Quit
-        </button>
-    </div>
-    </div>
+	<div class="col-12">
+		<hr />
+		<button class="btn btn-danger float-right">
+			Quit
+		</button>
+	</div>
+	</div>
 </div>
 </div>
 

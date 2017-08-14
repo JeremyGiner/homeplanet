@@ -152,6 +152,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `label` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `effect` text,
+  `requirement` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 

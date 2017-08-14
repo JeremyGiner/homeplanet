@@ -79,11 +79,78 @@ a.list-group-item {
 	color: $body-color;
 }
 
+// @source stackoverflow.com/questions/34450586/justify-buttons-with-bootstrap-v4
+.btn-group-justified {
+	display: flex;
+	width: 100%;
+	.btn,
+	.btn-group {
+		flex: 1;
+		.btn {
+			width: 100%;
+		}
+		.dropdown-menu {
+			left: auto;
+		}
+	}
+}
+
 /*_____________________________________________________________________________
  * Theme */
+
+$conver-aspect-0: green;
+$conver-aspect-1: purple;
+$conver-aspect-2: blue;
+$conver-aspect-3: orange;
+
+//_____________________________________
+//	General
+
+body {
+	font-size: 15px;
+}
 
 a:hover, a:focus {
 	text-decoration: none;
 }
 
+//_____________________________________
+//	Conversation
 
+.color-aspect-0 {
+	color: $conver-aspect-0;
+}
+.color-aspect-1 {
+	color: $conver-aspect-1;
+}
+.color-aspect-2 {
+	color: $conver-aspect-2;
+}
+.color-aspect-3 {
+	color: $conver-aspect-3;
+}
+
+.badge-aspect-0 {
+	border: 2px solid $conver-aspect-0;
+	background-color: $conver-aspect-0;
+}
+.badge-aspect-1 {
+	border: 2px solid $conver-aspect-1;
+	background-color: $conver-aspect-1;
+}
+.badge-aspect-2 {
+	border: 2px solid $conver-aspect-2;
+	background-color: $conver-aspect-2;
+}
+.badge-aspect-3 {
+	border: 2px solid $conver-aspect-3;
+	background-color: $conver-aspect-3;
+}
+
+.badge-aspect-0.disabled,
+.badge-aspect-1.disabled,
+.badge-aspect-2.disabled,
+.badge-aspect-3.disabled {
+	color: inherit;
+	background-color: white;
+}

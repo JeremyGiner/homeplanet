@@ -1,9 +1,9 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
-<span class="badge badge-pill badge-point-{{ o.type }}" 
-	style="{{ 
+<span class="badge badge-aspect-{{o.type}} badge-pill {{ 
 	param.conversation is defined 
-	and !o.validate( param.conversation ) 
-	? 'border: 1px solid red' }}"
+	and param.character is defined
+	and not o.validate( [ param.conversation, param.character ] ) 
+	? 'disabled' }}"
 	>
 {{ o.value }}
 </span>

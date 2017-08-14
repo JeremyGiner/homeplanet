@@ -34,6 +34,10 @@ use homeplanet\tool\TileValidatorResolver;
 use homeplanet\Entity\Conversation;
 use homeplanet\Form\ConversationExpressionChoiceForm;
 use homeplanet\Form\ConversationExpressionChoice;
+use homeplanet\validator\ValidatorAnd;
+use homeplanet\validator\PointCost;
+use homeplanet\Entity\Expression;
+use homeplanet\modifier\conversation\AddPoint;
 
 /**
  *
@@ -141,7 +145,7 @@ class PlanetController extends BaseController {
 		}
 		return $this->redirect( $this->generateUrl('play') );
 	}
-	
+
 	/**
 	 * @Route("/test_conversation", name="test_conversation")
 	 */
@@ -149,8 +153,26 @@ class PlanetController extends BaseController {
 		
 		$this->_handleRequest($oRequest);
 		
+		/*
+		$oExpression = $this->getGame()->getEntityManager()->find(Expression::class, 2);
+		$oExpression->setRequirement( new ValidatorAnd([
+			new PointCost( 0, 1),
+			new PointCost( 1, 1),
+		]) );
+		$oExpression->setEffect( [ new AddPoint(0, 1) ] );
+		
+		$this->getGame()->getEntityManager()->flush();
+		*/
+		
+		
 		/* @var $oConversation Conversation */
 		$oConversation = $this->getGame()->getEntityManager()->find(Conversation::class, 1);
+		/*
+		$oConversation->setState( Conversation::getStateInitial() );
+		
+		$this->getGame()->getEntityManager()->flush();
+		*/
+		
 		
 		// Create form
 		$oExpressionChoice = new ConversationExpressionChoice( 
@@ -164,20 +186,21 @@ class PlanetController extends BaseController {
 		
 		$oFormExpression->handleRequest( $oRequest );
 		if( $oFormExpression->isSubmitted() && $oFormExpression->isValid() ) {
-			
+			/*
+			// Get opponent expression
 			$a = (new ConversationExpressionChoice( 
 				$oConversation->getCharacter1(),
 				null
 			))->getExpressionAr();
-			$oExpressionOopponent = 
-			
+			$oExpressionOopponent = null;
+			*/
 			$oConversation->processExpression(
 				$oExpressionChoice->getExpression(), 
-				$oExpressionChoice->getExpression()
+				$oExpressionChoice->getExpression()	//TODO: put opponent expression
 			);
+			$this->getGame()->getEntityManager()->flush();
 			
-			
-			$this->redirect( $this->generateUrl('test_conversation') );
+			return $this->redirect( $this->generateUrl('test_conversation') );
 		}
 		
 		return $this->render( 
