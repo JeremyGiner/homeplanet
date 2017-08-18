@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
 {% for i in 0..3 %}
-{% set value = conversation.state.point[0][i] %}
+{% set value = conversation.state.point(0,i) %}
 			<tr>
 				<td class="">
 					<strong>{{ aPointLabel[ i ]|capitalize }}</strong>
@@ -54,7 +54,7 @@
 		</thead>
 		<tbody>
 {% for i in 0..3 %}
-{% set value = conversation.state.point[1][i] %}
+{% set value = conversation.state.point( 1, i ) %}
 			<tr>
 				<td class="text-right">
 					<strong>{{ aPointLabel[ i ]|capitalize }}</strong>
@@ -81,28 +81,19 @@
 			<tr><td colspan="99" class="text-center">Subject</td></tr>
 		</thead>
 		<tbody>
+{% for entry in conversation.state.log %}
 			<tr>
 				<td class="">
-					<span class="label label-default">Move1</span>
+					<span class="label label-default">{{ expressionAr[ entry[0] ].label|capitalize }}</span>
 				</td>
 				<td class="text-center">
 					&larr;
 				</td>
 				<td class="text-right">
-					<span class="label label-default">Move2</span>
+					<span class="label label-default">{{ expressionAr[ entry[1] ].label|capitalize }}</span>
 				</td>
 			</tr>
-			<tr>
-				<td class="">
-					<span class="label label-default">Move3</span>
-				</td>
-				<td class="text-center">
-					&rarr;
-				</td>
-				<td class="text-right">
-					<span class="label label-danger">Pass</span>
-				</td>
-			</tr>
+{% endfor %}
 			<tr class="active TODO-animation">
 				<td class="">
 				</td>
@@ -115,16 +106,34 @@
 			<tr class="active TODO-animation">
 				<td colspan="99" class="">
 					<div class="row">
-					{% for expression in conversation.character0.expressionAr  %}
+					{% for expression in expressionAr  %}
 					<div class="col-3">
 						{{ printo( expression, { 
-							conversation: conversation, 
-							character: conversation.character0, 
+							context: conversation.context0, 
 						} ) }}
 					</div>
 					{% endfor %}
 					<div class="col-12">
-						{{ form(form) }}
+						{# {{ form(form) }} #}
+						{{ form_start(form) }}
+							{{ form_errors(form) }}
+							
+{% do form.expression.setRendered %}
+{% spaceless %}
+	<div class="btn-group btn-group-justified" data-toggle="buttons" >
+{% for child in form.expression %}
+		{% dump(child.vars) %}
+		<label class="btn btn-secondary clickable {{ child.vars.checked ? 'active'}} {{ child.vars.disabled ? 'disabled'}}">
+			{{ form_widget(child) }}
+			{# {{ form.expression.vars.translation_domain is same as(false) ? child.vars.label : child.vars.label|trans({}, form.expression.vars.translation_domain) }} #}
+			{{ printo( child.vars.label_printo, { context: conversation.context0 } ) }}
+		</label
+		>{% endfor %}
+	</div>
+{% endspaceless %}
+
+						{{ form_end(form) }}
+					</div>
 					</div>
 				</td>
 			</tr>

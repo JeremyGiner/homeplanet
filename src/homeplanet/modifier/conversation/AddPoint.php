@@ -39,12 +39,12 @@ class AddPoint {
 // Process
 
 	public function modify( ConversationContext $oContext ) {
-		$aState = $oContext->conversation->getState();
+		$oState = $oContext->conversation->getState();
 		
 		$iCharIndex = $oContext->conversation->getCharacterIndex( $oContext->character );
 		
-		$aState['point'][ $iCharIndex ][ $this->_iPointIndex ] += $this->_iValue;
+		$oState->addPoint($iCharIndex, $this->_iPointIndex, $this->_iValue );
 		
-		$oContext->conversation->setState( $aState );
+		$oContext->conversation->setState( $oState );
 	}
 }

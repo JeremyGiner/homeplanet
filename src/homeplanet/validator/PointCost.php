@@ -3,6 +3,7 @@ namespace homeplanet\validator;
 
 use homeplanet\Entity\Conversation;
 use homeplanet\Entity\Character;
+use homeplanet\Entity\part\ConversationContext;
 
 class PointCost /*implements IConversationValidator*/ {
 	
@@ -27,11 +28,10 @@ class PointCost /*implements IConversationValidator*/ {
 // Accessor
 	
 	public function getValueCurrent( Conversation $oConversation, Character $oCharacter ) {
-		return $oConversation->getState()
-			['point']
-			[ $oConversation->getCharacterIndex( $oCharacter ) ]
-			[ $this->_iPointIndex ]
-		;
+		return $oConversation->getState()->getPoint( 
+			$oConversation->getCharacterIndex( $oCharacter ),
+			$this->_iPointIndex
+		);
 	}
 	
 	public function getType() {
@@ -45,7 +45,7 @@ class PointCost /*implements IConversationValidator*/ {
 //_____________________________________________________________________________
 // Process
 	
-	public function validate( array $aContext ) {
-		return $this->getValueCurrent( $aContext[0], $aContext[1] ) >= $this->_iCost;
+	public function validate( ConversationContext $oContext ) {
+		return $this->getValueCurrent( $oContext->conversation, $oContext->character ) >= $this->_iCost;
 	}
 }

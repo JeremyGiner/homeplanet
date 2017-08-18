@@ -7,6 +7,7 @@ use homeplanet\Entity\attribute\Location;
 use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 use homeplanet\Entity\part\ConversationContext;
+use homeplanet\Entity\part\ConversationState;
 
 /**
  * @ORM\Table(name="conversation")
@@ -43,12 +44,11 @@ class Conversation {
 	
 	/**
 	 * State of the conversation
-	 * Member :
-	 * - initiative : int character id
-	 * - points : int[][] indexed by character id then by persuade(0), coerce(1), ...
-	 * - log : 
+	 * there is supposed to be only one object at index 0 (the array is there to fix a Doctrine bug )
+	 * see stackoverflow.com/questions/30193351/how-to-update-doctrine-object-type-field
 	 * 
-	 * @ORM\Column(type="array", name="state")
+	 * @ORM\Column(type="object", name="state")
+	 * @var ConversationState[] 
 	 */
 	protected $_aState;
 	
@@ -72,15 +72,20 @@ class Conversation {
 	public function getCharacter1() {
 		return $this->_oCharacter1;
 	}
+	
+	public function getContext0() {
+		return new ConversationContext($this, $this->getCharacter0() );
+	}
+	public function getContext1() {
+		return new ConversationContext($this, $this->getCharacter1() );
+	}
+	
 	/**
 	 * State of the conversation
-	 * @return array
-	 * ['initiative'] int character id
-	 * [points] int[][] indexed by character index then by persuade(0), coerce(1), ...
-	 * [log] 
+	 * @return ConversationState
 	 */
 	public function getState() {
-		return $this->_aState;
+		return $this->_aState[0];
 	}
 	
 	public function getCharacterIndex( Character $oCharacter ) {
@@ -92,8 +97,8 @@ class Conversation {
 //_____________________________________________________________________________
 //	Modifier
 	
-	public function setState( array $aState ) {
-		$this->_aState = $aState;
+	public function setState( ConversationState $oState ) {
+		$this->_aState = [ $oState ];
 		return $this;
 	}
 	
@@ -103,19 +108,7 @@ class Conversation {
 			$oModifier->modify( new ConversationContext($this, $this->getCharacter0() ) );
 		//$this->_aState = $oExp1->getEffect()->modify( $this );
 		
-		$this->_aState['log'][] = array( $oExp0->getId(), $oExp1->getId() );
-	}
-	
-//_____________________________________________________________________________
-
-	static public function getStateInitial() {
-		return [
-			'initiative' => 0,
-			'point' => [
-				0 => [ 0, 0, 0, 0 ],
-				1 => [ 0, 0, 0, 0 ],
-			],
-			'log' => [],
-		];
+		$this->_aState[0]->addLog($oExp0, $oExp1);
+		$this->setState($this->_aState[0]);
 	}
 }

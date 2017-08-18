@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use homeplanet\Entity\attribute\Location;
 use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\Table(name="`character`")
@@ -62,7 +63,7 @@ class Character {
 	 *     joinColumns={@ORM\JoinColumn(name="character_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="knowledge_id", referencedColumnName="id")}
 	 * )
-	 * @var array
+	 * @var Collection
 	 */
 	protected $_aKnowledge;
 	
@@ -73,7 +74,7 @@ class Character {
 	 *     joinColumns={@ORM\JoinColumn(name="character_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="expression_id", referencedColumnName="id")}
 	 * )
-	 * @var array
+	 * @var Collection
 	 */
 	protected $_aExpression;
 	
@@ -117,11 +118,11 @@ class Character {
 	}
 	
 	public function getExpressionAr() {
-		return $this->_aExpression;
+		return $this->_aExpression->toArray();
 	}
 	
 	public function getKnowledgeAr() {
-		return $this->_aKnowledge;
+		return $this->_aKnowledge->toArray();
 	}
 	
 	

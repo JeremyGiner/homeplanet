@@ -39,6 +39,7 @@ class Expression {
 	
 	/**
 	 * @ORM\Column(type="object", name="effect")
+	 * 
 	 */
 	protected $_aEffect;
 	

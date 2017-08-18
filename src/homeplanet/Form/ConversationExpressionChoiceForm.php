@@ -7,10 +7,13 @@ use homeplanet\Entity\Expression;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 class ConversationExpressionChoiceForm extends AbstractType {
 	
 	function configureOptions( OptionsResolver $oResolver ) {
+		$oResolver->setRequired('conversation_context');
 		$oResolver->setDefaults([
 			'data_class' => ConversationExpressionChoice::class,
 		]);
@@ -24,11 +27,22 @@ class ConversationExpressionChoiceForm extends AbstractType {
 		$oBuilder
 			->add('expression', EntityType::class, [
 				'class' => Expression::class,
-				'choice_label' => 'label',
+				'choice_label' => function( Expression $o ) {
+					return $o->getLabel().' Hi';
+				},
 				'choices' => $oBuilder->getData()->getExpressionAr(),
 				'expanded' => true,
-				'choice_attr' => function( $val, $key, $index ) {
-					return ['data-expressionview' => $val->getId() ];
+				'choice_attr' => function( Expression $val, $key, $index ) use($aOption) {
+					
+					$oValidator = $val->getRequirement();
+					$disabled = $oValidator != null 
+						&& ! $oValidator->validate( $aOption['conversation_context'] )
+					;
+					
+					return [
+						'data-expressionview' => $val->getId(),
+						'disabled' => $disabled,	//used in finishView
+					];
 				},
 				'attr' => [
 					'class' => 'btn-group',
@@ -39,5 +53,18 @@ class ConversationExpressionChoiceForm extends AbstractType {
 				'label' => 'End turn',
 			])
 		;
+	}
+	
+	function finishView( FormView $oView, FormInterface $oForm, array $aOption ) {
+		
+		// Quick fix TODO: improve
+		foreach ( $oView->children['expression']->children as $children ) {
+			$children->vars['disabled'] = isset($children->vars['attr']['disabled']) ? $children->vars['attr']['disabled'] :  $children->vars['disabled'];
+		}
+		
+		foreach ( $oView->children['expression']->children as $key => $child ) {
+			$child->vars['label_printo'] = $oView->children['expression']->vars['choices'][$key]->data;
+		}
+		
 	}
 }

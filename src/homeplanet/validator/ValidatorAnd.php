@@ -18,7 +18,7 @@ class ValidatorAnd /*extends IExpressionValidator*/ {
 	}
 	
 	public function validate( $o ) {
-		foreach( $validator as $this->_a )
+		foreach( $this->_a as $validator )
 			if( !$validator->validate( $o ) ) return false;
 		return true;
 	}

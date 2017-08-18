@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `effect` text,
   `requirement` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate
@@ -213,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   KEY `FK_entity_player` (`player_id`),
   KEY `FK_entity_entitytype` (`type_id`),
   CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawntype
@@ -315,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `prod` (
   KEY `FK_prod_pawn` (`pawn_id`),
   CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodinput
@@ -330,7 +330,7 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
   KEY `FK_prodinput_prodinputtype` (`prodinputtype_id`),
   CONSTRAINT `FK_prodinput_prod` FOREIGN KEY (`prod_id`) REFERENCES `prod` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prodinput_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodinputtype
@@ -1418,7 +1418,7 @@ DROP TABLE IF EXISTS `player_ext`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `homeplanet`.`player`.`id` AS `player_id`,ifnull(`tcontract`.`value`,0) AS `contract`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`homeplanet`.`player` left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`homeplanet`.`pawn`.`grade`),0) AS `value` from (`homeplanet`.`pawn` join `homeplanet`.`pawntype` on((`homeplanet`.`pawntype`.`id` = `homeplanet`.`pawn`.`type_id`))) group by `homeplanet`.`pawn`.`player_id`) `tcontract` on((`tcontract`.`player_id` = `homeplanet`.`player`.`id`))) left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`homeplanet`.`demand`.`price_modifier` * `homeplanet`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`homeplanet`.`pawn` join `homeplanet`.`sold` on((`sold`.`seller_id` = `homeplanet`.`pawn`.`id`))) join `homeplanet`.`demand` on(((`homeplanet`.`demand`.`city_id` = `sold`.`buyer_id`) and (`homeplanet`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `homeplanet`.`ressource` on((`homeplanet`.`ressource`.`id` = `sold`.`ressource_id`))) group by `homeplanet`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `homeplanet`.`player`.`id`))) left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`homeplanet`.`demand`.`price_modifier` * `homeplanet`.`ressource`.`baseprice`)),0) AS `value` from (((((`homeplanet`.`pawn` join `homeplanet`.`prod` on((`homeplanet`.`prod`.`pawn_id` = `homeplanet`.`pawn`.`id`))) join `homeplanet`.`prodtype` on((`homeplanet`.`prodtype`.`id` = `homeplanet`.`prod`.`prodtype_id`))) join `homeplanet`.`city` on(((`homeplanet`.`city`.`location_x` = `homeplanet`.`prod`.`location_x`) and (`homeplanet`.`city`.`location_y` = `homeplanet`.`prod`.`location_y`)))) join `homeplanet`.`demand` on(((`homeplanet`.`demand`.`city_id` = `homeplanet`.`city`.`id`) and (`homeplanet`.`demand`.`ressource_id` = `homeplanet`.`prodtype`.`ressource_id`)))) join `homeplanet`.`ressource` on((`homeplanet`.`ressource`.`id` = `homeplanet`.`demand`.`ressource_id`))) group by `homeplanet`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `homeplanet`.`player`.`id`)));
 
 -- Dumping structure for view homeplanet.prodinput_sum
--- Removing temporary table and create final VIEW structurehomeplanet
+-- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `prodinput_sum`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prodinput_sum` AS select `pawn`.`player_id` AS `player_id`,`prodinput`.`location_x` AS `location_x`,`prodinput`.`location_y` AS `location_y`,`prodinputtype`.`ressource_id` AS `ressource_id`,sum((`prodinputtype`.`quantity` * `prod`.`grade`)) AS `quantity` from (((`prodinput` join `prod` on((`prod`.`id` = `prodinput`.`prod_id`))) join `pawn` on((`pawn`.`id` = `prod`.`pawn_id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) group by `pawn`.`player_id`,`prodinput`.`location_x`,`prodinput`.`location_y`,`prodinputtype`.`ressource_id`;
 

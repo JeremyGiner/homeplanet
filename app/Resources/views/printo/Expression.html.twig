@@ -4,8 +4,7 @@
 	<strong>{{ o.label|capitalize }}</strong>
 	<div class="float-right">
 		{{ printo( o.requirement(), { 
-			character: param.character|default(null),
-			conversation: param.conversation|default(null),
+			context: param.context|default(null),
 		} ) }}
 	</div>
 	<p>{{ o.description }}</p>

@@ -38,6 +38,9 @@ use homeplanet\validator\ValidatorAnd;
 use homeplanet\validator\PointCost;
 use homeplanet\Entity\Expression;
 use homeplanet\modifier\conversation\AddPoint;
+use homeplanet\Entity\part\ConversationState;
+use homeplanet\Entity\part\ConversationContext;
+use AppBundle\Tool\ArrayTool;
 
 /**
  *
@@ -168,7 +171,7 @@ class PlanetController extends BaseController {
 		/* @var $oConversation Conversation */
 		$oConversation = $this->getGame()->getEntityManager()->find(Conversation::class, 1);
 		/*
-		$oConversation->setState( Conversation::getStateInitial() );
+		$oConversation->setState( new ConversationState() );
 		
 		$this->getGame()->getEntityManager()->flush();
 		*/
@@ -181,7 +184,13 @@ class PlanetController extends BaseController {
 		);
 		$oFormExpression = $this->createForm( 
 			ConversationExpressionChoiceForm::class, 
-			$oExpressionChoice
+			$oExpressionChoice,
+			[ 
+				'conversation_context' => new ConversationContext(
+					$oConversation, $oConversation->getCharacter0() 
+				), 
+				
+			]
 		);
 		
 		$oFormExpression->handleRequest( $oRequest );
@@ -202,13 +211,20 @@ class PlanetController extends BaseController {
 			
 			return $this->redirect( $this->generateUrl('test_conversation') );
 		}
-		
 		return $this->render( 
 			'homeplanet/page/conversation.html.twig', 
 			[
 				'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
 				'conversation' => $oConversation,
 				'form' => $oFormExpression->createView(),
+				'expressionAr' => ArrayTool::STindexBy( 
+					\array_merge(
+						$oConversation->getCharacter0()->getExpressionAr(),
+						$oConversation->getCharacter1()->getExpressionAr()
+					), 
+					'id',
+					true
+				),
 			]
 		);
 	}
