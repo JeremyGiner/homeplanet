@@ -17,6 +17,36 @@ class ConversationState {
 	 */
 	private $_aPoint;
 	
+	/**
+	 * Current debate point (positive favor character0, negative favor character1)
+	 * @var int
+	 */
+	private $_iDebate;
+	
+	/**
+	 * Current debate intensity
+	 * @var int
+	 */
+	private $_iDebateIntensity;
+	
+	/**
+	 * Debate goal for character0
+	 * @var int
+	 */
+	private $_iDebateGoal0;
+	
+	/**
+	 * Debate goal for character1
+	 * @var int
+	 */
+	private $_iDebateGoal1;
+	
+	/**
+	 * Character index of the leading character
+	 * @var int
+	 */
+	private $_iCharacterLeading;
+	
 //______________________________________________________________________________
 // Constructor
 	
@@ -42,6 +72,27 @@ class ConversationState {
 		return $this->_aLog;
 	}
 	
+	public function getDebate() {
+		return $this->_iDebate;
+	}
+	public function getDebateIntensity() {
+		return $this->_iDebateIntensity;
+	}
+	public function getDebateGoal0() {
+		return $this->_iDebateGoal0;
+	}
+	public function getDebateGoal1() {
+		return $this->_iDebateGoal1;
+	}
+	
+	public function getWinnerIndex() {
+		if( $this->_iDebate >= $this->_iDebateGoal0 )
+			return 0;
+		if( $this->_iDebate <= -$this->_iDebateGoal1 )
+			return 1;
+		return null;
+	}
+	
 //______________________________________________________________________________
 // Modifier
 
@@ -55,6 +106,25 @@ class ConversationState {
 			$iIndex, 
 			$this->getPoint($iCharacterIndex, $iIndex) + $iValue 
 		);
+	}
+	
+	public function updateDebate() {
+		if( $this->_iCharacterLeading === null ) return;
+		
+		$this->_iDebate += $this->getDebateIntensity();
+		return $this;
+	}
+	
+	public function addDebateIntensity( $iCharacterIndex, $iValue ) {
+		$this->_iCharacterLeading = $iCharacterIndex;
+		
+		if( $this->_iCharacterLeading === null ) return;
+		
+		$this->_iDebate = abs( $this->_iDebate ) + $iValue;
+		if( $iCharacterIndex === 1 )
+			$this->_iDebate *= -1;
+		
+		return $this;
 	}
 	
 	public function addLog( Expression$oExp0, Expression $oExp1 ) {

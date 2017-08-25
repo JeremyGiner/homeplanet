@@ -108,7 +108,12 @@ class Conversation {
 			$oModifier->modify( new ConversationContext($this, $this->getCharacter0() ) );
 		//$this->_aState = $oExp1->getEffect()->modify( $this );
 		
+		// Update debate point
+		$this->getState()->updateDebate();
+		
+		// Update log
 		$this->_aState[0]->addLog($oExp0, $oExp1);
+		
 		$this->setState($this->_aState[0]);
 	}
 }
