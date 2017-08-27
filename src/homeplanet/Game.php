@@ -4,6 +4,7 @@ namespace homeplanet;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\entity\City;
+use homeplanet\Entity\Character;
 use homeplanet\Entity\Pawn;
 use homeplanet\Entity\Worldmap;
 use homeplanet\Entity\Ressource;
@@ -122,6 +123,12 @@ JOIN pawntype._aProdType prodtype
 	 */
 	public function getProductionRepo() {
 		return $this->_oEntityManager->getRepository(Production::class);
+	}
+	/**
+	 * @return CharacterRepository
+	 */
+	public function getCharacterRepo() {
+		return $this->_oEntityManager->getRepository(Character::class);
 	}
 	
 	public function getEntityManager() {

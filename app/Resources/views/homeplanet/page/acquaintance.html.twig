@@ -1,0 +1,22 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+
+{% block page_content %}
+
+<div class="card">
+<div class="card-header">
+	Aquaintance
+</div>
+<div class="card-block">
+	<div class="list-group">
+	{% for character in characterList %}
+		<a class="list-group-item" href="{{ url('character_view',{id: character.id}) }}">
+			{{ character.label }}
+		</a>
+	{% endfor %}
+	</div>
+</div>
+</div>
+
+
+{% endblock %}

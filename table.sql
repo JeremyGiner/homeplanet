@@ -197,9 +197,11 @@ CREATE TABLE IF NOT EXISTS `influencetype` (
 CREATE TABLE IF NOT EXISTS `knowledge` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
-  `type` enum('gossip','rumor') NOT NULL,
+  `type` enum('gossip','rumor','acquaintance') NOT NULL,
+  `reference` int(10) unsigned DEFAULT NULL,
+  `expire` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawn

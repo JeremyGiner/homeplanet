@@ -5,7 +5,7 @@ namespace homeplanet\modifier\conversation;
 use homeplanet\Entity\Conversation;
 use homeplanet\Entity\part\ConversationContext;
 
-class AddPoint {
+class AddDebateIntensity {
 	/**
 	 * @var interger
 	 */
@@ -19,7 +19,7 @@ class AddPoint {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( $iType, $iValue ) {
+	public function __construct( $iValue ) {
 		$this->_iPointIndex = $iType;
 		$this->_iValue = $iValue;
 	}
@@ -39,11 +39,9 @@ class AddPoint {
 // Process
 
 	public function modify( ConversationContext $oContext ) {
-		
 		$iCharIndex = $oContext->conversation->getCharacterIndex( $oContext->character );
 		
 		$oState = $oContext->conversation->getState();
 		$oState->addPoint($iCharIndex, $this->_iPointIndex, $this->_iValue );
-		
 	}
 }

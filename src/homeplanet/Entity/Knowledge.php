@@ -30,6 +30,11 @@ class Knowledge {
 	 */
 	protected $_sType;
 	
+	/**
+	 * @ORM\Column(type="integer", name="reference")
+	 */
+	protected $_iReference;
+	
 	
 //_____________________________________________________________________________
 //	Constructor

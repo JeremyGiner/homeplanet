@@ -7,7 +7,7 @@ class ConversationState {
 	
 	/**
 	 * Pair of expression played indexed by turn then by character index
-	 * @var int[][]
+	 * @var ConversationTurnLog[]
 	 */
 	private $_aLog;
 	
@@ -56,6 +56,9 @@ class ConversationState {
 			1 => [ 0, 0, 0, 0 ],
 		];
 		$this->_aLog = [];
+		$this->_iDebate = 0;
+		$this->_iCharacterLeading = null;
+		$this->_iDebateIntensity = 0;
 	}
 	
 //______________________________________________________________________________
@@ -108,6 +111,11 @@ class ConversationState {
 		);
 	}
 	
+	public function setCharacterLeading( $iCharacterId ) {
+		$this->_iCharacterLeading = $iCharacterId;
+		return $this;
+	}
+	
 	public function updateDebate() {
 		if( $this->_iCharacterLeading === null ) return;
 		
@@ -127,8 +135,16 @@ class ConversationState {
 		return $this;
 	}
 	
-	public function addLog( Expression$oExp0, Expression $oExp1 ) {
-		$this->_aLog[] = [ $oExp0->getId(), $oExp1->getId() ];
+	public function addLog(
+		Expression $iExpression0,
+		Expression $iExpression1
+	) {
+		$this->_aLog[] = new ConversationTurnLog(
+				$iExpression0->getId(), 
+				$iExpression1->getId(), 
+				$this->_iCharacterLeading,
+				$this->_iDebateIntensity
+		);
 		return $this;
 	}
 }

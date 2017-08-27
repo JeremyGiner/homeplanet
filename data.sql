@@ -257,7 +257,7 @@ INSERT INTO `characternamereference` (`id`, `fname`, `lname`) VALUES
 	(200, 'THORA', 'TEMPLE');
 /*!40000 ALTER TABLE `characternamereference` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.character_expression: ~3 rows (approximately)
+-- Dumping data for table homeplanet.character_expression: ~4 rows (approximately)
 /*!40000 ALTER TABLE `character_expression` DISABLE KEYS */;
 INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(1, 1),
@@ -266,8 +266,10 @@ INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(4, 4);
 /*!40000 ALTER TABLE `character_expression` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.character_knowledge: ~0 rows (approximately)
+-- Dumping data for table homeplanet.character_knowledge: ~1 rows (approximately)
 /*!40000 ALTER TABLE `character_knowledge` DISABLE KEYS */;
+INSERT INTO `character_knowledge` (`character_id`, `knowledge_id`) VALUES
+	(1, 2);
 /*!40000 ALTER TABLE `character_knowledge` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.city: ~0 rows (approximately)
@@ -879,17 +881,17 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 	(600, 'Ziguinchor');
 /*!40000 ALTER TABLE `citynamereference` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.conversation: ~0 rows (approximately)
+-- Dumping data for table homeplanet.conversation: ~1 rows (approximately)
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 INSERT INTO `conversation` (`id`, `character0_id`, `character1_id`, `state`) VALUES
-	(1, 1, 4, 'a:1:{i:0;O:40:"homeplanet\\Entity\\part\\ConversationState":2:{s:47:"\0homeplanet\\Entity\\part\\ConversationState\0_aLog";a:1:{i:0;a:2:{i:0;i:2;i:1;i:2;}}s:49:"\0homeplanet\\Entity\\part\\ConversationState\0_aPoint";a:2:{i:0;a:4:{i:0;i:2;i:1;i:0;i:2;i:0;i:3;i:0;}i:1;a:4:{i:0;i:0;i:1;i:0;i:2;i:0;i:3;i:0;}}}}');
+	(1, 1, 4, 'a:1:{i:11;O:40:"homeplanet\\Entity\\part\\ConversationState":7:{s:47:"\0homeplanet\\Entity\\part\\ConversationState\0_aLog";a:1:{i:0;O:42:"homeplanet\\Entity\\part\\ConversationTurnLog":4:{s:59:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iExpression0Id";i:2;s:59:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iExpression1Id";i:2;s:64:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iCharacterLeadingId";N;s:61:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iDebateIntensity";i:0;}}s:49:"\0homeplanet\\Entity\\part\\ConversationState\0_aPoint";a:2:{i:0;a:4:{i:0;i:1;i:1;i:0;i:2;i:0;i:3;i:0;}i:1;a:4:{i:0;i:1;i:1;i:0;i:2;i:0;i:3;i:0;}}s:50:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebate";i:0;s:59:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebateIntensity";i:0;s:55:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebateGoal0";N;s:55:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebateGoal1";N;s:60:"\0homeplanet\\Entity\\part\\ConversationState\0_iCharacterLeading";N;}}');
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.demand: ~0 rows (approximately)
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.expression: ~3 rows (approximately)
+-- Dumping data for table homeplanet.expression: ~4 rows (approximately)
 /*!40000 ALTER TABLE `expression` DISABLE KEYS */;
 INSERT INTO `expression` (`id`, `label`, `description`, `effect`, `requirement`) VALUES
 	(1, 'joke', '+charm ', NULL, 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:2:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:0;}i:1;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}'),
@@ -917,8 +919,10 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.knowledge: ~0 rows (approximately)
+-- Dumping data for table homeplanet.knowledge: ~1 rows (approximately)
 /*!40000 ALTER TABLE `knowledge` DISABLE KEYS */;
+INSERT INTO `knowledge` (`id`, `label`, `type`, `reference`, `expire`) VALUES
+	(2, ' ', 'acquaintance', 4, NULL);
 /*!40000 ALTER TABLE `knowledge` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.pawn: ~0 rows (approximately)

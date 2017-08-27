@@ -9,7 +9,7 @@
 
 {% block page_content %}
 
-<div class="panel panel-default">
+<div class="card">
 <div class="card-header">
 	Conversation
 </div>
@@ -78,31 +78,34 @@
 	<div class="col-12 col-lg-8 pull-lg-2">
 		<table class="table">
 		<thead>
-			<tr><td colspan="99" class="text-center">Subject</td></tr>
+			<tr><td colspan="99" class="text-center">
+				{{ conversation.state.debate }}
+			</td></tr>
 		</thead>
 		<tbody>
 {% for entry in conversation.state.log %}
 			<tr>
 				<td class="">
-					<span class="label label-default">{{ expressionAr[ entry[0] ].label|capitalize }}</span>
+					<span class="label label-default">{{ expressionAr[ entry.expression0Id ].label|capitalize }}</span>
 				</td>
 				<td class="text-center">
-					&larr;
+					{% if( entry.characterLeadingId is same as (0) ) %}
+						&larr;
+						{{ entry.debateIntensity }}
+						&larr;
+					{% elseif ( entry.characterLeadingId is same as(1) ) %}
+						&rarr;
+						{{ entry.debateIntensity }}
+						&rarr;
+					{% else %}
+						{{ entry.debateIntensity }}
+					{% endif %}
 				</td>
 				<td class="text-right">
-					<span class="label label-default">{{ expressionAr[ entry[1] ].label|capitalize }}</span>
+					<span class="label label-default">{{ expressionAr[ entry.expression1Id ].label|capitalize }}</span>
 				</td>
 			</tr>
 {% endfor %}
-			<tr class="active TODO-animation">
-				<td class="">
-				</td>
-				<td class="text-center">
-					&rarr;
-				</td>
-				<td class="text-center">
-				</td>
-			</tr>
 			<tr class="active TODO-animation">
 				<td colspan="99" class="">
 					<div class="row">

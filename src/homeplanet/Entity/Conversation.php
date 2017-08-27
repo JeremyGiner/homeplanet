@@ -85,7 +85,7 @@ class Conversation {
 	 * @return ConversationState
 	 */
 	public function getState() {
-		return $this->_aState[0];
+		return reset( $this->_aState );
 	}
 	
 	public function getCharacterIndex( Character $oCharacter ) {
@@ -98,7 +98,8 @@ class Conversation {
 //	Modifier
 	
 	public function setState( ConversationState $oState ) {
-		$this->_aState = [ $oState ];
+		$k = array_keys($this->_aState);
+		$this->_aState = [ (reset( $k )+1) => $oState ];
 		return $this;
 	}
 	
@@ -106,14 +107,15 @@ class Conversation {
 				
 		foreach( $oExp0->getEffectAr() as $oModifier )
 			$oModifier->modify( new ConversationContext($this, $this->getCharacter0() ) );
-		//$this->_aState = $oExp1->getEffect()->modify( $this );
-		
+		foreach( $oExp1->getEffectAr() as $oModifier )
+			$oModifier->modify( new ConversationContext($this, $this->getCharacter1() ) );
+
 		// Update debate point
 		$this->getState()->updateDebate();
 		
 		// Update log
-		$this->_aState[0]->addLog($oExp0, $oExp1);
+		$this->getState()->addLog($oExp0, $oExp1);
 		
-		$this->setState($this->_aState[0]);
+		$this->setState($this->getState());
 	}
 }
