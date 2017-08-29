@@ -3,9 +3,13 @@
 <div class="card-block">
 	<strong>{{ o.label|capitalize }}</strong>
 	<div class="float-right">
+	{% if o.requirement() == null %}
+		<span class="text-muted lead">&empty;</span>
+	{% else %}
 		{{ printo( o.requirement(), { 
 			context: param.context|default(null),
 		} ) }}
+	{% endif %}
 	</div>
 	<p>{{ o.description }}</p>
 </div>

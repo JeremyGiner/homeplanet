@@ -93,6 +93,11 @@ class Conversation {
 		if( $oCharacter == $this->getCharacter1() ) return 1;
 		throw new Exception('Character is not in this conversation');
 	}
+	public function getOpponentIndex( Character $oCharacter ) {
+		if( $oCharacter == $this->getCharacter0() ) return 1;
+		if( $oCharacter == $this->getCharacter1() ) return 0;
+		throw new Exception('Character is not in this conversation');
+	}
 	
 //_____________________________________________________________________________
 //	Modifier

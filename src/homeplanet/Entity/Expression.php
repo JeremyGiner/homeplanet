@@ -11,7 +11,7 @@ use homeplanet\validator\PointCost;
 
 /**
  * @ORM\Table(name="expression")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="homeplanet\Repository\ExpressionRepository")
  */
 class Expression {
 	

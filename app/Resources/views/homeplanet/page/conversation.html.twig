@@ -3,7 +3,7 @@
 {% set aPointLabel = [ 
 	'persuade', 
 	'coerce', 
-	'convince', 
+	'passion', 
 	'charm', 
 ] %}
 
@@ -117,7 +117,6 @@
 					</div>
 					{% endfor %}
 					<div class="col-12">
-						{# {{ form(form) }} #}
 						{{ form_start(form) }}
 							{{ form_errors(form) }}
 							
@@ -125,7 +124,6 @@
 {% spaceless %}
 	<div class="btn-group btn-group-justified" data-toggle="buttons" >
 {% for child in form.expression %}
-		{% dump(child.vars) %}
 		<label class="btn btn-secondary clickable {{ child.vars.checked ? 'active'}} {{ child.vars.disabled ? 'disabled'}}">
 			{{ form_widget(child) }}
 			{# {{ form.expression.vars.translation_domain is same as(false) ? child.vars.label : child.vars.label|trans({}, form.expression.vars.translation_domain) }} #}

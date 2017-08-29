@@ -1,0 +1,34 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+
+{% block page_content %}
+<div class="container">
+<div class="row">
+<div class="col-12 col-sm-10 offset-sm-1">
+
+<div class="card">
+	<div class="card-header">
+		Expressions
+	</div>
+	<div class="list-group list-group-flush">
+	{% dump(expressionOwnershipAr) %}
+	{% for expression in expressionList %}
+		{% if expressionOwnershipAr[ expression.id ] is defined %}
+		<div class="list-group-item">
+			{{ expression.label|capitalize }}
+			{{ printo(expression) }}
+		</div>
+		{% else %}
+		<div class="list-group-item list-group-item-warning">
+			<span class="fa fa-lock mr-2"></span>
+			{{ expression.label|capitalize }}
+		</div>
+		{% endif %}
+	{% endfor %}
+	</div>
+</div>
+
+</div>
+</div>
+</div>
+{% endblock %}

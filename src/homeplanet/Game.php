@@ -21,6 +21,7 @@ use homeplanet\Entity\attribute\ProductionInputType;
 use homeplanet\Repository\PawnRepository;
 use homeplanet\Repository\ProductionRepository;
 use homeplanet\Entity\GameState;
+use homeplanet\Entity\Expression;
 
 class Game {
 	/**
@@ -129,6 +130,12 @@ JOIN pawntype._aProdType prodtype
 	 */
 	public function getCharacterRepo() {
 		return $this->_oEntityManager->getRepository(Character::class);
+	}
+	/**
+	 * @return ExpressionRepository
+	 */
+	public function getExpressionRepo() {
+		return $this->_oEntityManager->getRepository(Expression::class);
 	}
 	
 	public function getEntityManager() {

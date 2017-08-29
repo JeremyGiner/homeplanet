@@ -85,5 +85,34 @@ class CharacterController extends BaseController {
 			'characterList' => $aCharacter,
 		]);
 	}
+	
+	/**
+	 * 
+	 * @Route("/expression", name="character_expression")
+	 */
+	public function expressionAction( Request $oRequest ) {
+		
+		/*
+# Update knowledge expression
+INSERT IGNORE INTO knowledge ( knowledge.`id`,knowledge.`label`, knowledge.`type`, knowledge.reference) 
+SELECT id+10000,' ','expression', id FROM expression
+		 */
+		
+		$this->_handleRequest( $oRequest );
+		
+		$oExpressionRepo = $this->getGame()->getExpressionRepo();
+		
+		$aExpression = $oExpressionRepo->findAll();
+		
+		$aOwnership = $oExpressionRepo->getIdByPlayerOwnership( $this->getGame()->getPlayer()->getId() );
+		
+		$aDeck = $oExpressionRepo->getDeckByPlayer( $this->getGame()->getPlayer()->getId() );
+		
+		return $this->render('homeplanet/page/expression_list.html.twig', [
+			'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
+			'expressionList' => $aExpression,
+			'expressionOwnershipAr' => array_flip( $aOwnership ),
+		]);
+	}
 }
 

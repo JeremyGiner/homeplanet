@@ -1,6 +1,6 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
 <span class="badge badge-aspect-{{o.type}} badge-pill {{ 
-	param.context is defined 
+	param.context is not empty
 	and not o.validate( param.context ) 
 	? 'disabled' }}"
 	>
