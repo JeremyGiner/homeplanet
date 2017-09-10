@@ -5,6 +5,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use homeplanet\Entity\Character;
+use Symfony\Component\Form\Form;
+use homeplanet\Entity\Conversation;
 
 /**
  * @Route("/character")
@@ -53,10 +55,33 @@ class CharacterController extends BaseController {
 		$this->_handleRequest( $oRequest );
 		
 		$aAquaintance = $this->getGame()->getCharacterRepo()->getAcquaintance( $this->getGame()->getPlayer() );
-	
+		
+		// Meet form
+		/* @var $oFormMeet Form */
+		$oFormMeet = $this->createFormBuilder()
+			->add('submit',SubmitType::class,['label' => 'Meet new charater'])
+			->getForm()
+		;
+		
+		$oFormMeet->handleRequest( $oRequest );
+		if( $oFormMeet->isSubmitted() && $oFormMeet->isValid() ) {
+			
+			$em = $this->getGame()->getEntityManager();
+			
+			$oConversation = new Conversation( 
+					$this->getGame()->getPlayer()->getCharacter(),  
+					$this->getGame()->getCharacterRepo()->getRandom( null )
+			);
+			$em->persist( $oConversation );
+			$em->flush();
+			
+			$this->redirect( $this->generateUrl('conversation_view',['id' => $oConversation->getId(),]));
+		}
+		
 		return $this->render('homeplanet/page/acquaintance.html.twig', [
 				'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
 				'characterList' => $aAquaintance,
+				'form_meet' => $oFormMeet->createView(),
 		]);
 	}
 	

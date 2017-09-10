@@ -4,6 +4,7 @@ namespace homeplanet\Repository;
 use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\City;
+use homeplanet\Entity\Character;
 
 class CharacterRepository extends EntityRepository {
 	
@@ -20,27 +21,37 @@ WHERE character._iId = :id
 			'id' => $iCharacterId,
 		])
 			->useQueryCache(true)
-			->useResultCache(true);
+			->useResultCache(true)
+		;
 		return $oQuery->getResult();
 	}
 	
 //_____________________________________________________________________________
 
-	public function getRandomList( Location $oLocation ) {
+	public function getRandom( Location $oLocation = null, $excludeId ) {
 		$aCharacter = [];
 		
-		$aCharacter = $this->findBy([ 
-				'locationX' => $oLocation->getX(), 
-				'locationY' => $oLocation->getY(),
-		], [], rand(1,10) );
+		$oCharacter = $this->getEntityManager()->createQuery('
+SELECT character
+FROM homeplanet\Entity\Character character
+WHERE character._iId != :id 
+		')
+//AND character.locationX = :locationX
+//AND character.locationY = :locationY
+			->setParameters( [
+				'id' => $excludeId,
+				//'locationX' => $oLocation->getX(), 
+				//'locationY' => $oLocation->getY(),
+			])
+			->getOneOrNullResult()
+		;
+		if( $oCharacter !== null ) 
+			return $oCharacter;
 		
-		foreach ( range(0, 10-count( $aCharacter ) ) as $i ) { if( $i == 0 ) continue;
-			$oCharacter = $this->_generateCharater( $oLocation );
-			if( $oCharacter === null ) continue;
-			$aCharacter[] = $oCharacter;
-		}
+		// Generate random char
+		$oCharacter = Character::generate( $oLocation, 'city' );
 		
-		return $aCharacter;
+		return $oCharacter;
 	}
 	
 	private function _generateCharater( Location $oLocation ) {

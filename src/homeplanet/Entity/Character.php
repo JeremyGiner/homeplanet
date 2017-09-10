@@ -84,8 +84,11 @@ class Character {
 	public function __construct() {
 	}
 	
-	static public function generate( $sPlace ) {
+	static public function generate( Location $oLocation, $sPlace ) {
 		$o = new Character();
+		
+		$o->_x = 0;//$oLocation->getX();
+		$o->_y = 0;//$oLocation->getY();
 		
 		
 		// Get occupation
@@ -98,8 +101,12 @@ class Character {
 		//TODO
 		
 		// Get knowledge
+		//TODO
 		
 		// Get expression
+		//TODO
+		
+		return $o;
 	}
 	
 //_____________________________________________________________________________
@@ -121,6 +128,7 @@ class Character {
 		return $this->_aExpression->toArray();
 	}
 	
+	
 	public function getKnowledgeAr() {
 		return $this->_aKnowledge->toArray();
 	}
@@ -129,6 +137,12 @@ class Character {
 //_____________________________________________________________________________
 //	Modifier
 
+	public function setDeck( array $aExpression ) {
+		foreach ( $aExpression as $oExpression )
+			$this->_aExpression->add( $oExpression );
+		return $this;
+	}
+	
 //_____________________________________________________________________________
 //	Sub-routine
 
