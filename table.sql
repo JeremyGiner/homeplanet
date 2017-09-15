@@ -151,10 +151,10 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   `description` text NOT NULL,
-  `effect` text,
   `requirement` text,
+  `effect` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1301 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate
@@ -197,11 +197,11 @@ CREATE TABLE IF NOT EXISTS `influencetype` (
 CREATE TABLE IF NOT EXISTS `knowledge` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
-  `type` enum('gossip','rumor','acquaintance') NOT NULL,
+  `type` enum('gossip','rumor','acquaintance','expression') NOT NULL,
   `reference` int(10) unsigned DEFAULT NULL,
   `expire` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12001 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawn

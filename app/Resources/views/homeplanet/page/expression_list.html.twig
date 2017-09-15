@@ -2,9 +2,25 @@
 
 
 {% block page_content %}
-<div class="container">
 <div class="row">
 <div class="col-12 col-sm-10 offset-sm-1">
+
+<div class="row">
+<div class="col-6">
+	<div class="card">
+	<div class="card-header">
+		Deck
+	</div>
+	<ul class="list-group list-group-flush">
+	{% for expressionId in deck %}
+		<li class="list-group-item">
+			{{ printo( expressionList[ expressionId ] ) }}
+		</li>
+	{% endfor %}
+	</ul>
+	</div>
+</div>
+<div class="col-6">
 
 <div class="card">
 	<div class="card-header">
@@ -15,13 +31,12 @@
 	{% for expression in expressionList %}
 		{% if expressionOwnershipAr[ expression.id ] is defined %}
 		<div class="list-group-item">
-			{{ expression.label|capitalize }}
 			{{ printo(expression) }}
 		</div>
 		{% else %}
 		<div class="list-group-item list-group-item-warning">
-			<span class="fa fa-lock mr-2"></span>
-			{{ expression.label|capitalize }}
+			<span class="fa fa-lock mr-2 float-left"></span>
+			{{ printo(expression) }}
 		</div>
 		{% endif %}
 	{% endfor %}
@@ -29,6 +44,8 @@
 </div>
 
 </div>
+</div>
+
 </div>
 </div>
 {% endblock %}

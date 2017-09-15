@@ -7,7 +7,11 @@ use homeplanet\Entity\City;
 
 class ExpressionRepository extends EntityRepository {
 	
-	
+	/**
+	 * 
+	 * @param int $iPlayerId
+	 * @return integer[]
+	 */
 	public function getIdByPlayerOwnership( $iPlayerId ) {
 		$oQuery = $this->getEntityManager()->createQuery('
 SELECT expression._iId
@@ -22,7 +26,13 @@ WHERE player._iId = :id
 		]);
 		return array_map('current', $oQuery->getScalarResult());
 	}
-	public function getDeckByPlayer( $iPlayerId ) {
+	
+	/**
+	 * 
+	 * @param int $iPlayerId
+	 * @return integer[]
+	 */
+	public function getIdByPlayerDeck( $iPlayerId ) {
 		$oQuery = $this->getEntityManager()->createQuery('
 SELECT expression._iId
 FROM homeplanet\Entity\Player player
@@ -33,7 +43,7 @@ WHERE player._iId = :id
 		$oQuery->setParameters( [
 			'id' => $iPlayerId,
 		]);
-		return $oQuery->getResult();
+		return array_map('current', $oQuery->getScalarResult());
 	}
 	
 	

@@ -157,29 +157,7 @@ class PlanetController extends BaseController {
 	public function testConversationAction( Request $oRequest ) {
 		
 		$this->_handleRequest($oRequest);
-		/**
-		 * Persuade : 0
-		 * Coerce : 1
-		 * Passion : 2
-		 * Charm : 3
-		 */
-		$oExpression = $this->getGame()->getEntityManager()
-			->find(Expression::class, 202);
 		
-		$oExpression->setRequirement( new ValidatorAnd([
-			new PointCost( 1, 3),
-		]) );
-		//$oExpression->setRequirement( null );
-		
-		$oExpression->setEffect( [ 
-			new Counter(),
-			new AddPoint(1, -3),
-			//new GivePoint(3, -2),
-			//new AddPoint(2, 1),
-			//new AddPoint(3, -1),
-		] );
-		
-		$this->getGame()->getEntityManager()->flush();
 		/*
 		*/
 		

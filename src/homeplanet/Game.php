@@ -22,6 +22,7 @@ use homeplanet\Repository\PawnRepository;
 use homeplanet\Repository\ProductionRepository;
 use homeplanet\Entity\GameState;
 use homeplanet\Entity\Expression;
+use homeplanet\Repository\ExpressionRepository;
 
 class Game {
 	/**

@@ -266,10 +266,13 @@ INSERT INTO `character_expression` (`character_id`, `expression_id`) VALUES
 	(4, 4);
 /*!40000 ALTER TABLE `character_expression` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.character_knowledge: ~1 rows (approximately)
+-- Dumping data for table homeplanet.character_knowledge: ~3 rows (approximately)
 /*!40000 ALTER TABLE `character_knowledge` DISABLE KEYS */;
 INSERT INTO `character_knowledge` (`character_id`, `knowledge_id`) VALUES
-	(1, 2);
+	(1, 2),
+	(1, 10001),
+	(1, 10005),
+	(1, 10200);
 /*!40000 ALTER TABLE `character_knowledge` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.city: ~0 rows (approximately)
@@ -881,7 +884,7 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 	(600, 'Ziguinchor');
 /*!40000 ALTER TABLE `citynamereference` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.conversation: ~1 rows (approximately)
+-- Dumping data for table homeplanet.conversation: ~0 rows (approximately)
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 INSERT INTO `conversation` (`id`, `character0_id`, `character1_id`, `state`) VALUES
 	(1, 1, 4, 'a:1:{i:11;O:40:"homeplanet\\Entity\\part\\ConversationState":7:{s:47:"\0homeplanet\\Entity\\part\\ConversationState\0_aLog";a:1:{i:0;O:42:"homeplanet\\Entity\\part\\ConversationTurnLog":4:{s:59:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iExpression0Id";i:2;s:59:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iExpression1Id";i:2;s:64:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iCharacterLeadingId";N;s:61:"\0homeplanet\\Entity\\part\\ConversationTurnLog\0_iDebateIntensity";i:0;}}s:49:"\0homeplanet\\Entity\\part\\ConversationState\0_aPoint";a:2:{i:0;a:4:{i:0;i:1;i:1;i:0;i:2;i:0;i:3;i:0;}i:1;a:4:{i:0;i:1;i:1;i:0;i:2;i:0;i:3;i:0;}}s:50:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebate";i:0;s:59:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebateIntensity";i:0;s:55:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebateGoal0";N;s:55:"\0homeplanet\\Entity\\part\\ConversationState\0_iDebateGoal1";N;s:60:"\0homeplanet\\Entity\\part\\ConversationState\0_iCharacterLeading";N;}}');
@@ -891,13 +894,26 @@ INSERT INTO `conversation` (`id`, `character0_id`, `character1_id`, `state`) VAL
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.expression: ~4 rows (approximately)
+-- Dumping data for table homeplanet.expression: ~16 rows (approximately)
 /*!40000 ALTER TABLE `expression` DISABLE KEYS */;
-INSERT INTO `expression` (`id`, `label`, `description`, `effect`, `requirement`) VALUES
-	(1, 'joke', '+charm ', NULL, 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:2:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:0;}i:1;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}'),
-	(2, 'statement', '+persuade', 'a:1:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}}', NULL),
+INSERT INTO `expression` (`id`, `label`, `description`, `requirement`, `effect`) VALUES
+	(1, 'joke', '+charm ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:2:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:0;}i:1;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}', NULL),
+	(2, 'statement', '+persuade', NULL, 'a:1:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}}'),
 	(3, 'threat', '+coerce', NULL, NULL),
-	(4, 'sing', '+charm', NULL, NULL);
+	(4, 'sing', '+charm', NULL, NULL),
+	(5, 'yell', ' ', NULL, 'a:4:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:-1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}i:1;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:1;}i:2;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:2;}i:3;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:-1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:3;}}'),
+	(6, 'expose fact', ' ', NULL, 'a:1:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}}'),
+	(7, 'diplomacy', ' ', NULL, 'a:4:{i:0;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:1;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:0;}i:1;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:1;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:2;}i:2;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}i:3;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:2;}}'),
+	(8, 'compliment', ' ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:1:{i:0;O:54:"homeplanet\\validator\\conversation\\OpponentPointRequire":2:{s:62:"\0homeplanet\\validator\\conversation\\OpponentPointRequire\0_iCost";i:1;s:68:"\0homeplanet\\validator\\conversation\\OpponentPointRequire\0_iPointIndex";i:3;}}}', 'a:2:{i:0;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:2;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:3;}i:1;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:2;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:3;}}'),
+	(9, 'educate', ' ', NULL, 'a:2:{i:0;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:1;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:0;}i:1;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:1;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:0;}}'),
+	(200, 'threats', ' ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:1:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:2;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}', 'a:1:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:2;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:1;}}'),
+	(201, 'intimidate', ' ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:1:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:3;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}', 'a:4:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:-3;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:1;}i:1;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:-2;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:0;}i:2;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:-2;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:1;}i:3;O:42:"homeplanet\\modifier\\conversation\\GivePoint":2:{s:51:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iValue";i:-2;s:56:"\0homeplanet\\modifier\\conversation\\GivePoint\0_iPointIndex";i:3;}}'),
+	(202, 'silence!', ' ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:1:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:3;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}', 'a:2:{i:0;O:40:"homeplanet\\modifier\\conversation\\Counter":0:{}i:1;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:-3;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:1;}}'),
+	(300, 'criticize temper', '', NULL, 'a:1:{i:0;O:40:"homeplanet\\modifier\\conversation\\Imitate":3:{s:54:"\0homeplanet\\modifier\\conversation\\Imitate\0_aTypeFilter";N;s:51:"\0homeplanet\\modifier\\conversation\\Imitate\0_aConvert";a:1:{i:1;i:2;}s:12:"_iTypeFilter";a:1:{i:0;i:1;}}}'),
+	(301, 'criticize ego', ' ', NULL, 'a:1:{i:0;O:40:"homeplanet\\modifier\\conversation\\Imitate":3:{s:54:"\0homeplanet\\modifier\\conversation\\Imitate\0_aTypeFilter";N;s:51:"\0homeplanet\\modifier\\conversation\\Imitate\0_aConvert";a:1:{i:3;i:2;}s:12:"_iTypeFilter";a:1:{i:0;i:3;}}}'),
+	(302, 'listen', ' ', NULL, 'a:2:{i:0;O:43:"homeplanet\\modifier\\conversation\\ChangeLead":1:{s:63:"\0homeplanet\\modifier\\conversation\\ChangeLead\0_iModificationType";i:0;}i:1;O:40:"homeplanet\\modifier\\conversation\\Imitate":3:{s:54:"\0homeplanet\\modifier\\conversation\\Imitate\0_aTypeFilter";N;s:51:"\0homeplanet\\modifier\\conversation\\Imitate\0_aConvert";N;s:12:"_iTypeFilter";N;}}'),
+	(1200, 'want to fight about it?!', ' ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:1:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:5;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}', 'a:2:{i:0;O:41:"homeplanet\\modifier\\conversation\\AddPoint":2:{s:50:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iValue";i:-5;s:55:"\0homeplanet\\modifier\\conversation\\AddPoint\0_iPointIndex";i:1;}i:1;O:42:"homeplanet\\modifier\\conversation\\AddDebate":1:{s:51:"\0homeplanet\\modifier\\conversation\\AddDebate\0_iValue";i:10;}}'),
+	(1300, 'this is beneath you', ' ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:1:{i:0;O:54:"homeplanet\\validator\\conversation\\OpponentPointRequire":2:{s:62:"\0homeplanet\\validator\\conversation\\OpponentPointRequire\0_iCost";i:5;s:68:"\0homeplanet\\validator\\conversation\\OpponentPointRequire\0_iPointIndex";i:3;}}}', 'a:1:{i:0;O:42:"homeplanet\\modifier\\conversation\\AddDebate":1:{s:51:"\0homeplanet\\modifier\\conversation\\AddDebate\0_iValue";i:10;}}');
 /*!40000 ALTER TABLE `expression` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.gamestate: 1 rows
@@ -919,10 +935,19 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.knowledge: ~1 rows (approximately)
+-- Dumping data for table homeplanet.knowledge: ~10 rows (approximately)
 /*!40000 ALTER TABLE `knowledge` DISABLE KEYS */;
 INSERT INTO `knowledge` (`id`, `label`, `type`, `reference`, `expire`) VALUES
-	(2, ' ', 'acquaintance', 4, NULL);
+	(2, ' ', 'acquaintance', 4, NULL),
+	(10001, 'Expression : joke', 'expression', 1, NULL),
+	(10002, 'Expression : statement', 'expression', 2, NULL),
+	(10003, 'Expression : threat', 'expression', 3, NULL),
+	(10004, 'Expression : sing', 'expression', 4, NULL),
+	(10005, 'Expression : yell', 'expression', 5, NULL),
+	(10200, 'Expression : threats', 'expression', 200, NULL),
+	(10201, 'Expression : intimidate', 'expression', 201, NULL),
+	(10202, 'Expression : silence!', 'expression', 202, NULL),
+	(12000, 'Expression : want to fight about it?!', 'expression', 2000, NULL);
 /*!40000 ALTER TABLE `knowledge` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.pawn: ~0 rows (approximately)

@@ -12,6 +12,9 @@
 	{% endif %}
 	</div>
 	<p>{{ o.description }}</p>
+	{% for effect in o.effectAr %}
+		{{ printo(effect) }};
+	{% endfor %}
 </div>
 </div>
 

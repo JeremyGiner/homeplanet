@@ -88,6 +88,10 @@ class ConversationState {
 		return $this->_iDebateGoal1;
 	}
 	
+	public function getCharacterLeading() {
+		return $this->_iCharacterLeading;
+	}
+	
 	public function getWinnerIndex() {
 		if( $this->_iDebate >= $this->_iDebateGoal0 )
 			return 0;
@@ -119,7 +123,9 @@ class ConversationState {
 	public function updateDebate() {
 		if( $this->_iCharacterLeading === null ) return;
 		
-		$this->_iDebate += $this->getDebateIntensity();
+		$this->_iDebate += ( $this->_iCharacterLeading == 0 ) ?
+			$this->getDebateIntensity() :
+			-$this->getDebateIntensity();
 		return $this;
 	}
 	
@@ -128,9 +134,7 @@ class ConversationState {
 		
 		if( $this->_iCharacterLeading === null ) return;
 		
-		$this->_iDebate = abs( $this->_iDebate ) + $iValue;
-		if( $iCharacterIndex === 1 )
-			$this->_iDebate *= -1;
+		$this->_iDebateIntensity += $iValue;
 		
 		return $this;
 	}

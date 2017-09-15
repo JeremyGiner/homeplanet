@@ -38,7 +38,5 @@ class AddDebate {
 		$iCharIndex = $oContext->conversation->getCharacterIndex( $oContext->character );
 		
 		$oState->addDebate( $iCharIndex, $this->_iValue );
-		
-		$oContext->conversation->setState( $oState );
 	}
 }

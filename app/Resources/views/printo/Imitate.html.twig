@@ -1,0 +1,11 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+
+{% if( o.convertAr[1] is defined and o.convertAr[1] == 2 ) %}
+Gain as much <span class="badge badge-aspect-2">passion</span> as your opponent gain <span class="badge badge-aspect-1">coercion</span>
+{% elseif( o.convertAr[3] is defined and o.convertAr[3] == 2 ) %}
+Gain as much <span class="badge badge-aspect-2">passion</span> as your opponent gain <span class="badge badge-aspect-3">charm</span>
+{% elseif( o.filterAr == null ) %}
+Gain as much points as your opponent
+{% else %}
+imitate TODO
+{% endif %}

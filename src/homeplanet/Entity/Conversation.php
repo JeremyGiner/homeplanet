@@ -109,12 +109,20 @@ class Conversation {
 	}
 	
 	public function processExpression( Expression $oExp0, Expression $oExp1 ) {
-				
-		foreach( $oExp0->getEffectAr() as $oModifier )
-			$oModifier->modify( new ConversationContext($this, $this->getCharacter0() ) );
-		foreach( $oExp1->getEffectAr() as $oModifier )
-			$oModifier->modify( new ConversationContext($this, $this->getCharacter1() ) );
-
+		
+		if( $this->getState()->getCharacterLeading() == 0 ) {
+			$oExpLeading = $oExp0;
+			$oExpFollowing = $oExp1;
+		} else {
+			$oExpLeading = $oExp1;
+			$oExpFollowing = $oExp0;
+		}
+		
+		foreach( $oExpLeading->getEffectAr() as $oModifier )
+			$oModifier->modify( new ConversationContext($this, $this->getCharacter0(), $oExpFollowing ) );
+		foreach( $oExpFollowing->getEffectAr() as $oModifier )
+			$oModifier->modify( new ConversationContext($this, $this->getCharacter1(), $oExpLeading ) );
+			
 		// Update debate point
 		$this->getState()->updateDebate();
 		
