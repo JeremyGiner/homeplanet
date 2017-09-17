@@ -110,6 +110,9 @@ class Conversation {
 	
 	public function processExpression( Expression $oExp0, Expression $oExp1 ) {
 		
+		// Reset tail
+		$this->getState()->setTail([]);
+		
 		if( $this->getState()->getCharacterLeading() == 0 ) {
 			$oExpLeading = $oExp0;
 			$oExpFollowing = $oExp1;

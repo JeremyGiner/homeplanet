@@ -16,6 +16,7 @@ use homeplanet\modifier\conversation\AddPoint;
 use homeplanet\modifier\conversation\GivePoint;
 use homeplanet\validator\conversation\OpponentPointRequire;
 use homeplanet\modifier\conversation\AddDebate;
+use homeplanet\Entity\homeplanet\Entity;
 
 /**
  * @Route("/character")
@@ -134,7 +135,99 @@ SELECT id+10000,' ','expression', id FROM expression
 		
 		$this->_handleRequest( $oRequest );
 		
+		//______________________________
+		//DEV
+		//GENERATE expression
+		/*
+		$em = $this->getGame()->getEntityManager();
 		
+		function array_cartesian() {
+			$_ = func_get_args();
+			if(count($_) == 0)
+				return array(array());
+			$a = array_shift($_);
+			$c = call_user_func_array(__FUNCTION__, $_);
+			$r = array();
+			foreach($a as $v)
+				foreach($c as $p)
+					$r[] = array_merge(array($v), $p);
+				return $r;
+		}
+		function get_type() {
+			static $a = [];
+			if( empty( $a ) ) {
+				$a = array( 0,1,2,3 );
+			}
+			$k = array_rand($a);
+			$v = $a[ $k ];
+			unset( $a[ $k ] );
+			return $v;
+		}
+		function get_score(
+				$aTail,
+				$iDebateGain,
+				$iPointGain,
+				$iPointGiven,
+				$bCounter
+		) {
+			$i = 0;
+			$i += $iDebateGain * 10;
+			$i += $iPointGain * 20;
+			$i -= $iPointGiven * 30;
+			$i += ( $bCounter ) ? 50 : 0;  
+			return $i;
+		}
+		function get_complexity(
+				$aTail,
+				$iDebateGain,
+				$iPointGain,
+				$iPointGiven,
+				$bCounter
+		) {
+			$i = 0;
+			$i += $iDebateGain != 0 ? 1 : 0;
+			$i += $iPointGain != 0 ? 1 : 0;
+			$i += $iPointGiven != 0 ? 1 : 0;
+			$i += ( $bCounter ) ? 1 : 0;  
+			return $i;
+		}
+		$aCombination = array_cartesian(
+			[// tail
+					[0,1],
+					[0,2],
+					[0,3],
+					[1,2],
+					[1,3],
+					[2,3],
+					[0,1,2],
+					[0,1,3],
+					[1,2,3],
+			],
+			range(0,5),		// debate
+			range(-5,5),	// gain
+			range(-5,5),	// given
+			[true,false]	// counter
+		);
+		foreach( $aCombination as $a ) {
+			// Filter complexity
+			if( get_complexity($a[0], $a[1], $a[2], $a[3], $a[4]) > 3 ) 
+				continue;
+			
+			// Filter by score
+			$iScore = get_score($a[0], $a[1], $a[2], $a[3], $a[4]);
+			if( $iScore != 50 )
+				continue;
+			
+			$oExpresion = Expression::generateExpression(
+					get_type(), 
+					$a[0], $a[1], $a[2], $a[3], $a[4]
+			);
+			
+			$em->persist( $oExpresion );
+		} 
+		$em->flush();
+		//_____________________________
+		*/
 		/**
 		 * Persuade : 0
 		 * Coerce : 1
@@ -164,6 +257,8 @@ SELECT id+10000,' ','expression', id FROM expression
 				
 		] );
 		
+		
+		
 		$this->getGame()->getEntityManager()->flush();
 		
 		//_____________________________
@@ -183,5 +278,11 @@ SELECT id+10000,' ','expression', id FROM expression
 			'deck' => $aDeck,
 		]);
 	}
+	
+//_____________________________________________________________________________
+// Sub-routine
+
+
+	
 }
 

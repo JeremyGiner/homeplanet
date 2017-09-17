@@ -153,8 +153,10 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `description` text NOT NULL,
   `requirement` text,
   `effect` text,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1301 DEFAULT CHARSET=utf8;
+  `generation_key` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `generation_key` (`generation_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=1985 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate

@@ -47,6 +47,12 @@ class ConversationState {
 	 */
 	private $_iCharacterLeading;
 	
+	/**
+	 * Arrray of aspect type id forbidden to be played
+	 * @var int[]
+	 */
+	private $_aTail;
+	
 //______________________________________________________________________________
 // Constructor
 	
@@ -59,6 +65,8 @@ class ConversationState {
 		$this->_iDebate = 0;
 		$this->_iCharacterLeading = null;
 		$this->_iDebateIntensity = 0;
+		
+		$this->_aTail = [0,1,2,3];
 	}
 	
 //______________________________________________________________________________
@@ -100,6 +108,10 @@ class ConversationState {
 		return null;
 	}
 	
+	public function getTail() {
+		return $this->_aTail;
+	}
+	
 //______________________________________________________________________________
 // Modifier
 
@@ -113,6 +125,16 @@ class ConversationState {
 			$iIndex, 
 			$this->getPoint($iCharacterIndex, $iIndex) + $iValue 
 		);
+	}
+	
+	public function addTail( array $aTypeFilter ) {
+		$this->_aTail = array_merge( $aTypeFilter, $this->_aTail );
+		return $this;
+	}
+	
+	public function setTail( array $aTypeFilter ) {
+		$this->_aTail = $aTypeFilter;
+		return $this;
 	}
 	
 	public function setCharacterLeading( $iCharacterId ) {

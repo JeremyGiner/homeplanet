@@ -1,5 +1,7 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
 <div class="card card-expression small">
+<div class="card-header bg-aspect-{{ o.tailRequire.type|default('') }}">
+</div>
 <div class="card-block">
 	<strong>{{ o.label|capitalize }}</strong>
 	<div class="float-right">

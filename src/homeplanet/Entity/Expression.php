@@ -8,6 +8,12 @@ use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 use homeplanet\validator\ValidatorAnd;
 use homeplanet\validator\PointCost;
+use homeplanet\validator\conversation\TailRequire;
+use homeplanet\modifier\conversation\Counter;
+use homeplanet\modifier\conversation\AddDebate;
+use homeplanet\modifier\conversation\AddTail;
+use homeplanet\modifier\conversation\AddPoint;
+use homeplanet\modifier\conversation\GivePoint;
 
 /**
  * @ORM\Table(name="expression")
@@ -43,11 +49,69 @@ class Expression {
 	 */
 	protected $_aEffect;
 	
+	/**
+	 * @ORM\Column(type="string", name="generation_key")
+	 *
+	 */
+	protected $_sGenerationKey = null;
+	
 	
 //_____________________________________________________________________________
 //	Constructor
 	
 	public function __construct() {
+	}
+	
+	static public function generateExpression(
+			$iType,
+			$aTail,
+			$iDebateGain,
+			$iPointGain,
+			$iPointGiven,
+			$bCounter
+	) {
+		$o = new Expression();
+		$o->_sGenerationKey = implode(';',[
+				$iType,
+				implode('|',$aTail),
+				$iDebateGain,
+				$iPointGain,
+				$iPointGiven,
+				$bCounter,
+		]);
+		$o->_sLabel = $o->_sGenerationKey;
+		$o->_sDescription = $o->_sGenerationKey;
+		
+		$o->setRequirement(new ValidatorAnd([
+			new TailRequire($iType),
+		]));
+		
+		$aEffect = [
+				//new Counter(),
+				//new AddPoint(1, -3),
+				//new GivePoint(0, 1),
+				//new AddPoint(0, 1),
+					
+				//new AddPoint(3, -1),
+				//new ChangeLead(ChangeLead::GIVE),
+				//new Imitate(),
+					
+				//new AddDebate(10),
+			new AddTail($aTail),
+		];
+		
+		if( $bCounter )
+			$aEffect[] = new Counter();
+		if( $iDebateGain != 0 )
+			$aEffect[] = new AddDebate($iDebateGain);
+		if( $iPointGain != 0 )
+			$aEffect[] = new AddPoint($iType,$iPointGain);
+		if( $iPointGiven != 0 )
+			$aEffect[] = new GivePoint($iType,$iPointGiven);
+		
+		$o->setEffect( $aEffect );
+		
+		return $o;
 	}
 	
 //_____________________________________________________________________________
@@ -71,6 +135,15 @@ class Expression {
 	
 	public function getRequirement() {
 		return $this->_oRequirement;
+	}
+	
+	public function getTailRequire() {
+		if( ! $this->_oRequirement instanceof ValidatorAnd ) return null;
+		foreach( $this->_oRequirement->getValidatorAr() as $oValidator ) {
+			if( $oValidator instanceof TailRequire )
+				return $oValidator;
+		}
+		return null;
 	}
 	
 //_____________________________________________________________________________
