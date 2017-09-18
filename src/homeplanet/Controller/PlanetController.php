@@ -184,7 +184,7 @@ class PlanetController extends BaseController {
 					$oConversation, 
 					$oConversation->getCharacter0() 
 				), 
-				
+				'em' => $this->_oGame->getEntityManager(),
 			]
 		);
 		

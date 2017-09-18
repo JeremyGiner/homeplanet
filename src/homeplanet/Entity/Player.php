@@ -70,7 +70,7 @@ class Player {
 	/**
 	 * @ORM\OneToOne(targetEntity="Character")
 	 * @ORM\JoinColumn(name="character_id", referencedColumnName="id")
-	 * @var Sovereign
+	 * @var Character
 	 */
 	protected $_oCharacter;
 	
@@ -130,6 +130,9 @@ class Player {
 		return $this->_oAllegeance;
 	}
 	
+	public function getCharacter() {
+		return $this->_oCharacter;
+	}
 	
 //_____________________________________________________________________________
 //	Modifier

@@ -16,6 +16,7 @@ class ConversationExpressionChoiceForm extends AbstractType {
 		$oResolver->setRequired('conversation_context');
 		$oResolver->setDefaults([
 			'data_class' => ConversationExpressionChoice::class,
+			'em' => null,
 		]);
 	}
 	
@@ -30,7 +31,7 @@ class ConversationExpressionChoiceForm extends AbstractType {
 				'choice_label' => function( Expression $o ) {
 					return $o->getLabel().' Hi';
 				},
-				'choices' => $oBuilder->getData()->getExpressionAr(),
+				'choices' => $oBuilder->getData()->getExpressionAr( $aOption['em'] ),
 				'expanded' => true,
 				'choice_attr' => function( Expression $val, $key, $index ) use($aOption) {
 					

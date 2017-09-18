@@ -79,8 +79,11 @@ class CharacterController extends BaseController {
 			$em = $this->getGame()->getEntityManager();
 			
 			$oConversation = new Conversation( 
-					$this->getGame()->getPlayer()->getCharacter(),  
-					$this->getGame()->getCharacterRepo()->getRandom( null )
+				$this->getGame()->getPlayer()->getCharacter(),
+				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr(),
+				
+				$this->getGame()->getCharacterRepo()->getRandom( null ),
+				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr()
 			);
 			$em->persist( $oConversation );
 			$em->flush();

@@ -6,6 +6,26 @@ use homeplanet\Entity\Expression;
 class ConversationState {
 	
 	/**
+	 * Expression id
+	 * Indexed by character index
+	 * @var int[]
+	 */
+	private $_aDeck;
+	
+	/**
+	 * Expression id
+	 * Indexed by character index
+	 * @var int[]
+	 */
+	private $_aHand;
+	
+	/**
+	 * Expression id drawn indexed by turn then by character index
+	 * @var int[][]
+	 */
+	private $_aLogDraw;
+	
+	/**
 	 * Pair of expression played indexed by turn then by character index
 	 * @var ConversationTurnLog[]
 	 */
@@ -56,7 +76,12 @@ class ConversationState {
 //______________________________________________________________________________
 // Constructor
 	
-	public function __construct() {
+	public function __construct(
+		array $aDeck0,
+		array $aHand0,
+		array $aDeck1,
+		array $aHand1
+	) {
 		$this->_iDebateGoal0 = 50;
 		$this->_iDebateGoal1 = 50;
 		
@@ -68,6 +93,21 @@ class ConversationState {
 		$this->_iDebate = 0;
 		$this->_iCharacterLeading = null;
 		$this->_iDebateIntensity = 0;
+		
+		$this->_aDeck = [
+			0 => $aDeck0,
+			1 => $aDeck1,
+		];
+		$this->_aHand = [
+			0 => $aHand0,
+			1 => $aHand1,
+		];
+		
+		$this->_aLogDraw = [[
+			0 => $aHand0,
+			1 => $aHand1,
+		]];
+		
 		
 		
 		$this->_aTail = [0,1,2,3];
@@ -85,6 +125,17 @@ class ConversationState {
 	
 	public function getLog() {
 		return $this->_aLog;
+	}
+	
+	public function getHand( $iCharacterIndex ) {
+		if( ! isset( $this->_aDeck[$iCharacterIndex] ) ) throw new \Exception();
+		return $this->_aDeck[$iCharacterIndex];
+	}
+	public function getDeck1() {
+		return $this->_aDeck[1];
+	}
+	public function getDeck0() {
+		return $this->_aDeck[0];
 	}
 	
 	public function getDebate() {
@@ -171,7 +222,9 @@ class ConversationState {
 	
 	public function addLog(
 		Expression $iExpression0,
-		Expression $iExpression1
+		Expression $iExpression1,
+		array $aNewHand0,
+		array $aNewHand1
 	) {
 		$this->_aLog[] = new ConversationTurnLog(
 				$iExpression0->getId(), 
@@ -179,6 +232,11 @@ class ConversationState {
 				$this->_iCharacterLeading,
 				$this->_iDebateIntensity
 		);
+		$this->_aHand = [
+			0 => $aNewHand0,
+			1 => $aNewHand1,
+		];
+		
 		return $this;
 	}
 }

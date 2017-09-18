@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 use homeplanet\Entity\part\ConversationContext;
 use homeplanet\Entity\part\ConversationState;
+use homeplanet\Entity\part\homeplanet\Entity\part;
 
 /**
  * @ORM\Table(name="conversation")
@@ -55,7 +56,18 @@ class Conversation {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct() {
+	public function __construct(
+		Character $oCharacter0,
+		array $aDeck0,
+		Character $oCharacter1,
+		array $aDeck1
+	) {
+		$this->setState(new ConversationState(
+			array_map(function( Expression $o ){ return $o->getId(); }, $aDeck0 ),
+			$this->draw($aDeck0),
+			array_map(function( Expression $o ){ return $o->getId(); }, $aDeck1 ),
+			$this->draw($aDeck1)
+		));
 	}
 	
 //_____________________________________________________________________________
@@ -81,6 +93,16 @@ class Conversation {
 	}
 	
 	/**
+	 * 
+	 * @param Character $oCharacter
+	 * @return int[]
+	 */
+	public function getHand( Character $oCharacter ) {
+		$i = $this->getCharacterIndex($oCharacter);
+		return $this->getState()->getHand($i);
+	}
+	
+	/**
 	 * State of the conversation
 	 * @return ConversationState
 	 */
@@ -99,14 +121,26 @@ class Conversation {
 		throw new Exception('Character is not in this conversation');
 	}
 	
+	public function draw( array $aDeck ) {
+		shuffle( $aDeck );
+		return [
+			array_pop( $aDeck ),
+			array_pop( $aDeck ),
+			array_pop( $aDeck ),
+		];
+	}
+	
 //_____________________________________________________________________________
-//	Modifier
+// Modifier
 	
 	public function setState( ConversationState $oState ) {
 		$k = array_keys($this->_aState);
 		$this->_aState = [ (reset( $k )+1) => $oState ];
 		return $this;
 	}
+	
+//_____________________________________________________________________________
+// Process
 	
 	public function processExpression( Expression $oExp0, Expression $oExp1 ) {
 		
@@ -121,6 +155,7 @@ class Conversation {
 			$oExpFollowing = $oExp0;
 		}
 		
+		// Create context
 		$oContext0 = new ConversationContext(
 			$this, 
 			$this->getCharacter0(), 
@@ -160,6 +195,15 @@ class Conversation {
 		// Update log
 		$this->getState()->addLog($oExp0, $oExp1);
 		
+		// Draw 3
+		$this->getState()->setHand0( 
+			$this->draw( $this->getState()->getDeck0() ) 
+		);
+		$this->getState()->setHand1( 
+			$this->draw( $this->getState()->getDeck1() ) 
+		);
+		
+		// Mark state as updated
 		$this->setState($this->getState());
 	}
 }

@@ -3,8 +3,16 @@ namespace homeplanet\Form;
 
 use homeplanet\Entity\Expression;
 use homeplanet\Entity\Character;
+use homeplanet\Entity\Conversation;
+use Doctrine\ORM\EntityManager;
 
 class ConversationExpressionChoice {
+	
+	/**
+	 * 
+	 * @var Conversation
+	 */
+	private $_oConversation;
 	
 	/**
 	 * 
@@ -20,7 +28,12 @@ class ConversationExpressionChoice {
 //_____________________________________________________________________________
 // Constructor
 	
-	public function __construct( Character $oCharacter, Expression $oExpression = null ) {
+	public function __construct( 
+			Conversation $oConversation,
+			Character $oCharacter, 
+			Expression $oExpression = null 
+	) {
+		$this->_oConversation = $oConversation;
 		$this->_oCharacter = $oCharacter;
 		$this->setExpression($oExpression);
 	}
@@ -32,8 +45,10 @@ class ConversationExpressionChoice {
 		return $this->_oExpression;
 	}
 	
-	public function getExpressionAr() {
-		return $this->_oCharacter->getExpressionAr();
+	public function getExpressionAr( EntityManager $em ) {
+		$a = $this->_oConversation->getHand( $this->_oCharacter );
+		return $em->getRepository(Expression::class)->find($a);
+		//return $this->_oCharacter->getExpressionAr();
 	}
 	
 //_____________________________________________________________________________
