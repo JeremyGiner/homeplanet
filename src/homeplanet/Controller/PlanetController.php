@@ -181,7 +181,8 @@ class PlanetController extends BaseController {
 			$oExpressionChoice,
 			[ 
 				'conversation_context' => new ConversationContext(
-					$oConversation, $oConversation->getCharacter0() 
+					$oConversation, 
+					$oConversation->getCharacter0() 
 				), 
 				
 			]

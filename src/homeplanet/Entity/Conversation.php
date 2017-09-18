@@ -121,13 +121,41 @@ class Conversation {
 			$oExpFollowing = $oExp0;
 		}
 		
-		foreach( $oExpLeading->getEffectAr() as $oModifier )
-			$oModifier->modify( new ConversationContext($this, $this->getCharacter0(), $oExpFollowing ) );
+		$oContext0 = new ConversationContext(
+			$this, 
+			$this->getCharacter0(), 
+			$oExp0,
+			$oExp1 
+		);
+		$oContext1 = new ConversationContext(
+			$this, 
+			$this->getCharacter1(), 
+			$oExp1,
+			$oExp0 
+		);
+		
+		// Get value
+		$oAddDebate = $oExp0->getAddDebate();
+		$iExp0Value = ($oAddDebate !== null) ? 
+			$oAddDebate->getValue() + $oAddDebate->getBonus($oContext0) :
+			-1;
+		
+		$oAddDebate = $oExp1->getAddDebate();
+		$iExp1Value = ($oAddDebate !== null) ? 
+			$oAddDebate->getValue() + $oAddDebate->getBonus($oContext1) :
+			-1;
+		
+		// Process modifier if their expression value is greater or equal
+		if( $iExp0Value >= $iExp1Value )
+		foreach( $oExp0->getEffectAr() as $oModifier )
+			$oModifier->modify( $oContext0 );
+		
+		if( $iExp1Value >= $iExp0Value )
 		foreach( $oExpFollowing->getEffectAr() as $oModifier )
-			$oModifier->modify( new ConversationContext($this, $this->getCharacter1(), $oExpLeading ) );
-			
+			$oModifier->modify( $oContext1 );
+		
 		// Update debate point
-		$this->getState()->updateDebate();
+		//$this->getState()->updateDebate();
 		
 		// Update log
 		$this->getState()->addLog($oExp0, $oExp1);

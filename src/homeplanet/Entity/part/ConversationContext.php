@@ -21,6 +21,11 @@ class ConversationContext {
 	/**
 	 * @var Expression
 	 */
+	public $expression;
+	
+	/**
+	 * @var Expression
+	 */
 	public $responseTo;
 	
 //_____________________________________________________________________________
@@ -29,10 +34,12 @@ class ConversationContext {
 	public function __construct( 
 			Conversation $oConversation, 
 			Character $oCharacter, 
+			Expression $oExpression = null,
 			Expression $oResponseTo = null
 	) {
 		$this->character = $oCharacter;
 		$this->conversation = $oConversation;
+		$this->expression = $oExpression;
 		$this->responseTo = $oResponseTo;
 	}
 	
@@ -40,9 +47,9 @@ class ConversationContext {
 // Accessor
 
 	public function getCharacterIndex() {
-		$this->conversation->getCharacterIndex( $this->character );
+		return $this->conversation->getCharacterIndex( $this->character );
 	}
 	public function getOpponentIndex() {
-		$this->conversation->getOpponentIndex( $this->character );
+		return $this->conversation->getOpponentIndex( $this->character );
 	}
 }

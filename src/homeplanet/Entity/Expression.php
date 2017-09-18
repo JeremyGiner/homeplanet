@@ -137,6 +137,19 @@ class Expression {
 		return $this->_oRequirement;
 	}
 	
+	public function getAddDebate() {
+		foreach( $this->getEffectAr() as $oEffect ) {
+			if( $oEffect instanceof AddDebate ) return $oEffect;
+		}
+		return null;
+	}
+	public function getAddDebateValue() {
+		$oAddDebate = $this->getAddDebate();
+		if( $oAddDebate === null )
+			return null;
+		return $oAddDebate->getValue();
+	}
+	
 	public function getTailRequire() {
 		if( ! $this->_oRequirement instanceof ValidatorAnd ) return null;
 		foreach( $this->_oRequirement->getValidatorAr() as $oValidator ) {
@@ -144,6 +157,13 @@ class Expression {
 				return $oValidator;
 		}
 		return null;
+	}
+	public function getTailRequireType() {
+		$oTailRequire = $this->getTailRequire();
+		if( $oTailRequire === null )
+			return null;
+		//else 
+		return $oTailRequire->getType();
 	}
 	
 //_____________________________________________________________________________

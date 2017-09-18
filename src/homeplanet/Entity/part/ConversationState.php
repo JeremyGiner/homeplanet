@@ -57,6 +57,9 @@ class ConversationState {
 // Constructor
 	
 	public function __construct() {
+		$this->_iDebateGoal0 = 50;
+		$this->_iDebateGoal1 = 50;
+		
 		$this->_aPoint = [
 			0 => [ 0, 0, 0, 0 ],
 			1 => [ 0, 0, 0, 0 ],
@@ -65,6 +68,7 @@ class ConversationState {
 		$this->_iDebate = 0;
 		$this->_iCharacterLeading = null;
 		$this->_iDebateIntensity = 0;
+		
 		
 		$this->_aTail = [0,1,2,3];
 	}
@@ -100,6 +104,10 @@ class ConversationState {
 		return $this->_iCharacterLeading;
 	}
 	
+	/**
+	 * Get character index of the winner, or null if there is no winner yet
+	 * @return number|NULL
+	 */
 	public function getWinnerIndex() {
 		if( $this->_iDebate >= $this->_iDebateGoal0 )
 			return 0;
@@ -114,7 +122,7 @@ class ConversationState {
 	
 //______________________________________________________________________________
 // Modifier
-
+	
 	public function setPoint( $iCharacterIndex, $iIndex, $iValue ) {
 		$this->_aPoint[ $iCharacterIndex ][ $iIndex ] = min( max( $iValue, 0 ), 5 );
 		return $this;
