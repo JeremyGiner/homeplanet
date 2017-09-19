@@ -43,6 +43,7 @@ WHERE character._iId != :id
 				//'locationX' => $oLocation->getX(), 
 				//'locationY' => $oLocation->getY(),
 			])
+			->setMaxResults(1)
 			->getOneOrNullResult()
 		;
 		if( $oCharacter !== null ) 

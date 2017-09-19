@@ -2,10 +2,10 @@
 namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
-use homeplanet\Entity\Character;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use homeplanet\Entity\Character;
 use homeplanet\Entity\Conversation;
 use homeplanet\modifier\conversation\Imitate;
 use homeplanet\Entity\Expression;
@@ -51,8 +51,14 @@ class CharacterController extends BaseController {
 		if( $oCharacter == null ) throw $this->createNotFoundException('No character found');
 		
 		// Form debate
+		$oForm = $this->createFormBuilder()
+			->add('submit',SubmitType::class, ['label' => 'TEST'])
+			->getForm()
+		;
 		
-		
+		if( $oForm->isSubmitted() && $oForm->isValid() ) {
+			//TODO
+		}
 		
 		// Render
 		return $this->render('homeplanet/page/character_view.html.twig', [
@@ -86,13 +92,13 @@ class CharacterController extends BaseController {
 				$this->getGame()->getPlayer()->getCharacter(),
 				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr(),
 				
-				$this->getGame()->getCharacterRepo()->getRandom( null ),
+				$this->getGame()->getCharacterRepo()->getRandom( null, $this->getGame()->getPlayer()->getCharacter()->getId() ),
 				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr()
 			);
 			$em->persist( $oConversation );
 			$em->flush();
 			
-			$this->redirect( $this->generateUrl('conversation_view',['id' => $oConversation->getId(),]));
+			return $this->redirect( $this->generateUrl('conversation_view',['id' => $oConversation->getId(),]));
 		}
 		
 		return $this->render('homeplanet/page/acquaintance.html.twig', [

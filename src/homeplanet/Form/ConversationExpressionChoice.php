@@ -50,7 +50,7 @@ class ConversationExpressionChoice {
 	
 	public function getExpressionAr( EntityManager $em ) {
 		$a = $this->_oConversation->getHand( $this->_oCharacter );
-		return $em->getRepository(Expression::class)->find($a);
+		return $em->getRepository(Expression::class)->findBy(['_iId' => $a]);
 		//return $this->_oCharacter->getExpressionAr();
 	}
 	

@@ -8,13 +8,15 @@
 	Aquaintance
 </div>
 <div class="card-block">
-	<div class="list-group">
+	<div class="list-group mb-3">
 	{% for character in characterList %}
 		<a class="list-group-item" href="{{ url('character_view',{id: character.id}) }}">
 			{{ character.label }}
 		</a>
 	{% endfor %}
 	</div>
+	
+	{{ form( form_meet ) }}
 </div>
 </div>
 
