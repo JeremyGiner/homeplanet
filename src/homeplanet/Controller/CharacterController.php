@@ -17,6 +17,10 @@ use homeplanet\modifier\conversation\GivePoint;
 use homeplanet\validator\conversation\OpponentPointRequire;
 use homeplanet\modifier\conversation\AddDebate;
 use homeplanet\Entity\homeplanet\Entity;
+use homeplanet\tool\conversation\NpcBrain;
+use AppBundle\Tool\CartesianProduct;
+use AppBundle\Tool\Combine;
+use AppBundle\Tool\ArrayTool;
 
 /**
  * @Route("/character")
@@ -280,6 +284,128 @@ SELECT id+10000,' ','expression', id FROM expression
 			'expressionOwnershipAr' => array_flip( $aOwnership ),
 			'deck' => $aDeck,
 		]);
+	}
+	
+	/**
+	 * 
+	 * @Route("/test_benchmark", name="test_benchmark")
+	 */
+	public function benchmarkAction( Request $oRequest ) {
+		/*
+		echo 'hello';
+		echo ini_get('memory_limit');
+		exit();
+		*/
+		$this->_handleRequest( $oRequest );
+		$em = $this->getGame()->getEntityManager();
+		
+		
+		$getExpr = function ( $id ) use ($em) { 
+				$o = $em->find(Expression::class, $id);
+				if( $o === null ) throw new \Exception($id.' invalid expression id');
+				return $o;
+		};
+		// Get all deck combination (for a range of expression )
+		/* @var $aDeckAr Expression[][] */
+		/*
+		$aDeckAr = ArrayTool::catesianProduct(array_map(function() use($getExpr) {
+			return \array_map($getExpr, \range(1985,2236));
+		}, \range(0, 8) ));
+		*/
+		\header("HTTP/1.1 200 Ok");
+		echo 'prod carte : ';
+		\ob_flush();
+		
+		//
+		//$o = new CartesianProduct(array_map(function() use($getExpr) {
+		//	return \array_map($getExpr, \range(1985,2236));
+		//}, \range(0, 5) ));
+		$o0 = new Combine(\array_map($getExpr, \range(1985,2236)), 4);
+		$o1 = new Combine(\array_map($getExpr, \range(1985,2236)), 4);
+		//$aDeckAr = $o->asArray();
+		
+		//
+		$oCharacter0 = new Character();
+		$oCharacter1 = new Character();
+		
+		//$c = count($aDeckAr);
+		//$total = 250058907189001;//($c*$c);
+		//$total = ( 2236 - 1985 ) * ( 2236 - 1985 - 1 ) * ( 2236 - 1985 - 2 ) * ( 2236 - 1985 - 3 ) * ( 2236 - 1985 - 4 );
+		//echo 'total : '.$total;
+		\ob_flush();
+		//exit();
+		$aStats = [];
+		$iLoop = 0;
+		foreach( $o0 as $aDeck0 ) 
+		foreach( $o1 as $aDeck1 ) {
+			
+			//echo implode( ';', \array_map(function( $o ){ return $o->getId(); }, $aDeck0) );
+			//echo ' vs ';
+			//echo implode( ';', \array_map(function( $o ){ return $o->getId(); }, $aDeck1) );
+			//echo "<br/>\n";
+			//\ob_flush();
+			//continue;
+			
+			$aDeck0 = ArrayTool::STindexBy($aDeck1, 'id', true);
+			$aDeck1 = ArrayTool::STindexBy($aDeck1, 'id', true);
+			
+			$oConversation = new Conversation(
+					$oCharacter0, 
+					$aDeck0, 
+					$oCharacter1, 
+					$aDeck1
+			);
+			
+			$oWinner = null;
+			foreach ( range(0,50) as $i ) {
+				$oConversation->processExpression(
+					NpcBrain::chooseConversationExpression( $oConversation, $oCharacter0, $aDeck0 ),
+					NpcBrain::chooseConversationExpression( $oConversation, $oCharacter1, $aDeck1 )
+				);
+				
+				$oWinner = $oConversation->getWinner();
+				if( $oWinner !== null )
+					break;
+			}
+			
+			foreach( $aDeck0 as $oExpression ) {
+				if( ! isset( $aStats[ $oExpression->getId() ] ) )
+					$aStats[ $oExpression->getId() ] = ['w'=>0,'l'=>0,'d'=>0];
+				
+				if( $oWinner === $oCharacter0 )
+					$aStats[ $oExpression->getId() ]['w']++;
+				if( $oWinner === $oCharacter1 )
+					$aStats[ $oExpression->getId() ]['l']++;
+				if( $oWinner === null )
+					$aStats[ $oExpression->getId() ]['d']++;
+			}
+			foreach( $aDeck1 as $oExpression ) {
+				if( ! isset( $aStats[ $oExpression->getId() ] ) )
+					$aStats[ $oExpression->getId() ] = ['w'=>0,'l'=>0,'d'=>0];
+				
+				if( $oWinner === $oCharacter1 )
+					$aStats[ $oExpression->getId() ]['w']++;
+				if( $oWinner === $oCharacter0 )
+					$aStats[ $oExpression->getId() ]['l']++;
+				if( $oWinner === null )
+					$aStats[ $oExpression->getId() ]['d']++;
+			}
+			
+			$iLoop++;
+			echo $iLoop."<br/>\n";
+			
+			\ob_flush();
+			
+			//if( $iLoop > 100 ) exit();
+			
+			\file_put_contents('benchmark', \json_encode( $aStats ) );
+		}
+		echo "END<br/>\n";
+			
+		\ob_flush();
+		\file_put_contents('banchmark', \json_encode( $aStats) );
+		
+		exit();
 	}
 	
 //_____________________________________________________________________________

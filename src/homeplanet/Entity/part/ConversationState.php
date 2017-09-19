@@ -82,8 +82,8 @@ class ConversationState {
 		array $aDeck1,
 		array $aHand1
 	) {
-		$this->_iDebateGoal0 = 50;
-		$this->_iDebateGoal1 = 50;
+		$this->_iDebateGoal0 = 25;
+		$this->_iDebateGoal1 = 25;
 		
 		$this->_aPoint = [
 			0 => [ 0, 0, 0, 0 ],
@@ -201,12 +201,28 @@ class ConversationState {
 		return $this;
 	}
 	
+	public function setHand0( array $a ) {
+		$this->_aHand[0] = $a;
+		return $this;
+	}
+	public function setHand1( array $a ) {
+		$this->_aHand[1] = $a;
+		return $this;
+	}
+	
 	public function updateDebate() {
 		if( $this->_iCharacterLeading === null ) return;
 		
 		$this->_iDebate += ( $this->_iCharacterLeading == 0 ) ?
 			$this->getDebateIntensity() :
 			-$this->getDebateIntensity();
+		return $this;
+	}
+	
+	public function addDebate( $iCharacterIndex, $iValue ) {
+		$this->_iDebate += ( $iCharacterIndex == 0 ) ?
+			$iValue :
+			-$iValue;
 		return $this;
 	}
 	
@@ -221,21 +237,15 @@ class ConversationState {
 	}
 	
 	public function addLog(
-		Expression $iExpression0,
-		Expression $iExpression1,
-		array $aNewHand0,
-		array $aNewHand1
+		$iExpression0,
+		$iExpression1
 	) {
 		$this->_aLog[] = new ConversationTurnLog(
-				$iExpression0->getId(), 
-				$iExpression1->getId(), 
+				$iExpression0, 
+				$iExpression1, 
 				$this->_iCharacterLeading,
 				$this->_iDebateIntensity
 		);
-		$this->_aHand = [
-			0 => $aNewHand0,
-			1 => $aNewHand1,
-		];
 		
 		return $this;
 	}

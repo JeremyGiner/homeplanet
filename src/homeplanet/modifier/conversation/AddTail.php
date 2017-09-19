@@ -30,6 +30,6 @@ class AddTail {
 // Process
 
 	public function modify( ConversationContext $oContext ) {
-		$oState = $oContext->conversation->getState()->addTail( $aTypeFilter );
+		$oState = $oContext->conversation->getState()->addTail( $this->_aPointIndex );
 	}
 }

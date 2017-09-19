@@ -1,10 +1,13 @@
 <?php
 namespace homeplanet\Form;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use homeplanet\Entity\Expression;
 use homeplanet\Entity\Character;
 use homeplanet\Entity\Conversation;
 use Doctrine\ORM\EntityManager;
+use homeplanet\Entity\part\ConversationContext;
+
 
 class ConversationExpressionChoice {
 	
@@ -62,4 +65,16 @@ class ConversationExpressionChoice {
 	
 	
 	// TODO validate cost
+	/**
+	 * @Assert\IsTrue(
+	 *     message = "You cannot play this expression"
+	 * )
+	 * @return boolean
+	 */
+	public function validate() {
+		if( $this->_oExpression === null ) return false;
+		return $this->_oExpression->getRequirement()->validate(
+			new ConversationContext($this->_oConversation, $this->_oCharacter)
+		);
+	}
 }

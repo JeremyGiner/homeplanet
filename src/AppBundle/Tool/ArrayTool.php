@@ -85,12 +85,26 @@ class ArrayTool {
 	
 //_____________________________________________________________________________
 
+	
+	static public function catesianProduct( array $aArray ) {
+		$_ = $aArray;
+		if(count($_) == 0)
+			return [[]];
+		$a = array_shift($_);
+		$c = self::catesianProduct($_);
+		$r = array();
+		foreach($a as $v)
+			foreach($c as $p)
+				$r[] = array_merge(array($v), $p);
+		return $r;
+	}
+	
 	/**
 	 * Short hand for aggregate
 	 * @param unknown $mSubject
 	 * @param string $sPropertyPath
 	 */
-	public static function STaggregate( $mSubject, $sPropertyPath ) {
+	static public function STaggregate( $mSubject, $sPropertyPath ) {
 		$o = new ArrayTool();
 		
 		return $o->aggregate($mSubject, $sPropertyPath );
@@ -102,7 +116,7 @@ class ArrayTool {
 	 * @param array $mSubject
 	 * @param string $sPropertyPath
 	 */
-	public static function STindexBy( array $aSubject, $sPropertyPath, $bUniq = false ) {
+	static public function STindexBy( array $aSubject, $sPropertyPath, $bUniq = false ) {
 		$o = new ArrayTool();
 		
 		return $o->indexBy( $aSubject, $sPropertyPath, $bUniq );

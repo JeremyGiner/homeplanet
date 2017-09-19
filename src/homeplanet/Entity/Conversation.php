@@ -62,12 +62,16 @@ class Conversation {
 		Character $oCharacter1,
 		array $aDeck1
 	) {
+		$this->_aState = [null];
 		$this->setState(new ConversationState(
 			array_map(function( Expression $o ){ return $o->getId(); }, $aDeck0 ),
 			$this->draw($aDeck0),
 			array_map(function( Expression $o ){ return $o->getId(); }, $aDeck1 ),
 			$this->draw($aDeck1)
 		));
+		
+		$this->_oCharacter0 = $oCharacter0;
+		$this->_oCharacter1 = $oCharacter1;
 	}
 	
 //_____________________________________________________________________________
@@ -113,12 +117,24 @@ class Conversation {
 	public function getCharacterIndex( Character $oCharacter ) {
 		if( $oCharacter == $this->getCharacter0() ) return 0;
 		if( $oCharacter == $this->getCharacter1() ) return 1;
-		throw new Exception('Character is not in this conversation');
+		throw new \Exception('Character is not in this conversation');
 	}
 	public function getOpponentIndex( Character $oCharacter ) {
 		if( $oCharacter == $this->getCharacter0() ) return 1;
 		if( $oCharacter == $this->getCharacter1() ) return 0;
-		throw new Exception('Character is not in this conversation');
+		throw new \Exception('Character is not in this conversation');
+	}
+	/**
+	 * 
+	 * @throws \Exception
+	 * @return NULL|\homeplanet\Entity\Character
+	 */
+	public function getWinner() {
+		$iWinnerIndex = $this->getState()->getWinnerIndex();
+		if( $iWinnerIndex === null ) return null;
+		if( $iWinnerIndex === 0 ) return $this->getCharacter0();
+		if( $iWinnerIndex === 1 ) return $this->getCharacter1();
+		throw new \Exception('['.$iWinnerIndex.'] is not a valid character index');
 	}
 	
 	public function draw( array $aDeck ) {
@@ -142,11 +158,11 @@ class Conversation {
 //_____________________________________________________________________________
 // Process
 	
-	public function processExpression( Expression $oExp0, Expression $oExp1 ) {
+	public function processExpression( Expression $oExp0 = null, Expression $oExp1 = null ) {
 		
 		// Reset tail
 		$this->getState()->setTail([]);
-		
+		/*
 		if( $this->getState()->getCharacterLeading() == 0 ) {
 			$oExpLeading = $oExp0;
 			$oExpFollowing = $oExp1;
@@ -154,6 +170,7 @@ class Conversation {
 			$oExpLeading = $oExp1;
 			$oExpFollowing = $oExp0;
 		}
+		*/
 		
 		// Create context
 		$oContext0 = new ConversationContext(
@@ -170,30 +187,23 @@ class Conversation {
 		);
 		
 		// Get value
-		$oAddDebate = $oExp0->getAddDebate();
-		$iExp0Value = ($oAddDebate !== null) ? 
-			$oAddDebate->getValue() + $oAddDebate->getBonus($oContext0) :
-			-1;
-		
-		$oAddDebate = $oExp1->getAddDebate();
-		$iExp1Value = ($oAddDebate !== null) ? 
-			$oAddDebate->getValue() + $oAddDebate->getBonus($oContext1) :
-			-1;
+		$iExp0Value = $this->_getValue($oExp0,$oContext0);
+		$iExp1Value = $this->_getValue($oExp1,$oContext1);
 		
 		// Process modifier if their expression value is greater or equal
-		if( $iExp0Value >= $iExp1Value )
+		if( $iExp0Value != -2 && $iExp0Value >= $iExp1Value )
 		foreach( $oExp0->getEffectAr() as $oModifier )
 			$oModifier->modify( $oContext0 );
 		
-		if( $iExp1Value >= $iExp0Value )
-		foreach( $oExpFollowing->getEffectAr() as $oModifier )
+		if( $iExp1Value != -2 && $iExp1Value >= $iExp0Value )
+		foreach( $oExp1->getEffectAr() as $oModifier )
 			$oModifier->modify( $oContext1 );
 		
 		// Update debate point
 		//$this->getState()->updateDebate();
 		
 		// Update log
-		$this->getState()->addLog($oExp0, $oExp1);
+		$this->getState()->addLog($oExp0===null?0:$oExp0->getId(), $oExp1===null?0:$oExp1->getId());
 		
 		// Draw 3
 		$this->getState()->setHand0( 
@@ -205,5 +215,14 @@ class Conversation {
 		
 		// Mark state as updated
 		$this->setState($this->getState());
+	}
+	
+	
+	private function _getValue( Expression $oExp = null, ConversationContext $oContext ) {
+		if( $oExp === null ) return -2;
+		$oAddDebate = $oExp->getAddDebate();
+		return ($oAddDebate !== null) ? 
+			$oAddDebate->getValue() + $oAddDebate->getBonus($oContext) :
+			-1;
 	}
 }

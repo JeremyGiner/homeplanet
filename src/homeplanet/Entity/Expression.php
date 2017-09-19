@@ -40,6 +40,7 @@ class Expression {
 	
 	/**
 	 * @ORM\Column(type="object", name="requirement")
+	 * @var IValidator
 	 */
 	protected $_oRequirement;
 	
