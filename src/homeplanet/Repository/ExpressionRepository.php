@@ -15,7 +15,7 @@ class ExpressionRepository extends EntityRepository {
 	public function getIdByPlayerOwnership( $iPlayerId ) {
 		$oQuery = $this->getEntityManager()->createQuery('
 SELECT expression._iId
-FROM homeplanet\Entity\Player player INDEX BY player._iId
+FROM homeplanet\Entity\Player player
 JOIN player._oCharacter character
 JOIN character._aKnowledge knowledge WITH knowledge._sType = \'expression\'
 JOIN homeplanet\Entity\Expression expression WITH expression._iId = knowledge._iReference

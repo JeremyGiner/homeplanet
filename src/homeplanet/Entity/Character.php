@@ -138,8 +138,18 @@ class Character {
 //	Modifier
 
 	public function setDeck( array $aExpression ) {
-		foreach ( $aExpression as $oExpression )
+		foreach( $aExpression as $oExpression )
 			$this->_aExpression->add( $oExpression );
+		return $this;
+	}
+	
+	public function addDeckExpression( Expression $oExpression ) {
+		$this->_aExpression->add($oExpression);
+		return $this;
+	}
+	
+	public function removeDeckExpression( Expression $oExpression ) {
+		$this->_aExpression->removeElement( $oExpression );
 		return $this;
 	}
 	

@@ -21,6 +21,7 @@ use homeplanet\tool\conversation\NpcBrain;
 use AppBundle\Tool\CartesianProduct;
 use AppBundle\Tool\Combine;
 use AppBundle\Tool\ArrayTool;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 /**
  * @Route("/character")
@@ -247,6 +248,7 @@ SELECT id+10000,' ','expression', id FROM expression
 		 * Passion : 2
 		 * Charm : 3
 		 */
+			/*
 		$oExpression = $this->getGame()->getEntityManager()
 			->find(Expression::class, 1300);
 		
@@ -270,25 +272,85 @@ SELECT id+10000,' ','expression', id FROM expression
 				
 		] );
 		
-		
-		
 		$this->getGame()->getEntityManager()->flush();
+		
+		*/
+		
 		
 		//_____________________________
 		
 		$oExpressionRepo = $this->getGame()->getExpressionRepo();
 		
 		$aExpression = $oExpressionRepo->findAll();
+		$aExpression = ArrayTool::STindexBy($aExpression, 'id', true);
 		
 		$aOwnership = $oExpressionRepo->getIdByPlayerOwnership( $this->getGame()->getPlayer()->getId() );
 		
 		$aDeck = $oExpressionRepo->getIdByPlayerDeck( $this->getGame()->getPlayer()->getId() );
+		
+		//_____________________________
+		// Handle form add to deck
+		
+		$oFormAdd = $this->createNamedBuilder('deck_add')
+			->add('expression',EntityType::class, [
+				'class' => Expression::class,
+				'choice_label' => false,
+				'choices' => \array_map(function( $id ) use ( $aExpression ) { return $aExpression[ $id ]; }, $aOwnership)
+			] )
+			->add('submit', SubmitType::class, ['label' => '<<'])
+			->getForm()
+		;
+		
+		$oFormAdd->handleRequest( $oRequest );
+		if( $oFormAdd->isSubmitted() && $oFormAdd->isValid() ) {
+			/* @var $oExpression Expression */
+			$oExpression = $oFormAdd->getData()['expression'];
+			
+			$this->getGame()->getPlayer()->getCharacter()->addDeckExpression($oExpression);
+			$this->getGame()->getEntityManager()->flush();
+			
+			return $this->redirect($this->generateUrl('character_expression'));
+		}
+		
+		//_____________________________
+		// Handle form add to deck
+		
+		$oFormRemove = $this->createNamedBuilder('deck_remove')
+			->add('expression',EntityType::class, [
+				'class' => Expression::class,
+				'choice_label' => false,
+				'choices' => \array_map(function( $id ) use ( $aExpression ) { return $aExpression[ $id ]; }, $aOwnership)
+			] )
+			->add('submit', SubmitType::class, ['label' => '<<'])
+			->getForm()
+		;
+		
+		$oFormRemove->handleRequest( $oRequest );
+		if( $oFormRemove->isSubmitted() && $oFormRemove->isValid() ) {
+			/* @var $oExpression Expression */
+			$oExpression = $oFormRemove->getData()['expression'];
+			
+			$this->getGame()->getPlayer()->getCharacter()->removeDeckExpression($oExpression);
+			$this->getGame()->getEntityManager()->flush();
+			
+			return $this->redirect($this->generateUrl('character_expression'));
+		}
+		
+		
+		
+		//_____________________________
+		
+		$aFormAddView = [];
+		foreach( $oFormAdd->get('expression')->getConfig()->getOption('choices') as $key => $oExpression ) {
+			$aFormAddView[ $oExpression->getId() ] = $oFormAdd->createView();
+		}
 		
 		return $this->render('homeplanet/page/expression_list.html.twig', [
 			'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
 			'expressionList' => $aExpression,
 			'expressionOwnershipAr' => array_flip( $aOwnership ),
 			'deck' => $aDeck,
+			'formAddAr' => $aFormAddView,
 		]);
 	}
 	

@@ -31,6 +31,10 @@
 	{% for expression in expressionList %}
 		{% if expressionOwnershipAr[ expression.id ] is defined %}
 		<div class="list-group-item">
+			{{ form_start( formAddAr[ expression.id ] ) }}
+				{% do formAddAr[ expression.id ].expression.setRendered %}
+				<input type="hidden" name="{{ formAddAr[ expression.id ].expression.vars.full_name }}" value="{{ expression.id }}">
+			{{ form_end(formAddAr[ expression.id ]) }}
 			{{ printo(expression) }}
 		</div>
 		{% else %}
