@@ -43,6 +43,7 @@ class ConversationController extends BaseController {
 		
 		//_____________________________
 		// Create form
+		
 		$oExpressionChoice = new ConversationExpressionChoice(
 				$oConversation,
 				$oConversation->getCharacter0(),
@@ -64,12 +65,12 @@ class ConversationController extends BaseController {
 		if( $oFormExpression->isSubmitted() && $oFormExpression->isValid() ) {
 			$repo = $this->getGame()->getExpressionRepo();
 			$aDeck1 = array_map( function( $id ) use ( $repo ) { return $repo->find($id); } , $oConversation->getState()->getDeck1() );
-			
+			$aDeck1 = ArrayTool::STindexBy($aDeck1, 'id',true);
 			$oConversation->processExpression(
 					$oExpressionChoice->getExpression(),
 					NpcBrain::chooseConversationExpression(
 							$oConversation, 
-							$oCharacter, 
+							$oConversation->getCharacter1(), 
 							$aDeck1
 					)
 			);
@@ -77,6 +78,10 @@ class ConversationController extends BaseController {
 				
 			return $this->redirect( $this->generateUrl('conversation_view',['id' => $oConversation->getId()]) );
 		}
+		
+		//_____________________________
+		// Render
+		
 		return $this->render(
 				'homeplanet/page/conversation.html.twig',
 				[

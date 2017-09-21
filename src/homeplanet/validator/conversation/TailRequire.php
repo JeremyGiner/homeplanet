@@ -22,13 +22,6 @@ class TailRequire /*implements IConversationValidator*/ {
 //_____________________________________________________________________________
 // Accessor
 	
-	public function getValueCurrent( ConversationContext $oContext ) {
-		return $oConversation->getState()->getPoint( 
-			$oContext->getOpponentIndex(),
-			$this->_iPointIndex
-		);
-	}
-	
 	public function getType() {
 		return $this->_iPointIndex;
 	}
@@ -38,6 +31,6 @@ class TailRequire /*implements IConversationValidator*/ {
 // Process
 	
 	public function validate( ConversationContext $oContext ) {
-		return ! in_array( $this->getType(), $oContext->conversation->getState()->getTail() );
+		return in_array( $this->getType(), $oContext->conversation->getState()->getTail() );
 	}
 }

@@ -7,6 +7,8 @@
 	'charm', 
 ] %}
 
+{% dump(conversation.state) %}
+{% dump(conversation.winner) %}
 {% block page_content %}
 
 <div class="card">
@@ -79,43 +81,64 @@
 		<table class="table">
 		<thead>
 			<tr><td colspan="99" class="text-center">
-				{{ conversation.state.debate }}
+				{{ conversation.state.debateGoal0 }} |
+				{{ conversation.state.debate }} |
+				{{ conversation.state.debateGoal1 }}
 			</td></tr>
 		</thead>
 		<tbody>
-{% for entry in conversation.state.log %}
+{#{% for entry in conversation.state.log %}#}
+{% set entry = conversation.state.log|last%}
 			<tr>
 				<td class="">
-					<span class="label label-default">{{ expressionAr[ entry.expression0Id ].label|capitalize }}</span>
-				</td>
-				<td class="text-center">
-					{% if( entry.characterLeadingId is same as (0) ) %}
-						&larr;
-						{{ entry.debateIntensity }}
-						&larr;
-					{% elseif ( entry.characterLeadingId is same as(1) ) %}
-						&rarr;
-						{{ entry.debateIntensity }}
-						&rarr;
-					{% else %}
-						{{ entry.debateIntensity }}
-					{% endif %}
+					<span class="label label-default">{{ printo( expressionAr[ entry.expression0Id ] ) }}</span>
 				</td>
 				<td class="text-right">
-					<span class="label label-default">{{ expressionAr[ entry.expression1Id ].label|capitalize }}</span>
+					<span class="label label-default">{{ printo( expressionAr[ entry.expression1Id ] ) }}</span>
 				</td>
 			</tr>
-{% endfor %}
+{#{% endfor %}#}
 			<tr class="active TODO-animation">
 				<td colspan="99" class="">
 					<div class="row">
-					{% for expression in expressionAr  %}
-					<div class="col-3">
-						{{ printo( expression, { 
-							context: conversation.context0, 
-						} ) }}
+					<div class="col-12">
+{#
+CARD VIEWER
+#}
+<div class="row">
+<div class="col-auto">
+
+<div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
+{% set first = true %}
+{% for expression in expressionAr  %}
+	<a 
+		id="nav-link-expression-{{ expression.id}}" 
+		class="nav-link {{ first ? 'active' }}" 
+		data-toggle="tab" href="#tab-expression-{{ expression.id }}" role="tab" 
+		aria-controls="tab-expression-{{ expression.id}}" aria-expanded="true"
+	>{{ expression.label|capitalize }}</a>
+	{% set first = false %}
+{% endfor %}
+</div>
+
+</div>
+<div class="col">
+
+<div class="tab-content">
+{% set first = true %}
+{% for expression in expressionAr  %}
+	<div 
+		id="tab-expression-{{ expression.id }}" 
+		class="tab-pane fade {{ first ? 'show active' }}" 
+		role="tabpanel" aria-labelledby="nav-link-expression-{{ expression.id }}"
+	>{{ printo(expression) }}</div>
+	{% set first = false %}
+{% endfor %}
+</div>
+
+</div>
+</div>
 					</div>
-					{% endfor %}
 					<div class="col-12">
 						{{ form_start(form) }}
 							{{ form_errors(form) }}
@@ -127,7 +150,7 @@
 		<label class="btn btn-secondary clickable {{ child.vars.checked ? 'active'}} {{ child.vars.disabled ? 'disabled'}}">
 			{{ form_widget(child) }}
 			{# {{ form.expression.vars.translation_domain is same as(false) ? child.vars.label : child.vars.label|trans({}, form.expression.vars.translation_domain) }} #}
-			{{ printo( child.vars.label_printo, { context: conversation.context0 } ) }}
+			{% dump(child.vars.label_printo) %}{{ printo( child.vars.label_printo, { context: conversation.context0 } ) }}
 		</label
 		>{% endfor %}
 	</div>

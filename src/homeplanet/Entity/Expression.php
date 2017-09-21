@@ -167,6 +167,14 @@ class Expression {
 		return $oTailRequire->getType();
 	}
 	
+	public function getTailModifier() {
+		foreach( $this->_aEffect as $oModifier ) {
+			if( $oModifier instanceof AddTail )
+				return $oModifier;
+		}
+		return null;
+	}
+	
 //_____________________________________________________________________________
 //	Modifier
 

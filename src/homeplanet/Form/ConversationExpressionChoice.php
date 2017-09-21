@@ -71,7 +71,7 @@ class ConversationExpressionChoice {
 	 * )
 	 * @return boolean
 	 */
-	public function validate() {
+	public function isValid() {
 		if( $this->_oExpression === null ) return false;
 		return $this->_oExpression->getRequirement()->validate(
 			new ConversationContext($this->_oConversation, $this->_oCharacter)

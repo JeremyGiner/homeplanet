@@ -63,10 +63,13 @@ class Conversation {
 		array $aDeck1
 	) {
 		$this->_aState = [null];
+		
+		$aDeck0 = array_map(function( Expression $o ){ return $o->getId(); }, $aDeck0 );
+		$aDeck1 = array_map(function( Expression $o ){ return $o->getId(); }, $aDeck1 );
 		$this->setState(new ConversationState(
-			array_map(function( Expression $o ){ return $o->getId(); }, $aDeck0 ),
+			$aDeck0,
 			$this->draw($aDeck0),
-			array_map(function( Expression $o ){ return $o->getId(); }, $aDeck1 ),
+			$aDeck1,
 			$this->draw($aDeck1)
 		));
 		

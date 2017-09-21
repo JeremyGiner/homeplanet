@@ -128,8 +128,8 @@ class ConversationState {
 	}
 	
 	public function getHand( $iCharacterIndex ) {
-		if( ! isset( $this->_aDeck[$iCharacterIndex] ) ) throw new \Exception();
-		return $this->_aDeck[$iCharacterIndex];
+		if( ! isset( $this->_aHand[$iCharacterIndex] ) ) throw new \Exception();
+		return $this->_aHand[$iCharacterIndex];
 	}
 	public function getDeck1() {
 		return $this->_aDeck[1];

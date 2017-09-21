@@ -2,21 +2,40 @@
 <div class="card card-expression small">
 <div class="card-header bg-aspect-{{ o.tailRequire.type|default('') }}">
 </div>
-<div class="card-block">
-	<strong>{{ o.label|capitalize }}</strong>
-	<div class="float-right">
-	{% if o.requirement() == null %}
-		<span class="text-muted lead">&empty;</span>
-	{% else %}
-		{{ printo( o.requirement(), { 
-			context: param.context|default(null),
-		} ) }}
+<div class="card-block text-left">
+	<div class="row">
+	<div class="col-12">
+		<strong>{{ o.label|capitalize }}</strong>
+		<div class="float-right">
+		{% if o.requirement() == null %}
+			<span class="text-muted lead">&empty;</span>
+		{% else %}
+			{{ printo( o.requirement(), { 
+				context: param.context|default(null),
+			} ) }}
+		{% endif %}
+		</div>
+	</div>
+	<div class="col-3"></div>
+	<div class="col-6 p-0">
+		<img class="img-fluid" src="http://scmapdb.wdfiles.com/local--resized-images/wad:developer-textures/dev_256_gr_032x.jpg/small.jpg" />
+	</div>
+	<div class="col-3"></div>
+	<div class="col-12">
+		<p>{{ o.description }}</p>
+		{% for effect in o.effectAr %}
+			{{ printo(effect) }}<br/>
+		{% endfor %}
+	</div>
+	<div class="w-100"></div>
+	{% if o.tailModifier != null %}
+	{% for type in o.tailModifier.typeAr %}
+	<div class="col">
+		<div class=" py-2 bg-aspect-{{type}}"></div>
+	</div>
+	{% endfor %}
 	{% endif %}
 	</div>
-	<p>{{ o.description }}</p>
-	{% for effect in o.effectAr %}
-		{{ printo(effect) }};
-	{% endfor %}
 </div>
 </div>
 
