@@ -388,8 +388,8 @@ SELECT id+10000,' ','expression', id FROM expression
 		//$o = new CartesianProduct(array_map(function() use($getExpr) {
 		//	return \array_map($getExpr, \range(1985,2236));
 		//}, \range(0, 5) ));
-		$o0 = new Combine(\array_map($getExpr, \range(1985,2236)), 4);
-		$o1 = new Combine(\array_map($getExpr, \range(1985,2236)), 4);
+		$o0 = new Combine(\array_map($getExpr, \range(1985,2000)), 4);
+		$o1 = new Combine(\array_map($getExpr, \range(1985,2000)), 4);
 		//$aDeckAr = $o->asArray();
 		
 		//
@@ -407,28 +407,28 @@ SELECT id+10000,' ','expression', id FROM expression
 		foreach( $o0 as $aDeck0 ) 
 		foreach( $o1 as $aDeck1 ) {
 			
-			//echo implode( ';', \array_map(function( $o ){ return $o->getId(); }, $aDeck0) );
-			//echo ' vs ';
-			//echo implode( ';', \array_map(function( $o ){ return $o->getId(); }, $aDeck1) );
-			//echo "<br/>\n";
-			//\ob_flush();
+			echo implode( ';', \array_map(function( $o ){ return $o->getId(); }, $aDeck0) );
+			echo ' vs ';
+			echo implode( ';', \array_map(function( $o ){ return $o->getId(); }, $aDeck1) );
+			echo "<br/>\n";
+			\ob_flush();
 			//continue;
 			
-			$aDeck0 = ArrayTool::STindexBy($aDeck1, 'id', true);
-			$aDeck1 = ArrayTool::STindexBy($aDeck1, 'id', true);
+			$aDeck0ById = ArrayTool::STindexBy($aDeck0, 'id', true);
+			$aDeck1ById = ArrayTool::STindexBy($aDeck1, 'id', true);
 			
 			$oConversation = new Conversation(
 					$oCharacter0, 
-					$aDeck0, 
+					$aDeck0ById, 
 					$oCharacter1, 
-					$aDeck1
+					$aDeck1ById
 			);
 			
 			$oWinner = null;
 			foreach ( range(0,50) as $i ) {
 				$oConversation->processExpression(
-					NpcBrain::chooseConversationExpression( $oConversation, $oCharacter0, $aDeck0 ),
-					NpcBrain::chooseConversationExpression( $oConversation, $oCharacter1, $aDeck1 )
+					NpcBrain::chooseConversationExpression( $oConversation, $oCharacter0, $aDeck0ById ),
+					NpcBrain::chooseConversationExpression( $oConversation, $oCharacter1, $aDeck1ById )
 				);
 				
 				$oWinner = $oConversation->getWinner();
@@ -437,26 +437,28 @@ SELECT id+10000,' ','expression', id FROM expression
 			}
 			
 			foreach( $aDeck0 as $oExpression ) {
-				if( ! isset( $aStats[ $oExpression->getId() ] ) )
-					$aStats[ $oExpression->getId() ] = ['w'=>0,'l'=>0,'d'=>0];
+				$id = $oExpression->getId();
+				if( ! isset( $aStats[ $id ] ) )
+					$aStats[ $id ] = ['w'=>0,'l'=>0,'d'=>0,'ID' => $oExpression->getLabel()];
 				
 				if( $oWinner === $oCharacter0 )
-					$aStats[ $oExpression->getId() ]['w']++;
+					$aStats[ $id ]['w']++;
 				if( $oWinner === $oCharacter1 )
-					$aStats[ $oExpression->getId() ]['l']++;
+					$aStats[ $id ]['l']++;
 				if( $oWinner === null )
-					$aStats[ $oExpression->getId() ]['d']++;
+					$aStats[ $id ]['d']++;
 			}
 			foreach( $aDeck1 as $oExpression ) {
-				if( ! isset( $aStats[ $oExpression->getId() ] ) )
-					$aStats[ $oExpression->getId() ] = ['w'=>0,'l'=>0,'d'=>0];
+				$id = $oExpression->getId();
+				if( ! isset( $aStats[ $id ] ) )
+					$aStats[ $oExpression->getId() ] = ['w'=>0,'l'=>0,'d'=>0,'ID' => $oExpression->getLabel()];
 				
 				if( $oWinner === $oCharacter1 )
-					$aStats[ $oExpression->getId() ]['w']++;
+					$aStats[ $id ]['w']++;
 				if( $oWinner === $oCharacter0 )
-					$aStats[ $oExpression->getId() ]['l']++;
+					$aStats[ $id ]['l']++;
 				if( $oWinner === null )
-					$aStats[ $oExpression->getId() ]['d']++;
+					$aStats[ $id ]['d']++;
 			}
 			
 			$iLoop++;

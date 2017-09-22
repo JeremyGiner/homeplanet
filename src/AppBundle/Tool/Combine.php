@@ -7,8 +7,15 @@ use Countable;
 use IteratorAggregate;
 
 //TODO : find proper name
-class Combine implements IteratorAggregate, Countable
-{
+/**
+ * foreach( (new Combine(\range(0,10), 3)) as $m ) {
+			echo \implode(';', $m);
+			echo "<br/>\n";
+		}
+ * @author JGINER
+ *
+ */
+class Combine implements IteratorAggregate, Countable {
 	/**
 	 * @var array
 	 */
@@ -28,28 +35,31 @@ class Combine implements IteratorAggregate, Countable
 	 * @var int
 	 */
 	private $_iRecursion = 1;
+	
+//_____________________________________________________________________________
 
 	/**
 	 * CartesianProduct constructor.
 	 * @param array $set - A multidimensionnal array.
 	 * @param int $i - Size of result
 	 */
-	public function __construct(array $set, $i )
-	{
+	public function __construct(array $set, $i ) {
 		$this->set = $set;
 		$this->_iRecursion = $i;
 		if( $this->_iRecursion < 1 ) 
 			throw new \Exception('Recusion must be >= 1; '.$this->_iRecursion.' given');
 	}
+	
+//_____________________________________________________________________________
 
 	/**
 	 * @return \Generator
 	 */
 	public function getIterator() {
 		if (empty($this->set)) {
-			if (true === $this->isRecursiveStep) {
-				yield [];
-			}
+			//throw new \Exception('empty set');
+			yield[];
+			return;
 		}
 		
 		if( $this->_iRecursion == 1 ) {
@@ -59,15 +69,19 @@ class Combine implements IteratorAggregate, Countable
 			return;
 		}
 		
-		$a = $this->set+[];//Clone
+		$a = array_merge($this->set,[]);//Clone
 		
 		//$keys = array_keys($a);
 		//$key = end($keys);
-		$ref_value = array_pop($a);
 		
-		//$this->validate($subset, $key);
-		foreach (self::subset( $a, $this->_iRecursion-1 ) as $product)  {
-			yield array_merge( [$ref_value], $product );
+		while ( !empty( $a ) ) {
+			
+			$mValue = array_pop($a);
+			if( empty ($a ) ) return;
+			$oSubSet = new self($a, $this->_iRecursion-1);
+			foreach ( $oSubSet as $aSet ) {
+				yield array_merge( [$mValue], $aSet );
+			}
 		}
 	}
 
@@ -83,17 +97,6 @@ class Combine implements IteratorAggregate, Countable
 	}
 
 	/**
-	 * @param array $subset
-	 * @return CartesianProduct
-	 */
-	private static function subset(array $subset, $i )
-	{
-		$product = new self($subset, $i);
-		$product->isRecursiveStep = true;
-		return $product;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function asArray()
@@ -106,12 +109,15 @@ class Combine implements IteratorAggregate, Countable
 	 */
 	public function count()
 	{
+		//TODO
+		/*
 		if (null === $this->count) {
 			$this->count = (int) array_product(array_map(function ($subset, $key) {
 				$this->validate($subset, $key);
 				return count($subset);
 			}, $this->set, array_keys($this->set)));
 		}
+		*/
 		return $this->count;
 	}
 }

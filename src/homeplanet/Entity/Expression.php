@@ -139,7 +139,9 @@ class Expression {
 	}
 	
 	public function getAddDebate() {
-		foreach( $this->getEffectAr() as $oEffect ) {
+		$aEffect = $this->getEffectAr();
+		if( $aEffect == null ) return null;
+		foreach( $aEffect as $oEffect ) {
 			if( $oEffect instanceof AddDebate ) return $oEffect;
 		}
 		return null;
@@ -168,7 +170,9 @@ class Expression {
 	}
 	
 	public function getTailModifier() {
-		foreach( $this->_aEffect as $oModifier ) {
+		$aEffect = $this->getEffectAr();
+		if( $aEffect == null ) return null;
+		foreach( $aEffect as $oModifier ) {
 			if( $oModifier instanceof AddTail )
 				return $oModifier;
 		}

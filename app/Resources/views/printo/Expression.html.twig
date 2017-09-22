@@ -1,8 +1,9 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
 <div class="card card-expression small">
-<div class="card-header bg-aspect-{{ o.tailRequire.type|default('') }}">
+<div class="card-header text-center bg-aspect-{{ o.tailRequire.type|default('') }}">
+	<strong>{{ o.addDebate.value|default('&nbsp;')|raw }}</strong>
 </div>
-<div class="card-block text-left">
+<div class="container-fluid">
 	<div class="row">
 	<div class="col-12">
 		<strong>{{ o.label|capitalize }}</strong>
@@ -36,6 +37,6 @@
 	{% endfor %}
 	{% endif %}
 	</div>
-</div>
+	</div>
 </div>
 

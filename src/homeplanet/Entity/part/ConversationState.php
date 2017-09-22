@@ -98,10 +98,9 @@ class ConversationState {
 			0 => $aDeck0,
 			1 => $aDeck1,
 		];
-		$this->_aHand = [
-			0 => $aHand0,
-			1 => $aHand1,
-		];
+		$this->_aHand = [];
+		$this->setHand0($aHand0);
+		$this->setHand1($aHand1);
 		
 		$this->_aLogDraw = [[
 			0 => $aHand0,
