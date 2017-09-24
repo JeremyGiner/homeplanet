@@ -5,7 +5,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use homeplanet\Entity\Conversation;
 use homeplanet\tool\conversation\NpcBrain;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use homeplanet\Form\ConversationExpressionChoice;
 use homeplanet\Form\ConversationExpressionChoiceForm;
 use homeplanet\Entity\part\ConversationContext;
@@ -40,6 +39,9 @@ class ConversationController extends BaseController {
 		if( $oConversation == null ) throw $this->createNotFoundException('No conversation found');
 		
 		//TODO : check user access
+		
+		if( $oConversation->getWinner() !== null )
+			return $this->_resultAction($oConversation);
 		
 		//_____________________________
 		// Create form
@@ -101,9 +103,54 @@ class ConversationController extends BaseController {
 	}
 	
 	
+	
 //_____________________________________________________________________________
 // Sub-routine
 
+	/**
+	 * Handle end of the conversation, summarize 
+	 */
+	private function _resultAction( Conversation $oConversation ) {
+		
+		// Get reward
+		$sReward = $oConversation->getReward();
+		
+		// Give reward
+		switch( $sReward ) {
+			case 'meet' : 
+				$em = $this->getGame()->getEntityManager();
+				$this->getGame()->getPlayer()->getCharacter()
+					->addAcquaintance($oConversation->getCharacter1());
+				$em->remove( $oConversation );
+				$em->flush();
+			break;
+		}
+		
+		// Get type
+		$sType = null;
+		switch( $sReward ) {
+			case 'meet' : 
+			default:
+				$sType = $sReward;
+		}
+		
+		// Get link "next" from reward
+		$sLinkNext = $this->generateUrl('overview');
+		switch( $sReward ) {
+			case 'meet' : $sLinkNext = $this->generateUrl('character_view',['id' => $oConversation->getCharacter1()->getId()]); break;
+		}
+		
+		
+		return $this->render(
+			'homeplanet/page/conversation_result.html.twig',
+			[
+				'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
+				'conversation' => $oConversation,
+				'type' => $sType,
+				'link_next' => $sLinkNext,
+			]
+		);
+	}
 
 	
 }

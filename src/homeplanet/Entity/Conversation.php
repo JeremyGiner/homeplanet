@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 use homeplanet\Entity\part\ConversationContext;
 use homeplanet\Entity\part\ConversationState;
-use homeplanet\Entity\part\homeplanet\Entity\part;
 
 /**
  * @ORM\Table(name="conversation")
@@ -53,6 +52,11 @@ class Conversation {
 	 */
 	protected $_aState;
 	
+	/**
+	 * @ORM\Column(type="string", name="reward")
+	 */
+	protected $_sReward;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
@@ -60,7 +64,8 @@ class Conversation {
 		Character $oCharacter0,
 		array $aDeck0,
 		Character $oCharacter1,
-		array $aDeck1
+		array $aDeck1,
+		$sReward
 	) {
 		$this->_aState = [null];
 		
@@ -75,6 +80,8 @@ class Conversation {
 		
 		$this->_oCharacter0 = $oCharacter0;
 		$this->_oCharacter1 = $oCharacter1;
+		
+		$this->_sReward = $sReward;
 	}
 	
 //_____________________________________________________________________________
@@ -117,6 +124,10 @@ class Conversation {
 		return reset( $this->_aState );
 	}
 	
+	public function getReward() {
+		return $this->_sReward;
+	}
+	
 	public function getCharacterIndex( Character $oCharacter ) {
 		if( $oCharacter === $this->getCharacter0() ) return 0;
 		if( $oCharacter === $this->getCharacter1() ) return 1;
@@ -148,6 +159,7 @@ class Conversation {
 			array_pop( $aDeck ),
 		];
 	}
+	
 	
 //_____________________________________________________________________________
 // Modifier

@@ -1,0 +1,23 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+
+{% block page_content %}
+
+<div class="card">
+<div class="card-header">
+	Congratulation
+</div>
+<div class="card-block">
+	<p>
+	{% if type == 'meet' %}
+		{{ printo( conversation.character1, { _suffix: 'link'} ) }} is now an acquaintance of yours.
+	{% endif %}
+	</p>
+	<a class="btn btn-primary" href="{{ link_next }}">
+		Next
+	</a>
+</div>
+</div>
+
+
+{% endblock %}

@@ -74,6 +74,14 @@ CREATE TABLE IF NOT EXISTS `characternamereference` (
 ) ENGINE=MyISAM AUTO_INCREMENT=201 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
+-- Dumping structure for table homeplanet.character_acquaintance
+CREATE TABLE IF NOT EXISTS `character_acquaintance` (
+  `character_id` int(10) unsigned NOT NULL,
+  `target_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`character_id`,`target_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
 -- Dumping structure for table homeplanet.character_expression
 CREATE TABLE IF NOT EXISTS `character_expression` (
   `character_id` int(10) unsigned NOT NULL,
@@ -123,12 +131,13 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   `character0_id` int(10) unsigned NOT NULL,
   `character1_id` int(10) unsigned NOT NULL,
   `state` text,
+  `reward` text,
   PRIMARY KEY (`id`),
   KEY `FK_conversation_character` (`character0_id`),
   KEY `FK_conversation_character_2` (`character1_id`),
   CONSTRAINT `FK_conversation_character` FOREIGN KEY (`character0_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_conversation_character_2` FOREIGN KEY (`character1_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.demand
@@ -156,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `generation_key` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `generation_key` (`generation_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=1985 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1301 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate
@@ -434,12 +443,13 @@ CREATE TABLE IF NOT EXISTS `ressource_rescategory` (
 CREATE TABLE IF NOT EXISTS `sovereign` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) DEFAULT NULL,
+  `character_id` int(10) unsigned NOT NULL,
   `capital` int(10) unsigned NOT NULL,
   `taxe_ratio` float unsigned NOT NULL DEFAULT '1',
   `budget` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_sovereign_city` (`capital`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.user
@@ -1268,17 +1278,24 @@ BEGIN
 	DECLARE bDone INT;
 
 	DECLARE city_id INT;
+	DECLARE character_id INT;
 	DECLARE sovereign_id INT;
 	
 	DECLARE curs CURSOR FOR
-		# Get all big city with no influence 
+		# Get all big city with no influence and a character in it
 		SELECT 
-			city.id as city_id 
+			city.id as city_id,
+			MAX(cha.id)
 		FROM city
 		JOIN population ON population.city_id = city.id
 		JOIN influence_sum ON influence_sum.city_id = city.id 
 			AND influence_sum.sum_value IS NULL
-		WHERE population.quantity >= 10;
+		JOIN `character` as cha 
+			ON cha.location_x = city.location_x 
+			AND cha.location_y = city.location_y
+			AND cha.occupation != 'merchant'
+		WHERE population.quantity >= 10
+		GROUP BY city.id;
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET bDone = 1;
 
 	OPEN curs;
@@ -1286,12 +1303,12 @@ BEGIN
 	SET bDone = 0;
 	loopy: LOOP
 		
-		FETCH curs INTO city_id;
+		FETCH curs INTO city_id, character_id;
 		IF bDone = 1 THEN LEAVE loopy; END IF;
 		
 		START TRANSACTION;
-			INSERT INTO sovereign(capital)
-			VALUES (city_id);
+			INSERT INTO sovereign(capital, character_id)
+			VALUES (city_id, character_id);
 			
 			SET sovereign_id = LAST_INSERT_ID();
 			
@@ -1300,7 +1317,11 @@ BEGIN
 			
 			INSERT INTO budgetplan( sovereign_id, type_id, priority )
 			SELECT sovereign_id, id, 100
-			FROM budgetplantype
+			FROM budgetplantype;
+			
+			UPDATE `character`
+			SET `character`.occupation = 'sovereign'
+			WHERE `character`.id = character_id;
 		COMMIT;
 	
 	END LOOP loopy;

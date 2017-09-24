@@ -16,7 +16,6 @@ use homeplanet\modifier\conversation\AddPoint;
 use homeplanet\modifier\conversation\GivePoint;
 use homeplanet\validator\conversation\OpponentPointRequire;
 use homeplanet\modifier\conversation\AddDebate;
-use homeplanet\Entity\homeplanet\Entity;
 use homeplanet\tool\conversation\NpcBrain;
 use AppBundle\Tool\CartesianProduct;
 use AppBundle\Tool\Combine;
@@ -94,7 +93,9 @@ class CharacterController extends BaseController {
 				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr(),
 				
 				$this->getGame()->getCharacterRepo()->getRandom( null, $this->getGame()->getPlayer()->getCharacter()->getId() ),
-				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr()
+				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr(),
+				
+				'meet'
 			);
 			$em->persist( $oConversation );
 			$em->flush();
@@ -335,8 +336,6 @@ SELECT id+10000,' ','expression', id FROM expression
 			
 			return $this->redirect($this->generateUrl('character_expression'));
 		}
-		
-		
 		
 		//_____________________________
 		

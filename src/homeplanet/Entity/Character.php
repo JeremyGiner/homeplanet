@@ -68,6 +68,17 @@ class Character {
 	protected $_aKnowledge;
 	
 	/**
+	 * @ORM\ManyToMany(targetEntity="homeplanet\Entity\Character")
+	 * @ORM\JoinTable(
+	 *     name="character_acquaintance",
+	 *     joinColumns={@ORM\JoinColumn(name="character_id", referencedColumnName="id")},
+	 *     inverseJoinColumns={@ORM\JoinColumn(name="target_id", referencedColumnName="id")}
+	 * )
+	 * @var Collection
+	 */
+	protected $_aAcquaintance;
+	
+	/**
 	 * @ORM\ManyToMany(targetEntity="homeplanet\Entity\Expression")
 	 * @ORM\JoinTable(
 	 *     name="character_expression",
@@ -133,6 +144,13 @@ class Character {
 		return $this->_aKnowledge->toArray();
 	}
 	
+	/**
+	 * @return Character[]
+	 */
+	public function getAcquaintanceAr() {
+		return $this->_aAcquaintance->toArray();
+	}
+	
 	
 //_____________________________________________________________________________
 //	Modifier
@@ -150,6 +168,11 @@ class Character {
 	
 	public function removeDeckExpression( Expression $oExpression ) {
 		$this->_aExpression->removeElement( $oExpression );
+		return $this;
+	}
+	
+	public function addAcquaintance( Character $oCharacter ) {
+		$this->_aAcquaintance->add($oCharacter);
 		return $this;
 	}
 	
@@ -178,7 +201,7 @@ class Character {
 			'city' => [
 				'traveler' => 1,
 				'merchant' => 10,
-				'worker' => 10,
+				'labourer' => 10,
 				'soldier' => 5,	//TODO: depend on city security
 				'spy' => 1,
 			],
