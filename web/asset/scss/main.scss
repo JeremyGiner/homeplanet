@@ -146,6 +146,18 @@ a:hover, a:focus {
 	background-color: $conver-aspect-3;
 	color: white;
 }
+.border-aspect-0 {
+	border: 2px solid  $conver-aspect-0;
+}
+.border-aspect-1 {
+	border: 2px solid  $conver-aspect-1;
+}
+.border-aspect-2 {
+	border: 2px solid  $conver-aspect-2;
+}
+.border-aspect-3 {
+	border: 2px solid  $conver-aspect-3;
+}
 
 .badge-aspect-0 {
 	border: 2px solid $conver-aspect-0;
@@ -170,4 +182,20 @@ a:hover, a:focus {
 .badge-aspect-3.disabled {
 	color: inherit;
 	background-color: white;
+}
+
+.card-expression {
+	width: 200px;
+}
+
+.medal-debate {
+	z-index: 1000;
+	font-size: 2em;
+	position: relative;
+	display: inline-block;
+	width: 1.5em;
+	height: 1.5em;
+	line-height: 1.25em;
+	margin-top: -15px;
+	margin-bottom: -5px;
 }

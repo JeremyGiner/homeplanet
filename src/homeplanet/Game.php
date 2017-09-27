@@ -23,6 +23,8 @@ use homeplanet\Repository\ProductionRepository;
 use homeplanet\Entity\GameState;
 use homeplanet\Entity\Expression;
 use homeplanet\Repository\ExpressionRepository;
+use homeplanet\Entity\Deck;
+use homeplanet\Repository\DeckRepository;
 
 class Game {
 	/**
@@ -131,6 +133,12 @@ JOIN pawntype._aProdType prodtype
 	 */
 	public function getCharacterRepo() {
 		return $this->_oEntityManager->getRepository(Character::class);
+	}
+	/**
+	 * @return DeckRepository
+	 */
+	public function getDeckRepo() {
+		return $this->_oEntityManager->getRepository(Deck::class);
 	}
 	/**
 	 * @return ExpressionRepository

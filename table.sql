@@ -55,13 +55,16 @@ CREATE TABLE IF NOT EXISTS `budgetplantype` (
 CREATE TABLE IF NOT EXISTS `character` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `occupation` varchar(50) NOT NULL,
+  `deck_id` int(10) unsigned NOT NULL DEFAULT '1',
   `personality` varchar(50) NOT NULL,
   `appearance` varchar(50) NOT NULL,
   `label` varchar(50) NOT NULL,
   `location_x` int(11) NOT NULL,
   `location_y` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `location_x_location_y` (`location_x`,`location_y`)
+  KEY `location_x_location_y` (`location_x`,`location_y`),
+  KEY `deck_id` (`deck_id`),
+  CONSTRAINT `FK_character_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -140,6 +143,25 @@ CREATE TABLE IF NOT EXISTS `conversation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
+-- Dumping structure for table homeplanet.deck
+CREATE TABLE IF NOT EXISTS `deck` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.deck_expression
+CREATE TABLE IF NOT EXISTS `deck_expression` (
+  `deck_id` int(10) unsigned NOT NULL,
+  `expression_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`deck_id`,`expression_id`),
+  KEY `FK_deck_expression_expression` (`expression_id`),
+  CONSTRAINT `FK_deck_expression_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_deck_expression_expression` FOREIGN KEY (`expression_id`) REFERENCES `expression` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
 -- Dumping structure for table homeplanet.demand
 CREATE TABLE IF NOT EXISTS `demand` (
   `city_id` int(10) unsigned NOT NULL,
@@ -165,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `generation_key` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `generation_key` (`generation_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=1301 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1481 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate
@@ -449,7 +471,7 @@ CREATE TABLE IF NOT EXISTS `sovereign` (
   `budget` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_sovereign_city` (`capital`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.user

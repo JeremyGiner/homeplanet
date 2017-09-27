@@ -1,0 +1,12 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+
+<div class="row">
+<div class="col-12">
+	{{ o.label }}
+</div>
+{% for expression in o.expressionAr %}
+<div class="col-auto">
+	{{ printo( expression ) }}
+</div>
+{% endfor %}
+</div>

@@ -50,7 +50,7 @@ WHERE character._iId != :id
 			return $oCharacter;
 		
 		// Generate random char
-		$oCharacter = Character::generate( $oLocation, 'city' );
+		$oCharacter = Character::generate( $this->getEntityManager(), $oLocation, 'city' );
 		
 		return $oCharacter;
 	}

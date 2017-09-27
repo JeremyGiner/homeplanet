@@ -40,19 +40,16 @@ class Character {
 	
 	/**
 	 * @ORM\Column(type="string", name="occupation")
-	 * @var array
 	 */
 	protected $_sOccupation;
 	
 	/**
 	 * @ORM\Column(type="string", name="personality")
-	 * @var array
 	 */
 	protected $_sPersonality;
 	
 	/**
 	 * @ORM\Column(type="string", name="appearance")
-	 * @var array
 	 */
 	protected $_sAppearance;
 	
@@ -89,21 +86,30 @@ class Character {
 	 */
 	protected $_aExpression;
 	
+	/**
+	 * @ORM\OneToOne(targetEntity="\homeplanet\Entity\Deck")
+	 * @ORM\JoinColumn(name="deck_id", referencedColumnName="id")
+	 * @var Deck
+	 */
+	protected $_oDeck;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
 	public function __construct() {
 	}
 	
-	static public function generate( Location $oLocation, $sPlace ) {
+	static public function generate( EntityManager $em, Location $oLocation, $sPlace ) {
 		$o = new Character();
 		
 		$o->_x = 0;//$oLocation->getX();
 		$o->_y = 0;//$oLocation->getY();
 		
-		
 		// Get occupation
 		$o->_sOccupation = self::_generate_occupation( $sPlace );
+		
+		// Set Deck
+		$o->_oDeck = $em->getReference(Deck::class, 1);
 		
 		// Get appearance
 		//TODO
@@ -131,6 +137,10 @@ class Character {
 		return $this->_sLabel;
 	}
 	
+	public function getDeck() {
+		return $this->_oDeck;
+	}
+	
 	public function getPersonality() {
 		return $this->_sPersonality;
 	}
@@ -155,9 +165,8 @@ class Character {
 //_____________________________________________________________________________
 //	Modifier
 
-	public function setDeck( array $aExpression ) {
-		foreach( $aExpression as $oExpression )
-			$this->_aExpression->add( $oExpression );
+	public function setDeck( Deck $o ) {
+		$this->_oDeck = $o;
 		return $this;
 	}
 	

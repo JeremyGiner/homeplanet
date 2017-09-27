@@ -153,7 +153,7 @@ SELECT id+10000,' ','expression', id FROM expression
 		//______________________________
 		//DEV
 		//GENERATE expression
-		/*
+		
 		$em = $this->getGame()->getEntityManager();
 		
 		function array_cartesian() {
@@ -219,8 +219,8 @@ SELECT id+10000,' ','expression', id FROM expression
 					[1,2,3],
 			],
 			range(0,5),		// debate
-			range(-5,5),	// gain
-			range(-5,5),	// given
+			range(-3,3),	// gain
+			range(-3,3),	// given
 			[true,false]	// counter
 		);
 		foreach( $aCombination as $a ) {
@@ -242,7 +242,7 @@ SELECT id+10000,' ','expression', id FROM expression
 		} 
 		$em->flush();
 		//_____________________________
-		*/
+		
 		/**
 		 * Persuade : 0
 		 * Coerce : 1

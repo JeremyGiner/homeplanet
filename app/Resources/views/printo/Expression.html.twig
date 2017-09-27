@@ -1,12 +1,19 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
 <div class="card card-expression small">
-<div class="card-header text-center bg-aspect-{{ o.tailRequire.type|default('') }}">
-	<strong>{{ o.addDebate.value|default('&nbsp;')|raw }}</strong>
+<div class="card-header bg-aspect-{{ o.tailRequire.type|default('') }}">
+	<div class="row justify-content-between">
+		<strong class="col col-auto">{{ o.label|capitalize }}</strong>
+	</div>
 </div>
 <div class="container-fluid">
 	<div class="row">
+	<div class="col-12 text-center">
+		<span class="bg-dark rounded-circle medal-debate border-aspect-{{ o.tailRequire.type|default('') }}">
+			{{ o.addDebate.value|default('&empty;')|raw }}
+		</span>
+	</div>
+{#
 	<div class="col-12">
-		<strong>{{ o.label|capitalize }}</strong>
 		<div class="float-right">
 		{% if o.requirement() == null %}
 			<span class="text-muted lead">&empty;</span>
@@ -17,6 +24,7 @@
 		{% endif %}
 		</div>
 	</div>
+#}
 	<div class="col-3"></div>
 	<div class="col-6 p-0">
 		<img class="img-fluid" src="http://scmapdb.wdfiles.com/local--resized-images/wad:developer-textures/dev_256_gr_032x.jpg/small.jpg" />

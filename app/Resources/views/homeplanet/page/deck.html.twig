@@ -1,0 +1,43 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+<div class="col-12">
+	<div class="card mb-3">
+	<div class="card-header">
+		Equipped
+	</div>
+	<div class="card-block">
+		{{ printo( deck_current) }}
+	</div>
+	</div>
+</div>
+<div class="col-12">
+	<div class="card">
+	<div class="card-header">
+		Deck
+	</div>
+	<div class="card-block">
+		{% for deck in deckAr %}
+			<div class="row">
+			<div class="col col-auto">
+				{{ printo( deck ) }}
+			</div>
+			<div class="col col-auto">
+				{% if deck.id == deck_current.id %}
+					<button class="btn btn-warning" disabled title="Already equipped">
+						Equip
+					</button>
+				{% else %}
+					TODO : form equip
+				{% endif %}
+			</div>
+			</div>
+		{% endfor %}
+	</div>
+	</div>
+</div>
+</div>
+
+
+{% endblock %}

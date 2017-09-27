@@ -45,11 +45,11 @@ INSERT INTO `budgetplantype` (`id`, `label`) VALUES
 
 -- Dumping data for table homeplanet.character: ~4 rows (approximately)
 /*!40000 ALTER TABLE `character` DISABLE KEYS */;
-INSERT INTO `character` (`id`, `occupation`, `personality`, `appearance`, `label`, `location_x`, `location_y`) VALUES
-	(1, 'merchant', 'none', 'normal', 'Sir Toto', 7, 7),
-	(2, 'merchant', 'none', 'normal', 'Mr Titi', 7, 7),
-	(4, 'musician', 'genius', 'normal', 'Bach', 7, 7),
-	(5, 'merchant', 'none', 'normal', 'test', 7, 7);
+INSERT INTO `character` (`id`, `occupation`, `deck_id`, `personality`, `appearance`, `label`, `location_x`, `location_y`) VALUES
+	(1, 'merchant', 1, 'none', 'normal', 'Sir Toto', 7, 7),
+	(2, 'merchant', 1, 'none', 'normal', 'Mr Titi', 7, 7),
+	(4, 'musician', 1, 'genius', 'normal', 'Bach', 7, 7),
+	(5, 'merchant', 1, 'none', 'normal', 'test', 7, 7);
 /*!40000 ALTER TABLE `character` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.characternamereference: 200 rows
@@ -892,11 +892,21 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
+-- Dumping data for table homeplanet.deck: ~0 rows (approximately)
+/*!40000 ALTER TABLE `deck` DISABLE KEYS */;
+INSERT INTO `deck` (`id`, `label`) VALUES
+	(1, 'Commun tongue');
+/*!40000 ALTER TABLE `deck` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.deck_expression: ~5 rows (approximately)
+/*!40000 ALTER TABLE `deck_expression` DISABLE KEYS */;
+/*!40000 ALTER TABLE `deck_expression` ENABLE KEYS */;
+
 -- Dumping data for table homeplanet.demand: ~0 rows (approximately)
 /*!40000 ALTER TABLE `demand` DISABLE KEYS */;
 /*!40000 ALTER TABLE `demand` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.expression: ~17 rows (approximately)
+-- Dumping data for table homeplanet.expression: ~197 rows (approximately)
 /*!40000 ALTER TABLE `expression` DISABLE KEYS */;
 INSERT INTO `expression` (`id`, `label`, `description`, `requirement`, `effect`, `generation_key`) VALUES
 	(1, 'joke', '+charm ', 'O:33:"homeplanet\\validator\\ValidatorAnd":1:{s:37:"\0homeplanet\\validator\\ValidatorAnd\0_a";a:2:{i:0;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:0;}i:1;O:30:"homeplanet\\validator\\PointCost":2:{s:38:"\0homeplanet\\validator\\PointCost\0_iCost";i:1;s:44:"\0homeplanet\\validator\\PointCost\0_iPointIndex";i:1;}}}', NULL, NULL),
@@ -1993,7 +2003,7 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 141);
 /*!40000 ALTER TABLE `ressource_rescategory` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.sovereign: ~4 rows (approximately)
+-- Dumping data for table homeplanet.sovereign: ~0 rows (approximately)
 /*!40000 ALTER TABLE `sovereign` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sovereign` ENABLE KEYS */;
 
