@@ -10,10 +10,9 @@
 	{ 'route': '', 'label': 'ABOUT' }
 	]
 %}
+
 {% set navbar = navbar|merge( [{
-		'route': 
-			( not is_granted('ROLE_USER') ) ? 'login' :
-			( is_granted('ROLE_PLAYER') )? 'overview' : 'player_create', 
+		'route': app.user != null ? app.user.playRoute : 'login', 
 		'label': 'Play', 
 		'CSSClass': 'hightlighted' 
 	}])
@@ -29,7 +28,7 @@
 	<div id="header-main" class="bg-dark text-center" style="font-size: 72px">
 		<a href="{{ url('index') }}">LOGO</a>
 	</div>
-	{% include 'element/navbar.html.twig' with {navbar: navbar, user: user} only %}
+	{% include 'element/navbar.html.twig' with {navbar: navbar, user: app.user} only %}
 	{% block post_navbar %}{% endblock %}
 	<div id="content" class="container fadeIn mb-5">
 		{% include 'bootstrap/alert.html.twig' %}

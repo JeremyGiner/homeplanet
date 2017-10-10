@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `character` (
   KEY `location_x_location_y` (`location_x`,`location_y`),
   KEY `deck_id` (`deck_id`),
   CONSTRAINT `FK_character_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.characternamereference
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   KEY `FK_conversation_character_2` (`character1_id`),
   CONSTRAINT `FK_conversation_character` FOREIGN KEY (`character0_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_conversation_character_2` FOREIGN KEY (`character1_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.deck
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `generation_key` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `generation_key` (`generation_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=1481 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate
@@ -308,9 +308,8 @@ CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
 -- Dumping structure for table homeplanet.player
 CREATE TABLE IF NOT EXISTS `player` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `character_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `character_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
-  `name` varchar(250) NOT NULL,
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
   `income` int(10) unsigned NOT NULL DEFAULT '0',
   `contract_max` int(10) unsigned NOT NULL DEFAULT '0',
@@ -322,7 +321,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   CONSTRAINT `FK_player_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_sovereign` FOREIGN KEY (`allegeance`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.population
@@ -477,11 +476,10 @@ CREATE TABLE IF NOT EXISTS `sovereign` (
 -- Dumping structure for table homeplanet.user
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `player_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_shadow` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='toto@gmail.com\r\npass';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='toto@gmail.com\r\npass';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet._view_note

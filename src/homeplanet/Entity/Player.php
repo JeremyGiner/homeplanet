@@ -19,7 +19,6 @@ use Doctrine\Common\Collections\Doctrine\Common\Collections;
  */
 class Player {
 	
-	
 	/**
 	 * @ORM\Id
 	 * @ORM\Column(type="integer", name="id")
@@ -33,11 +32,6 @@ class Player {
 	 * @var User
 	 */
 	protected $_oUser;
-	
-	/**
-	 * @ORM\Column(type="string", name="name")
-	 */
-	protected $_sName;
 	
 	/**
 	 * @ORM\Column(type="integer", name="credit")
@@ -78,13 +72,13 @@ class Player {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( User $oUser, $sName ) {
+	public function __construct( User $oUser ) {
 		
 		$this->_oUser = $oUser;
-		$this->_sName = $sName;
 		$this->_iCredit = 100;
 		$this->_iIncome = 0;
 		$this->_iCart = 1;
+		$this->_iContractMax = 3;
 	}
 	
 //_____________________________________________________________________________
@@ -96,10 +90,6 @@ class Player {
 	
 	public function getUserId() {
 		return $this->_oUser->getId();
-	}
-	
-	public function getName() {
-		return $this->_sName;
 	}
 	
 	public function getCredit() {
@@ -142,13 +132,13 @@ class Player {
 		return $this;
 	}
 	
-	public function setName( $s ) {
-		$this->_sName = $s;
+	public function setCart( $i ) {
+		$this->_iCart = $i;		
 		return $this;
 	}
 	
-	public function setCart( $i ) {
-		$this->_iCart = $i;		
+	public function setCharacter( Character $oCharacter = null ) {
+		$this->_oCharacter = $oCharacter;
 		return $this;
 	}
 	

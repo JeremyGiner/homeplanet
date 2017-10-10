@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 
 /**
  * @ORM\Entity @ORM\Table(name="user")
- * @UniqueEntity(fields="player_name", message="Player name already taken")
  * @UniqueEntity(fields="email", message="Email already taken")
  */
 class User implements UserInterface, \Serializable, EquatableInterface {
@@ -23,12 +22,6 @@ class User implements UserInterface, \Serializable, EquatableInterface {
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
-	
-	/** 
-	 * @ORM\Column(type="string") 
-	 * @Assert\NotBlank()
-	 */
-	protected $player_name;	// Ingame name
 	
 	/** 
 	 * @ORM\Column(type="string") 
@@ -61,10 +54,6 @@ class User implements UserInterface, \Serializable, EquatableInterface {
 		return $this->id; 
 	}
 	
-	function getName() {
-		return $this->player_name;
-	}
-	
 	function getEmail() {
 		return $this->email;
 	}
@@ -90,23 +79,40 @@ class User implements UserInterface, \Serializable, EquatableInterface {
 	
 	public function getRoles() {
 		
+		if( isset( $this->roles ) )
+			return $this->roles;
+		
+		//return array('ROLE_USER');
 		$a = [];
-		if( $this->player !== null ) {
+		if( $this->getPlayer() !== null ) {
 			$a[] = 'ROLE_PLAYER';
+			
+			if( $this->player->getCharacter() !== null ) {
+				$a[] = 'ROLE_CHARACTER';
+			}
 		}
 		
-		if( $this->id == 1 )
-			return $a+['ROLE_ADMIN'];
 		
-		return $a+['ROLE_USER'];
+		if( $this->id == 1 )
+			return array_merge( $a, ['ROLE_ADMIN'] );
+		return array_merge( $a, ['ROLE_USER'] );
+	}
+	
+	public function getPlayRoute() {
+		$aRoles = $this->getRoles();
+		
+		if( !in_array( 'ROLE_PLAYER' , $aRoles ) )
+			return 'character_create';
+			//return 'player_create';
+		/*
+		if( !in_array( 'ROLE_CHARACTER' , $aRoles ) )
+			return 'character_create';
+		*/
+		return 'overview';
 	}
 	
 	public function eraseCredentials() {
 		//throw new Exception('Not implemented');
-	}
-	
-	public function getPlayerName() {
-		return $this->getName();
 	}
 	
 	/**
@@ -114,19 +120,32 @@ class User implements UserInterface, \Serializable, EquatableInterface {
 	 * @source http://stackoverflow.com/questions/27185180/getroles-ignored-in-symfony2
 	 * @see \Symfony\Component\Security\Core\User\EquatableInterface::isEqualTo()
 	 */
-	public function isEqualTo( UserInterface $user) {
-		if ($user instanceof User) {
-			// Check that the roles are the same, in any order
-			$isEqual = count($this->getRoles()) == count($user->getRoles());
-			if ($isEqual) {
-				foreach($this->getRoles() as $role) {
-					$isEqual = $isEqual && in_array($role, $user->getRoles());
-				}
-			}
-			return $isEqual;
-		}
-	
+	public function isEqualTo( UserInterface $oUser ) {
 		return false;
+		/*
+		if ( ! $oUser instanceof User ) 
+			return false;
+		
+		if( $oUser->getId() !== $this->getId() )
+			return false;
+		
+		return true;
+		
+		// Check that the roles are the same, in any order
+		$aRole = $oUser->getRoles();
+		$isEqual = count($this->getRoles()) == count($aRole);
+		if ( ! $isEqual ) {
+			return false;
+		}
+		
+		foreach($this->getRoles() as $role) {
+			if( ! in_array($role, $aRole ) ) {
+				return false;
+			}
+		}
+		
+		return true;
+		*/
 	}
 	
 //_____________________________________________________________________________
@@ -134,11 +153,6 @@ class User implements UserInterface, \Serializable, EquatableInterface {
 
 	function setEmail( $s ) {
 		$this->email = $s;
-		return $this;
-	}
-	
-	function setName( $sName ) {
-		$this->player_name = $sName;
 		return $this;
 	}
 	

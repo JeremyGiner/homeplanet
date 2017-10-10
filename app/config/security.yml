@@ -40,9 +40,12 @@ security:
                 path: logout
                 target: /
     
+    #priority top to bottom
+    #roles MUST be prefixed by ROLE_
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
-        - { path: ^/game/player/create, roles: ROLE_USER }
+        #- { path: ^/game/player/create, roles: ROLE_USER }
+        - { path: ^/game/character/create, roles: ROLE_USER }
         - { path: ^/game, roles: ROLE_PLAYER }
         

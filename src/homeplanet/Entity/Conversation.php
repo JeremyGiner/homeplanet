@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 use homeplanet\Entity\part\ConversationContext;
 use homeplanet\Entity\part\ConversationState;
+use homeplanet\modifier\conversation\AddTail;
 
 /**
  * @ORM\Table(name="conversation")
@@ -206,19 +207,32 @@ class Conversation {
 		$iExp1Value = $this->_getValue($oExp1,$oContext1);
 		
 		// Process modifier if their expression value is greater or equal
-		if( $iExp0Value != -2 && $iExp0Value >= $iExp1Value )
-		foreach( $oExp0->getEffectAr() as $oModifier )
+		$bTail0Countered = !( $iExp0Value != -2 && $iExp0Value >= $iExp1Value );
+		foreach( $oExp0->getEffectAr() as $oModifier ) {
+			
+			if( $bTail0Countered && get_class( $oModifier ) == AddTail::class )
+				continue;
+			
 			$oModifier->modify( $oContext0 );
+		}
 		
-		if( $iExp1Value != -2 && $iExp1Value >= $iExp0Value )
-		foreach( $oExp1->getEffectAr() as $oModifier )
+		$bTail1Countered = !( $iExp1Value != -2 && $iExp1Value >= $iExp0Value );
+		foreach( $oExp1->getEffectAr() as $oModifier ) {
+			if( $bTail1Countered && get_class( $oModifier ) == AddTail::class )
+				continue;
 			$oModifier->modify( $oContext1 );
+		}
 		
 		// Update debate point
 		//$this->getState()->updateDebate();
 		
 		// Update log
-		$this->getState()->addLog($oExp0===null?0:$oExp0->getId(), $oExp1===null?0:$oExp1->getId());
+		$this->getState()->addLog(
+			$oExp0 === null ? 0 : $oExp0->getId(), 
+			$oExp1 === null ? 0 : $oExp1->getId(),
+			$bTail0Countered,
+			$bTail1Countered
+		);
 		
 		// Draw 3
 		$this->getState()->setHand0( 

@@ -6,11 +6,7 @@
 	{% embed 'bootstrap/panel.html.twig' %}
 		{% block header %}Register{% endblock %}
 		{% block content %}
-			{% form_theme form 'form/theme-main.html.twig' %}
-			{{ form_start(form) }}
-				{{ form_errors(form) }}
-				{{ form_widget(form) }}
-			{{ form_end(form) }}
+			{{ form( form ) }}
 		{% endblock %}
 	{% endembed %}
 	

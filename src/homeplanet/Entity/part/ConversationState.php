@@ -82,8 +82,8 @@ class ConversationState {
 		array $aDeck1,
 		array $aHand1
 	) {
-		$this->_iDebateGoal0 = 25;
-		$this->_iDebateGoal1 = 25;
+		$this->_iDebateGoal0 = 10;
+		$this->_iDebateGoal1 = 10;
 		
 		$this->_aPoint = [
 			0 => [ 0, 0, 0, 0 ],
@@ -237,13 +237,15 @@ class ConversationState {
 	
 	public function addLog(
 		$iExpression0,
-		$iExpression1
+		$iExpression1,
+		$bTail0Coutnered,
+		$bTail1Coutnered
 	) {
 		$this->_aLog[] = new ConversationTurnLog(
 				$iExpression0, 
 				$iExpression1, 
-				$this->_iCharacterLeading,
-				$this->_iDebateIntensity
+				$bTail0Coutnered,
+				$bTail1Coutnered
 		);
 		
 		return $this;

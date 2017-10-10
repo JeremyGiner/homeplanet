@@ -26,7 +26,6 @@ class ConversationController extends BaseController {
 		
 	}
 	
-	
 	/**
 	 * Display conversation
 	 * @Route("/{id}", name="conversation_view", requirements={"id": "\d+"})
@@ -49,7 +48,7 @@ class ConversationController extends BaseController {
 		$oExpressionChoice = new ConversationExpressionChoice(
 				$oConversation,
 				$oConversation->getCharacter0(),
-				$oConversation->getCharacter0()->getExpressionAr()[1]
+				$oConversation->getCharacter0()->getDeck()->getExpressionAr()[1]
 		);
 		$oFormExpression = $this->createForm(
 				ConversationExpressionChoiceForm::class,
@@ -85,20 +84,20 @@ class ConversationController extends BaseController {
 		// Render
 		
 		return $this->render(
-				'homeplanet/page/conversation.html.twig',
-				[
-						'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
-						'conversation' => $oConversation,
-						'form' => $oFormExpression->createView(),
-						'expressionAr' => ArrayTool::STindexBy(
-								\array_merge(
-										$oConversation->getCharacter0()->getExpressionAr(),
-										$oConversation->getCharacter1()->getExpressionAr()
-								),
-								'id',
-								true
-						),
-				]
+			'homeplanet/page/conversation.html.twig',
+			[
+				'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
+				'conversation' => $oConversation,
+				'form' => $oFormExpression->createView(),
+				'expressionAr' => ArrayTool::STindexBy(
+					\array_merge(
+						$oConversation->getCharacter0()->getDeck()->getExpressionAr(),
+						$oConversation->getCharacter1()->getDeck()->getExpressionAr()
+					),
+					'id',
+					true
+				),
+			]
 		);
 	}
 	

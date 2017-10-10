@@ -3,18 +3,26 @@
 
 {% block page_content %}
 <div class="row">
-	<div class="col-12 col-md-6 offset-md-3">
+	<div class="col-12 col-lg-6 offset-lg-3">
 	{% embed 'bootstrap/panel.html.twig' %}
-    			
+		
 		{% block header %}Connexion{% endblock %}
-    	
+		
 		{% block content %}
-			{#
-				{% form_theme form 'form/theme-main.html.twig' %}
-			#}
-			{% form_theme form 'bootstrap_3_layout.html.twig' %}
 			{{ form_start(form) }}
-				{{ form_widget(form) }}
+				{% for child in form %}
+					{% if child.vars.name == 'signin' %}
+					<div class="form-group">
+						{{ form_widget(child) }}
+						<a class="btn btn-link float-right" href="{{ url('register') }}">
+							<span class="fa fa-user-plus "></span>
+							Create new account</a>
+					</div>
+					{% else %}
+						{{ form_row(child) }}
+					{% endif %}
+				{% endfor %}
+				{{ form_rest( form ) }}
 			{{ form_end(form) }}
 		{% endblock %}
 	{% endembed %}

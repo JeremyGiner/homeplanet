@@ -19,7 +19,7 @@
 	<div class="row">
 	<div class="col-6 col-lg-2">
 		{{ conversation.character0.label }} (initiative)
-		<img src="" />
+		<img class="float-left mr-2" src="" style="width: 2em; height: 2em;"/>
 		<table class="table">
 		<thead>
 			<tr><th colspan="99" class="text-center">Points</th></tr>
@@ -49,7 +49,7 @@
 	</div>
 	<div class="col-6 col-lg-2 push-lg-8 text-right">
 		{{ conversation.character1.label }}
-		<img src="" />
+		<img class="float-right ml-2" src="" style="width: 2em; height: 2em;"/>
 		<table class="table">
 		<thead>
 			<tr><th colspan="99" class="text-center">Points</th></tr>
@@ -88,15 +88,18 @@
 		</thead>
 		<tbody>
 {#{% for entry in conversation.state.log %}#}
-{% set entry = conversation.state.log|last%}
+{% set entry = conversation.state.log|last %}
+{% if entry != false %}
+{% dump(entry) %}
 			<tr>
 				<td class="">
-					<span class="label label-default">{{ printo( expressionAr[ entry.expression0Id ] ) }}</span>
+					{{ printo( expressionAr[ entry.expression0Id ], { oTurnLog: entry, iCharIndex: 0 } ) }}
 				</td>
 				<td class="text-right">
-					<span class="label label-default">{{ printo( expressionAr[ entry.expression1Id ] ) }}</span>
+					{{ printo( expressionAr[ entry.expression1Id ], { oTurnLog: entry, iCharIndex: 1 } ) }}
 				</td>
 			</tr>
+{% endif %}
 {#{% endfor %}#}
 			<tr class="active TODO-animation">
 				<td colspan="99" class="">

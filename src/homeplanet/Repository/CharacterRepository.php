@@ -34,7 +34,11 @@ WHERE character._iId = :id
 		$oCharacter = $this->getEntityManager()->createQuery('
 SELECT character
 FROM homeplanet\Entity\Character character
+LEFT JOIN homeplanet\Entity\Character character_main 
+	WITH character_main._iId = :id 
+LEFT JOIN character_main._aAcquaintance acquaintance WITH acquaintance._iId = character._iId
 WHERE character._iId != :id 
+AND acquaintance._iId IS NULL
 		')
 //AND character.locationX = :locationX
 //AND character.locationY = :locationY

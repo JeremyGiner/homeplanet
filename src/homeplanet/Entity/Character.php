@@ -96,7 +96,14 @@ class Character {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct() {
+	public function __construct( EntityManager $em, $sName ) {
+		$this->_sLabel = $sName;
+		$this->_sOccupation = 'merchant';
+		$this->_sPersonality = 'TODO';
+		$this->_sAppearance = 'TODO';
+		$this->_oDeck = $em->getReference(Deck::class, 1);
+		$this->_x = 0;//$oLocation->getX();
+		$this->_y = 0;//$oLocation->getY();
 	}
 	
 	static public function generate( EntityManager $em, Location $oLocation, $sPlace ) {
@@ -165,6 +172,10 @@ class Character {
 //_____________________________________________________________________________
 //	Modifier
 
+	public function setLabel( $s ) {
+		$this->_sLabel = $s;
+	}
+	
 	public function setDeck( Deck $o ) {
 		$this->_oDeck = $o;
 		return $this;

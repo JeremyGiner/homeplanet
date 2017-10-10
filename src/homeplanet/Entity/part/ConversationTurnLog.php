@@ -11,14 +11,16 @@ class ConversationTurnLog {
 	 * @var int
 	 */
 	private $_iExpression1Id;
+	
 	/**
-	 * @var int
+	 * @var boolean
 	 */
-	private $_iCharacterLeadingId;
+	private $_bTail0Countered;
+	
 	/**
-	 * @var int
+	 * @var boolean
 	 */
-	private $_iDebateIntensity;
+	private $_bTail1Countered;
 	
 //_____________________________________________________________________________
 // Constructor
@@ -26,13 +28,14 @@ class ConversationTurnLog {
 	public function __construct( 
 			$iExpression0Id, 
 			$iExpression1Id, 
-			$iCharacterLeadingId,
-			$iDebateIntensity
+			$bTail0Countered,
+			$bTail1Countered
 	) {
 		$this->_iExpression0Id = $iExpression0Id;
 		$this->_iExpression1Id = $iExpression1Id;
-		$this->_iCharacterLeadingId = $iCharacterLeadingId;
-		$this->_iDebateIntensity = $iDebateIntensity;
+		
+		$this->_bTail0Countered = $bTail0Countered;
+		$this->_bTail1Countered = $bTail1Countered;
 		
 	}
 	
@@ -45,12 +48,20 @@ class ConversationTurnLog {
 	public function getExpression1Id() {
 		return $this->_iExpression1Id;
 	}
-	public function getCharacterLeadingId() {
-		return $this->_iCharacterLeadingId;
+	
+	public function isTail0Countered() {
+		return $this->_bTail0Countered;
 	}
-	public function getDebateIntensity() {
-		return $this->_iDebateIntensity;
+	public function isTail1Countered() {
+		return $this->_bTail1Countered;
 	}
 	
-	
+	public function isTailCountered( $i ) {
+		if( $i === 0 )
+			return $this->_bTail0Countered;
+		if( $i === 1 )
+			return $this->_bTail1Countered;
+		
+		throw new \Exception();
+	}
 }

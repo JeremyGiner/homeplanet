@@ -1,5 +1,5 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
-<div class="card card-expression small">
+<div class="card small text-left">
 <div class="card-header bg-aspect-{{ o.tailRequire.type|default('') }}">
 	<div class="row justify-content-between">
 		<strong class="col col-auto">{{ o.label|capitalize }}</strong>
@@ -39,7 +39,7 @@
 	<div class="w-100"></div>
 	{% if o.tailModifier != null %}
 	{% for type in o.tailModifier.typeAr %}
-	<div class="col">
+	<div class="col {{ param.oTurnLog is defined and param.oTurnLog.tailCountered( param.iCharIndex ) ? 'countered' }}">
 		<div class=" py-2 bg-aspect-{{type}}"></div>
 	</div>
 	{% endfor %}

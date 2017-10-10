@@ -21,6 +21,12 @@ use AppBundle\Tool\CartesianProduct;
 use AppBundle\Tool\Combine;
 use AppBundle\Tool\ArrayTool;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\BrowserKit\Response;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
+use homeplanet\Entity\Player;
+use homeplanet\validator\conversation\TailRequire;
+use homeplanet\modifier\conversation\AddTail;
 
 /**
  * @Route("/character")
@@ -74,9 +80,11 @@ class CharacterController extends BaseController {
 	public function acquaintanceAction( Request $oRequest ) {
 		$this->_handleRequest( $oRequest );
 		
-		$aAquaintance = $this->getGame()->getCharacterRepo()->getAcquaintance( $this->getGame()->getPlayer() );
+		$aAquaintance = $this->getGame()->getPlayer()->getCharacter()->getAcquaintanceAr();
 		
+		//_____________________________
 		// Meet form
+		
 		/* @var $oFormMeet Form */
 		$oFormMeet = $this->createFormBuilder()
 			->add('submit',SubmitType::class,['label' => 'Meet new charater'])
@@ -88,12 +96,15 @@ class CharacterController extends BaseController {
 			
 			$em = $this->getGame()->getEntityManager();
 			
+			// Get character met
+			$oCharacter = $this->getGame()->getCharacterRepo()->getRandom( null, $this->getGame()->getPlayer()->getCharacter()->getId() );
+			
 			$oConversation = new Conversation( 
 				$this->getGame()->getPlayer()->getCharacter(),
-				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr(),
+				$this->getGame()->getPlayer()->getCharacter()->getDeck()->getExpressionAr(),
 				
-				$this->getGame()->getCharacterRepo()->getRandom( null, $this->getGame()->getPlayer()->getCharacter()->getId() ),
-				$this->getGame()->getPlayer()->getCharacter()->getExpressionAr(),
+				$oCharacter,
+				$oCharacter->getDeck()->getExpressionAr(),
 				
 				'meet'
 			);
@@ -102,6 +113,9 @@ class CharacterController extends BaseController {
 			
 			return $this->redirect( $this->generateUrl('conversation_view',['id' => $oConversation->getId(),]));
 		}
+		
+		//_____________________________
+		// Render
 		
 		return $this->render('homeplanet/page/acquaintance.html.twig', [
 				'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
@@ -137,6 +151,51 @@ class CharacterController extends BaseController {
 	}
 	
 	/**
+	 *
+	 * @Route("/create", name="character_create")
+	 */
+	public function createAction( Request $oRequest ) {
+		
+		// Deny access
+		if( $this->getUser()->getPlayer() !== null )
+			throw new AccessDeniedException();
+		
+		$this->_handleRequest( $oRequest );
+		
+		$oForm = $this->createFormBuilder()
+			->add('label', TextType::class, ['label' => 'Name'] )
+			->add('submit', SubmitType::class, ['label' => 'ok' ])
+			->getForm()
+		;
+		
+		$oForm->handleRequest( $oRequest );
+		if( $oForm->isSubmitted() && $oForm->isValid() ) {
+			
+			// TODO : sanitize name
+			$aData = $oForm->getData();
+			
+			$gem = $this->getGame()->getEntityManager();
+			$oCharacter = new Character( $gem, $aData['label'] );
+			$gem->persist( $oCharacter );
+			
+			$oPlayer = new Player( $this->getUser() );
+			$oPlayer->setCharacter( $oCharacter );
+			$gem->persist( $oPlayer );
+			
+			$gem->flush();
+			
+			return $this->redirect( $this->generateUrl('overview') );
+			
+		}
+		
+		return $this->render('page/page_form.html.twig', [
+			'title' => 'Character creation',
+			'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
+			'form' => $oForm->createView(),
+		]);
+	}
+	
+	/**
 	 * 
 	 * @Route("/expression", name="character_expression")
 	 */
@@ -153,7 +212,7 @@ SELECT id+10000,' ','expression', id FROM expression
 		//______________________________
 		//DEV
 		//GENERATE expression
-		
+		/*
 		$em = $this->getGame()->getEntityManager();
 		
 		function array_cartesian() {
@@ -241,6 +300,8 @@ SELECT id+10000,' ','expression', id FROM expression
 			$em->persist( $oExpresion );
 		} 
 		$em->flush();
+		*/
+		
 		//_____________________________
 		
 		/**
@@ -249,27 +310,33 @@ SELECT id+10000,' ','expression', id FROM expression
 		 * Passion : 2
 		 * Charm : 3
 		 */
-			/*
+		/*
 		$oExpression = $this->getGame()->getEntityManager()
-			->find(Expression::class, 1300);
+			->find(Expression::class, 8);
 		
 		$oExpression->setRequirement( new ValidatorAnd([
+			new TailRequire(3),
 			//new PointCost( 1, 2 ),
-			new OpponentPointRequire(3, 5),
+			//new OpponentPointRequire(3, 5),
 		]) );
 		//$oExpression->setRequirement( null );
 		
 		$oExpression->setEffect( [ 
 			//new Counter(),
-			//new AddPoint(1, -3),
-			//new GivePoint(0, 1),
-			//new AddPoint(0, 1),
 			
-			//new AddPoint(3, -1),
+			//new GivePoint(0, 1),
+			
+			//new AddPoint(0, 1),
+			//new AddPoint(1, 1),
+			//new AddPoint(2, 1),
+			//new AddPoint(3, 1),
+			
+			new AddTail([1,2,3]),
+			
 			//new ChangeLead(ChangeLead::GIVE),
 			//new Imitate(),
 			
-			new AddDebate(10),
+			new AddDebate(1),
 				
 		] );
 		
