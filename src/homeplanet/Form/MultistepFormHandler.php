@@ -123,25 +123,30 @@ class MultistepFormHandler {
 	public function handleForm( Form $oForm ) {
 		// Get data and step from session
 		
-		if( !( $oForm->isSubmitted() && $oForm->isValid() ) )
-			return;
+		if( !$oForm->isSubmitted() )
+			return false;
 		
 		// Case : Reset
 		if( $oForm->has('_reset') && $oForm->get('_reset')->isClicked() ) {
 			$this->reset();
-			return;
+			return true;
 		}
 		
 		// Case : back
 		if( $oForm->has('_prev') && $oForm->get('_prev')->isClicked() ) {
 			$this->_iStep = max(0,$this->_iStep-1);
-		} else {
+			$this->save();
+			return true;
+		}
+		
 		// Case : forward
+		if( $oForm->isValid() ){
 			$this->_iStep++;
 			$this->_oData = $oForm->getData();
 		}
 		
 		$this->save();
+		return false;
 	}
 	
 //_____________________________________________________________________________

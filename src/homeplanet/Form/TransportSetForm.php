@@ -27,6 +27,7 @@ class TransportSetForm extends MultistepType {
 	
 	function configureOptions( OptionsResolver $oResolver ) {
 		parent::configureOptions($oResolver);
+		
 		$oResolver->setDefaults([
 			'gameview' => null,
 			'game' => null,

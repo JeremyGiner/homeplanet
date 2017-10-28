@@ -109,6 +109,10 @@ class TransportSet {
 	 * )
 	 */
 	function isLocationBeginValid() {
+		
+		if( $this->_oLocationBegin == null ) 
+			return false;
+		
 		/* @var $oTransporter Transporter */
 		$oTransporter = $this->getPawn()->getAttribute('transport');
 		
@@ -129,9 +133,11 @@ class TransportSet {
 		$oPathfinder = $this->getPawn()->getAttribute('transport')->getPathfinder();
 		$oPathfinder->propagate( $this->_oLocationBegin );
 		$aMapping = $oPathfinder->getMapping();
+		
 		if( $aMapping === null )
 			return false; 
-		return in_array( $this->_oLocationEnd->__toString(), $aMapping );
+		
+		return isset( $aMapping[ $this->_oLocationEnd->__toString() ] );
 	}
 	
 	/**

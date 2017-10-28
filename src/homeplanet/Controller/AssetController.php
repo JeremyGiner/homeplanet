@@ -213,20 +213,23 @@ class AssetController extends BaseController {
 		
 		$oFormProd = null;
 		$oFormProdRecap = null;
-		if( !$bTransporter ) {
-		
+		$aProdType = $oPawn->getType()->getProdTypeAr();
+		if( !$bTransporter && count( $aProdType ) > 1 ) {
+			
 			// TODO : form validation
 			$oFormProd = $this->createFormBuilder( array() )
 				->add('production_type', EntityType::class, [
 					'class' => ProductionType::class,
 					'label' => 'Production',
 					'choice_label' => 'label',
+					'choices' => $oPawn->getType()->getProdTypeAr(),
+					/*
 					'query_builder' => function (EntityRepository $er) use ($oPawn ){
 						return $er->createQueryBuilder('prodtype')
 							->join('prodtype._aPawnType', 'pawntype')
 							->join('prodtype._oRessource', 'ressource')
 							->where('pawntype._iId = '.$oPawn->getType()->getId());
-					},
+					},*/
 				])
 				->add('submit',SubmitType::class,['label'=>'Change'])
 				->getForm();
@@ -258,7 +261,9 @@ class AssetController extends BaseController {
 				return $this->redirect( $oRequest->getUri() );
 			}
 		
-		} else {
+		}
+		
+		if( $bTransporter ) {
 			
 			/* @var $oData TransportSet */
 			$oData = new TransportSet();
@@ -299,7 +304,9 @@ class AssetController extends BaseController {
 			
 			$oFormProd->handleRequest( $oRequest );
 			
-			$oStepHandler->handleForm( $oFormProd );
+			if( $oStepHandler->handleForm( $oFormProd ) == true ) {
+				return $this->redirect( $oRequest->getUri() );
+			}
 			
 			if( $oFormProd->isSubmitted() && $oFormProd->isValid() ) {
 				
@@ -445,9 +452,9 @@ class AssetController extends BaseController {
 			] + ( $bTransporter ? [
 				'form_prodtype_transporter' => $oFormProd->createView(),
 				'form_prodtype_recap' => $oFormProdRecap->createView(),
-			] : [
+			] : ( $oFormProd == null ? [] : [
 				'form_prodtype' => $oFormProd->createView(),
-			])
+			] ) )
 		);
 	
 	}
