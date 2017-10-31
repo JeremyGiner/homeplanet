@@ -24,15 +24,13 @@ class TradeRouteCreationForm extends MultistepType {
 	function configureOptions( OptionsResolver $oResolver ) {
 		parent::configureOptions($oResolver);
 		$oResolver->setDefaults([
-			'gameview' => null,
-			'game' => null,
 			'repo' => null,
 			'validation_groups' => function (FormInterface $form) {
 				//TODO
 				//var_dump( $form->getConfig()->getOption('step') );
 				return ['form_step1'];
 			}
-		]);
+		])->setRequired(['game','default_location',]);
 	}
 	
 	function _buildFormByStep(
@@ -50,7 +48,8 @@ class TradeRouteCreationForm extends MultistepType {
 				$oBuilder
 					->add('name', TextType::class, ['label' => 'Name', 'required' => false])
 					->add('location_begin', LocationType::class,[
-						'gameview' => $aOption['gameview']
+						'game' => $aOption['game'],
+						'empty_data' => $aOption['default_location'],
 					])
 					->add('production_type', EntityType::class, [
 						'class' => ProductionType::class,
@@ -77,7 +76,8 @@ class TradeRouteCreationForm extends MultistepType {
 					->add('location_end', LocationType::class,[
 						'label' => ' end',
 						'data' => $oData->getLocationBegin(),
-						'gameview' => $aOption['gameview'],
+						'game' => $aOption['game'],
+						'empty_data' => $aOption['default_location'],
 						'validator' => new TileValidatorRange(
 							$aOption['game']->getWorldmap()->getTile(
 								$oData->getLocationBegin()->getX(),

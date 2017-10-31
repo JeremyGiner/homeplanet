@@ -20,8 +20,7 @@ class BuildingBuyForm extends AbstractType {
 	function configureOptions( OptionsResolver $oResolver ) {
 		$oResolver->setDefaults([
 			'data_class' => BuildingBuy::class,
-			'gameview' => null,
-		]);
+		])->setRequired(['game','default_location']);
 	}
 	
 	function getName() {
@@ -41,7 +40,8 @@ class BuildingBuyForm extends AbstractType {
 		$oBuilder
 			->add('location', LocationType::class, [ 
 				'label' => 'Location', 
-				'gameview' => $aOption['gameview'],
+				'game' => $aOption['game'],
+				'empty_data' => $aOption['default_location'],
 			])
 			->add('pawntype',PawnTypeChoiceType::class,[
 				//'mapped' => false,

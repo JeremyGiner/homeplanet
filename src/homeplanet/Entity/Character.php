@@ -5,7 +5,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use homeplanet\Entity\attribute\Location;
 use Doctrine\ORM\EntityManager;
-use homeplanet\Entity\attribute\Population;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -54,6 +53,11 @@ class Character {
 	protected $_sAppearance;
 	
 	/**
+	 * @ORM\Column(type="string", name="seed")
+	 */
+	protected $_sSeed;
+	
+	/**
 	 * @ORM\ManyToMany(targetEntity="homeplanet\Entity\Knowledge")
 	 * @ORM\JoinTable(
 	 *     name="character_knowledge",
@@ -97,7 +101,7 @@ class Character {
 //	Constructor
 	
 	public function __construct( EntityManager $em, $sName ) {
-		$this->_sLabel = $sName;
+		if( $sName != null ) $this->_sLabel = $sName;
 		$this->_sOccupation = 'merchant';
 		$this->_sPersonality = 'TODO';
 		$this->_sAppearance = 'TODO';
@@ -106,11 +110,16 @@ class Character {
 		$this->_y = 0;//$oLocation->getY();
 	}
 	
-	static public function generate( EntityManager $em, Location $oLocation, $sPlace ) {
-		$o = new Character();
+	static public function generate( 
+		EntityManager $em, 
+		$sLabel,
+		Location $oLocation, 
+		$sPlace 
+	) {
+		$o = new Character($em,null);
 		
-		$o->_x = 0;//$oLocation->getX();
-		$o->_y = 0;//$oLocation->getY();
+		$o->setLabel( $sLabel );
+		$o->setLocation( $oLocation );
 		
 		// Get occupation
 		$o->_sOccupation = self::_generate_occupation( $sPlace );
@@ -179,6 +188,11 @@ class Character {
 	public function setDeck( Deck $o ) {
 		$this->_oDeck = $o;
 		return $this;
+	}
+	
+	public function setLocation( $oLocation ) {
+		$this->_x = $oLocation->getX();
+		$this->_y = $oLocation->getY();
 	}
 	
 	public function addDeckExpression( Expression $oExpression ) {

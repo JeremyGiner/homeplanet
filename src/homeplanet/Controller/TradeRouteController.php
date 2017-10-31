@@ -20,7 +20,6 @@ use homeplanet\Entity\Player;
 use homeplanet\Form\BuildingBuy;
 use homeplanet\Form\BuildingBuyForm;
 use homeplanet\Form\TradeRouteCreationForm;
-use homeplanet\Form\MerchantCreationForm;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -74,11 +73,13 @@ class TradeRouteController extends BaseController {
 		$oFormTradeRouteCreation = $this->createFormBuilder(null,[])
 			->add('location_pickup', LocationType::class, [
 				'label' => 'Pick-up location',
-				'gameview' => $aGameView,
+				'game' => $oGame,
+				'empty_data' => $oLocation,
 			])
 			->add('location_dropoff', LocationType::class, [ 
 				'label' => 'Drop-off location',
-				'gameview' => $aGameView 
+				'game' => $oGame,
+				'empty_data' => $oLocation,
 			])
 			->add('prodtype',EntityType::class,[
 					'class' => ProductionType::class,

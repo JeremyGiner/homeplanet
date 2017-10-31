@@ -215,7 +215,7 @@ class Production {
 	
 	public function setRatio( $f ) {
 		if( !$this->isHarvester() )
-			throw new Exception('non-harvester is getting set ratio');
+			throw new \Exception('non-harvester is getting set ratio');
 		
 		$this->_fRatioMax = min( $this->getGrade(), $f);
 		return $this;
@@ -224,8 +224,7 @@ class Production {
 	public function setGrade( $i ) {
 		$this->_iGrade = $i;
 		$this->_fRatioMax = 0;
-		if( !$this->isHarvester() )
-			$this->_bUpdated = false;
+		$this->setNotUpdated();
 		return $this;
 	}
 	

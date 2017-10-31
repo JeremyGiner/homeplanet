@@ -6,7 +6,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\HttpFoundation\Symfony\Component\HttpFoundation;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\VarDumper\VarDumper;
@@ -19,13 +18,9 @@ use homeplanet\Entity\attribute\Location;
 use homeplanet\Game;
 use homeplanet\Entity\PawnFactory;
 use homeplanet\Form\TradeRouteCreationForm;
-use homeplanet\entity\TradeRouteFactory;
 use homeplanet\Entity\MerchantFactory;
 use homeplanet\Entity\Ressource;
-use homeplanet\Form\MerchantCreationForm;
-use homeplanet\Form\LocationType;
 use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Form\ProductionTypeType;
 use Doctrine\ORM\EntityRepository;
 use homeplanet\tool\TileValidatorResolver;
 
@@ -68,6 +63,8 @@ class MapController extends BaseController {
 	function mapAction( Request $oRequest ) {
 		$this->_handleRequest($oRequest);
 	
+		$oLocation = $this->getLocation();
+		
 		$oValidator = null;
 		if( $oRequest->query->has('validator') != null )
 		$oValidator = (new TileValidatorResolver())->resolve(
@@ -82,14 +79,9 @@ class MapController extends BaseController {
 		return $this->render(
 				'homeplanet/element/map_zoom0.html.twig',
 				[
-						'gameview' => [
-								'location' => $this->_oLocation,
-								'game' => $this->_oGame,
-								'map' => $this->_oGame->getWorldmap(),
-						],
-						'map_mod' => true,
-						'validator' => $oValidator,
-				]
+					'map_mod' => true,
+					'validator' => $oValidator,
+				]+$this->getGame()->getWorldmapView($oLocation)
 		);
 	}
 	

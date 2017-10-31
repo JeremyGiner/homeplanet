@@ -89,4 +89,14 @@ class BuildingBuy {
 		return $this->_oPlayer->getCredit() - $this->getCost();
 	}
 	
+	/**
+	 * @Assert\GreaterThan(
+	 *     value = 0,
+	 *     message = "Not enought contract"
+	 * )
+	 */
+	function getRemainingContract() {
+		return $this->_oPlayer->getContractRemaining();
+	}
+	
 }

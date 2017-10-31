@@ -28,11 +28,14 @@ class LocationType extends AbstractType {
 	
 	function configureOptions( OptionsResolver $oResolver ) {
 		parent::configureOptions($oResolver);
-		$oResolver->setDefaults([
-			'gameview' => null,	//todo : find proper way to do that
-			'data_class' => null, // string
-			'validator' => null,
-		]);
+		$oResolver
+			->setDefaults([
+				'data_class' => null, // string
+				'validator' => null,
+			])
+			->remove('empty_data')
+			->setRequired(['game', 'empty_data'])
+		;
 	}
 	
 //_____________________________________________________________________________
@@ -50,8 +53,11 @@ class LocationType extends AbstractType {
 //	View
 	
 	public function buildView(FormView $oView, FormInterface $oForm, array $aOptions) {
-		$oView->vars['gameview'] = $aOptions['gameview'];
+		
+		$oLocation = $oForm->isEmpty() ? $aOptions['empty_data'] : $oForm->getData();
+		$oView->vars['worldmap_view'] = $aOptions['game']->getWorldmapView( $oLocation );
 		$oView->vars['data'] = $oForm->getData();
+		$oView->vars['empty_data'] = $aOptions['empty_data'];
 		if( isset($aOptions['validator']) ) {
 			$oView->vars['validator'] = $aOptions['validator'];
 			$oView->vars['validator_class'] = get_class( $aOptions['validator'] );

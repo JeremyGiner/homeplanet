@@ -17,15 +17,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Game;
-use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
-use homeplanet\Form\TradeRouteCreationForm;
 use homeplanet\entity\TradeRouteFactory;
 use homeplanet\Entity\MerchantFactory;
 use homeplanet\Entity\Ressource;
-use homeplanet\Form\MerchantCreationForm;
-use homeplanet\Form\LocationType;
-use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Form\ProductionTypeType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 

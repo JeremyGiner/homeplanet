@@ -20,7 +20,6 @@ use homeplanet\Entity\Player;
 use homeplanet\Form\BuildingBuy;
 use homeplanet\Form\BuildingBuyForm;
 use homeplanet\Form\TradeRouteCreationForm;
-use homeplanet\Form\MerchantCreationForm;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

@@ -7,10 +7,10 @@
 	<tr>
 		{% for x in 0..12 %}
 			{% set highlighted = (
-				gameview.location is not empty and   
+				location is not empty and   
 				(
-					gameview.location.getRegionX() == x and 
-					gameview.location.getRegionY() == y 
+					location.getRegionX() == x and 
+					location.getRegionY() == y 
 				) ) ? 
 					'background-color: green' : ''
 			%}

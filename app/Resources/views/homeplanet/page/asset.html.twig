@@ -1,4 +1,5 @@
 {% extends 'homeplanet/page/game.html.twig' %}
+{% import 'homeplanet/macro/commun.twig' as commun %}
 
 {% block page_content %}
 <div class="row">
@@ -8,8 +9,20 @@
 		Buy asset
 	{% endblock %}
 	{% block content %}
-		<a class="btn btn-primary" href="{{ url('asset_create') }}">Buy building</a>
-		<a class="btn btn-warning" href="{{ url('transproute_create') }}">Create trade route</a>
+		{% if gameview.player.contractRemaining > 0 %}
+			<a class="btn btn-primary" href="{{ url('asset_create') }}">Buy building</a>
+		{% endif %}
+		{{ form_start( form_contract ) }}
+			{% do form_contract.submit.setRendered %}
+			<button class="btn btn-warning" type="submit">
+				<span class="fa fa-book"></span>
+				<span class="mx-1">|</span>
+				Buy Contract 
+				<span class="ml-1 badge badge-light">
+					{{ commun.credit( gameview.player.contractPrice ) }}
+				</span>
+			</button>
+		{{ form_end( form_contract ) }}
 	{% endblock %}
 	{% endembed %}
 </div>
@@ -35,7 +48,7 @@
 			<a class="btn btn-small btn-primary btn-sm pull-right" 
 				href="{{ url('asset_create',{location: sLocation}) }}"
 			>
-				Buy asset
+				Buy building
 			</a>
 		</div>
 		</div>

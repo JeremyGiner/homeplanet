@@ -3,7 +3,6 @@ namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,14 +19,12 @@ use homeplanet\Entity\Player;
 use homeplanet\Form\Buy;
 use homeplanet\Form\BuildingBuy;
 use homeplanet\Form\BuildingBuyForm;
-use homeplanet\Form\MerchantCreationForm;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Form\StepType;
 use homeplanet\Form\MultistepType;
 use homeplanet\Form\MultistepFormHandler;
 use Symfony\Component\Serializer\Serializer;
@@ -68,13 +65,42 @@ class AssetController extends BaseController {
 		$oUser = $this->getUser();
 		
 		// Get location
-		$oLocation = $this->_oLocation;
+		$oLocation = $this->getLocation();
 		
 		// Check game
-		$oGame = $this->_oGame;
+		$oGame = $this->getGame();
 		
 		
 		$oPlayer = $oGame->getPlayer();
+		
+		//_____________________________
+		// 
+		
+		$oFormContract = $this->createFormBuilder( 
+			new Buy( $oPlayer, $oPlayer->getContractPrice() ), [
+				'attr' => [ 'class' => 'float-right' ]
+			] )
+			->add('submit', SubmitType::class, [
+				'label' => 'Buy contract', 
+				'attr' => [ 'class' => 'btn-warning' ]
+			] )
+			->getForm()
+		;
+		
+		$oFormContract->handleRequest( $oRequest );
+		
+		if( $oFormContract->isSubmitted() && $oFormContract->isValid() ) {
+			
+			$oPlayer->increaseContractMax();
+			$oPlayer->setCredit( 
+				$oFormContract->getData()->getPlayerCreditNew()
+			);
+			
+			$oGame->getEntityManager()->flush();
+			
+			$this->redirect( $this->generateUrl('asset') );
+		}
+		
 		//_____________________________
 		// Render
 		
@@ -186,6 +212,7 @@ class AssetController extends BaseController {
 				'aLocation' => $aLocation,
 				'worldmap' => $oGame->getWorldmap(),
 				'aCity' => $aCity,
+				'form_contract' => $oFormContract->createView(),
 			]
 		);
 	}
@@ -195,7 +222,6 @@ class AssetController extends BaseController {
 	 */
 	public function assetViewAction( $id, Request $oRequest  ) {
 		$this->_handleRequest($oRequest);
-		$oPawnManager = $this->getDoctrine()->getManager();
 	
 		$oUser = $this->getUser();
 		$oGame = $this->getGame();
@@ -275,7 +301,8 @@ class AssetController extends BaseController {
 			
 			// Commun option
 			$a = [
-					'gameview' => $this->_createView($this->_oGame, $this->_oLocation),
+				'game' => $this->getGame(),
+				'default_location' => $this->getLocation(),
 			];
 			
 			$oStepHandler = new MultistepFormHandler( 
@@ -292,14 +319,13 @@ class AssetController extends BaseController {
 			$oData = $oStepHandler->getData( $oData );
 			
 			$oFormProd = $this->createForm(TransportSetForm::class,$oData,[
-					'game' => $this->_oGame,
-					'step' => $oStepHandler->getStep(),
+				'step' => $oStepHandler->getStep(),
 			]+$a);
 			
 			$oFormProdRecap = $this->createForm(TransportSetForm::class,$oData,[
-					'game' => $this->_oGame,
-					'step' => $oStepHandler->getStep(),
-					'isRecap' => true,
+
+				'step' => $oStepHandler->getStep(),
+				'isRecap' => true,
 			]+$a);
 			
 			$oFormProd->handleRequest( $oRequest );
@@ -350,8 +376,7 @@ class AssetController extends BaseController {
 				}
 				
 				$oFormProd = $this->createForm(TransportSetForm::class,$oFormProd->getData(),[
-						'game' => $this->_oGame,
-						'step' => $oStepHandler->getStep(),
+					'step' => $oStepHandler->getStep(),
 				]+$a);
 				
 				return $this->redirect( $oRequest->getUri() );
@@ -443,7 +468,7 @@ class AssetController extends BaseController {
 				'user' => $this->getUser(),
 				'gameview' => [
 						'entity' => $oPawn,
-						'player' => $oGame->getContextPlayer(),
+						'player' => $oGame->getPlayer(),
 						'game' => $oGame,
 				] + $this->_createViewMin($oGame, $this->_oLocation ),
 				
@@ -467,21 +492,23 @@ class AssetController extends BaseController {
 		$this->_handleRequest( $oRequest );
 		
 		$oUser = $this->getUser();
-		$oGame = $this->_oGame;
-		$oLocation = $this->_oLocation;
+		$oGame = $this->getGame();
+		$oLocation = $this->getLocation();
 		$oPlayer = $oGame->getPlayer();
 		
 		//_____________________________
 		// Form join Build
 			
 		$oData = new BuildingBuy(
-				$this->_oLocation,
-				$this->_oGame->getPawnType(2),
-				$this->_oGame->getPlayer()
+			$oLocation,
+			$oGame->getPawnType(2),
+			$oGame->getPlayer()
 		);
 		
-		$oFormBuild = $this->createForm(BuildingBuyForm::class, $oData, 
-				['gameview' => $this->_createView($oGame, $oLocation),] );
+		$oFormBuild = $this->createForm(BuildingBuyForm::class, $oData, [ 
+			'game' => $oGame, 
+			'default_location' => $oLocation,
+		] );
 		
 		$oFormBuild->handleRequest( $oRequest );
 		if( $oFormBuild->isSubmitted() && $oFormBuild->isValid() ) {
@@ -500,8 +527,8 @@ class AssetController extends BaseController {
 			$oFactory = new PawnFactory(
 					$oData->getPawnType(),
 					[
-							'oPlayer' => $oGame->getPlayer(),
-							'oLocation' => $oData->getLocation(),
+						'oPlayer' => $oGame->getPlayer(),
+						'oLocation' => $oData->getLocation(),
 					]
 			);
 				
@@ -512,7 +539,6 @@ class AssetController extends BaseController {
 			
 			$oGame->getProductionRepo()->updateProduction();
 			
-				
 			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}
 		
@@ -533,7 +559,7 @@ class AssetController extends BaseController {
 			])
 			->getForm()
 		;
-			
+		
 		$oFormUpgrade->handleRequest( $oRequest );
 		
 		if( $oFormUpgrade->isSubmitted() && $oFormUpgrade->isValid() ) {
@@ -582,7 +608,7 @@ class AssetController extends BaseController {
 			new ObjectNormalizer(null,null,null, new ReflectionExtractor()),
 			//new PropertyNormalizer(null,null,null, new ReflectionExtractor()),
 		],[
-			new JsonEncoder(),				
+			new JsonEncoder(),
 		]);
 		
 		// Commun option

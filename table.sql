@@ -58,14 +58,15 @@ CREATE TABLE IF NOT EXISTS `character` (
   `deck_id` int(10) unsigned NOT NULL DEFAULT '1',
   `personality` varchar(50) NOT NULL,
   `appearance` varchar(50) NOT NULL,
-  `label` varchar(50) NOT NULL,
+  `label` varchar(50) NOT NULL DEFAULT 'generate_character_name',
   `location_x` int(11) NOT NULL,
   `location_y` int(11) NOT NULL,
+  `seed` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `location_x_location_y` (`location_x`,`location_y`),
   KEY `deck_id` (`deck_id`),
   CONSTRAINT `FK_character_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.characternamereference
@@ -117,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `city` (
   UNIQUE KEY `location_x_location_y_unique` (`location_x`,`location_y`),
   KEY `location_x_location_y` (`location_x`,`location_y`),
   KEY `label` (`label`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.citynamereference
@@ -140,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   KEY `FK_conversation_character_2` (`character1_id`),
   CONSTRAINT `FK_conversation_character` FOREIGN KEY (`character0_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_conversation_character_2` FOREIGN KEY (`character1_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.deck
@@ -230,11 +231,21 @@ CREATE TABLE IF NOT EXISTS `influencetype` (
 CREATE TABLE IF NOT EXISTS `knowledge` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
-  `type` enum('gossip','rumor','acquaintance','expression') NOT NULL,
+  `category_id` int(10) unsigned NOT NULL,
   `reference` int(10) unsigned DEFAULT NULL,
   `expire` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `FK_knowledge_knowledgecategory` FOREIGN KEY (`category_id`) REFERENCES `knowledgecategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.knowledgecategory
+CREATE TABLE IF NOT EXISTS `knowledgecategory` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12001 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawn
@@ -248,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   KEY `FK_entity_player` (`player_id`),
   KEY `FK_entity_entitytype` (`type_id`),
   CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawntype
@@ -315,9 +326,10 @@ CREATE TABLE IF NOT EXISTS `player` (
   `contract_max` int(10) unsigned NOT NULL DEFAULT '0',
   `allegeance` int(10) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
+  UNIQUE KEY `user_id_uniq` (`user_id`),
   KEY `FK_player_sovereign` (`allegeance`),
   KEY `FK_player_character` (`character_id`),
+  KEY `user_id` (`user_id`),
   CONSTRAINT `FK_player_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_sovereign` FOREIGN KEY (`allegeance`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -349,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `prod` (
   KEY `FK_prod_pawn` (`pawn_id`),
   CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodinput
@@ -364,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
   KEY `FK_prodinput_prodinputtype` (`prodinputtype_id`),
   CONSTRAINT `FK_prodinput_prod` FOREIGN KEY (`prod_id`) REFERENCES `prod` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prodinput_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodinputtype
@@ -1234,7 +1246,7 @@ Update BUY prod percent */
 	SET c = c + ROW_COUNT();
 		
 /* ____________________________________________________________________________________
-Failt safe harvester */
+Disregard harvester and assume it's updated */
 	
 		UPDATE prod 
 		
@@ -1258,6 +1270,8 @@ Failt safe harvester */
 UNTIL c = 0 END REPEAT;
 	
 	UPDATE prod SET prod.updated = 1 WHERE prod.updated = 0;
+	
+	CALL `income_update`();
 
 END//
 DELIMITER ;
@@ -1356,10 +1370,10 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `turn`()
 BEGIN
 	#CALL `prod_percent_update`();
 	
+	CALL `city_spawn`();
+	
 	CALL `population_growth_update`();
 	CALL `population_quantity_update`();
-	
-	CALL `city_spawn`();
 	
 	CALL `demand_update_value`();
 	CALL `demand_update_pricemodifier`();

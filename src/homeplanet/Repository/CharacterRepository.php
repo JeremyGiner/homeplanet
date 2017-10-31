@@ -5,6 +5,8 @@ use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\City;
 use homeplanet\Entity\Character;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query;
 
 class CharacterRepository extends EntityRepository {
 	
@@ -23,12 +25,13 @@ WHERE character._iId = :id
 			->useQueryCache(true)
 			->useResultCache(true)
 		;
+		
 		return $oQuery->getResult();
 	}
 	
 //_____________________________________________________________________________
 
-	public function getRandom( Location $oLocation = null, $excludeId ) {
+	public function getRandom( Location $oLocation, $excludeId ) {
 		$aCharacter = [];
 		
 		$oCharacter = $this->getEntityManager()->createQuery('
@@ -39,13 +42,16 @@ LEFT JOIN homeplanet\Entity\Character character_main
 LEFT JOIN character_main._aAcquaintance acquaintance WITH acquaintance._iId = character._iId
 WHERE character._iId != :id 
 AND acquaintance._iId IS NULL
+AND character._sOccupation != \'merchant\'
+AND character._x = :x
+AND character._y = :y
 		')
 //AND character.locationX = :locationX
 //AND character.locationY = :locationY
 			->setParameters( [
 				'id' => $excludeId,
-				//'locationX' => $oLocation->getX(), 
-				//'locationY' => $oLocation->getY(),
+				'x' => $oLocation->getX(), 
+				'y' => $oLocation->getY(),
 			])
 			->setMaxResults(1)
 			->getOneOrNullResult()
@@ -54,9 +60,24 @@ AND acquaintance._iId IS NULL
 			return $oCharacter;
 		
 		// Generate random char
-		$oCharacter = Character::generate( $this->getEntityManager(), $oLocation, 'city' );
+		$oCharacter = Character::generate( 
+			$this->getEntityManager(), 
+			$this->getGeneratedName(),
+			$oLocation, 
+			'city' 
+		);
 		
 		return $oCharacter;
+	}
+	
+	public function getGeneratedName() {
+		$rsm = new ResultSetMapping();
+		$rsm->addScalarResult('name', 'name');
+		
+		return $this->getEntityManager()
+			->createNativeQuery('SELECT `generate_character_name`() as name', $rsm )
+			->getOneOrNullResult( Query::HYDRATE_SINGLE_SCALAR )
+		;
 	}
 	
 	private function _generateCharater( Location $oLocation ) {

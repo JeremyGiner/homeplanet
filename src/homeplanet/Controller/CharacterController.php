@@ -27,6 +27,10 @@ use Symfony\Component\Finder\Exception\AccessDeniedException;
 use homeplanet\Entity\Player;
 use homeplanet\validator\conversation\TailRequire;
 use homeplanet\modifier\conversation\AddTail;
+use homeplanet\Entity\KnowledgeCategory;
+use homeplanet\Entity\Knowledge;
+use homeplanet\Form\LocationType;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @Route("/character")
@@ -87,7 +91,12 @@ class CharacterController extends BaseController {
 		
 		/* @var $oFormMeet Form */
 		$oFormMeet = $this->createFormBuilder()
-			->add('submit',SubmitType::class,['label' => 'Meet new charater'])
+			->add('location', LocationType::class, [ 
+				'game' => $this->getGame(), 
+				'empty_data' => $this->getLocation(),
+				'constraints' => [ new NotBlank() ],
+			] )
+			->add('submit',SubmitType::class, ['label' => 'Meet new charater'])
 			->getForm()
 		;
 		
@@ -97,7 +106,10 @@ class CharacterController extends BaseController {
 			$em = $this->getGame()->getEntityManager();
 			
 			// Get character met
-			$oCharacter = $this->getGame()->getCharacterRepo()->getRandom( null, $this->getGame()->getPlayer()->getCharacter()->getId() );
+			$oCharacter = $this->getGame()->getCharacterRepo()->getRandom( 
+				$oFormMeet->getData()['location'], 
+				$this->getGame()->getPlayer()->getCharacter()->getId() 
+			);
 			
 			$oConversation = new Conversation( 
 				$this->getGame()->getPlayer()->getCharacter(),
@@ -126,32 +138,6 @@ class CharacterController extends BaseController {
 	
 	/**
 	 * 
-	 * @Route("/travel", name="travel")
-	 */
-	public function travelAction( Request $oRequest ) {
-		//TODO
-		$this->_handleRequest( $oRequest );
-		
-		$oForm = $this->createFormBuilder([],['csrf_protection' => false])
-			->setMethod('GET')
-			->add( SubmitType::class, [ 'label' => 'Meet a random character' ] )
-			->getForm()
-		;
-		$oForm->handleRequest( $oRequest );
-		
-		$aCharacter = null;
-		if( $oForm->isSubmitted() && $oForm->isValid() ) {
-			$aCharacter = $this->_oGame->getCharacterRepo()->getRandomList( $this->_oLocation );
-		}
-		
-		return $this->render('homeplanet/page/.html.twig', [
-			'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
-			'characterList' => $aCharacter,
-		]);
-	}
-	
-	/**
-	 *
 	 * @Route("/create", name="character_create")
 	 */
 	public function createAction( Request $oRequest ) {
@@ -417,6 +403,33 @@ SELECT id+10000,' ','expression', id FROM expression
 			'expressionOwnershipAr' => array_flip( $aOwnership ),
 			'deck' => $aDeck,
 			'formAddAr' => $aFormAddView,
+		]);
+	}
+	
+	/**
+	 *
+	 * @Route("/knowledge", name="character_knowledge")
+	 */
+	public function knowledgeAction( Request $oRequest ) {
+		
+		$this->_handleRequest( $oRequest );
+		
+		$em = $this->getGame()->getEntityManager();
+		
+		$aCategory = $em->getRepository(KnowledgeCategory::class)->findAll();
+		
+		$aKnowledge = $em->getRepository(Knowledge::class)->findAll();
+		$aKnowledge = ArrayTool::STindexBy( $aKnowledge, 'category.id');
+		
+		$aUnlocked = $this->getGame()->getPlayer()->getCharacter()->getKnowledgeAr();
+		$aUnlocked = ArrayTool::STaggregate($aUnlocked, 'id');
+		$aUnlocked = array_flip($aUnlocked);
+		
+		return $this->render('homeplanet/page/character_knowledge.html.twig', [
+			'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
+			'knowledgeAr' => $aKnowledge,
+			'unlockedAr' => $aUnlocked,
+			'categoryAr' => $aCategory,
 		]);
 	}
 	

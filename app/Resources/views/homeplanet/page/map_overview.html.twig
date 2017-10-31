@@ -1,13 +1,19 @@
 {% extends 'homeplanet/page/game.html.twig' %}
 
 {% block page_content %}
-
 <div class="card">
 	<div class="card-header">
-		World map ( {{ gameview.location }} )
+		World map
 	</div>
 	<div class="card-block">
-		{% embed 'homeplanet/element/map.html.twig'%}{% endembed %}
+		<div class="row">
+			<div class="col-6" style="padding-right:0;">
+				{% include 'homeplanet/element/map_zoom1.html.twig' with gameview %}
+			</div>
+			<div class="col-6" style="padding-left:0;">
+				{% include 'homeplanet/element/map_zoom0.html.twig' with gameview %}
+			</div>
+		</div>
 	</div>
 	<div class="card-header">
 		Location detail ({{ gameview.location  }})
@@ -15,7 +21,7 @@
 	<div class="card-block">
 		{% set x = gameview.location.getX() %}
 		{% set y = gameview.location.getY() %}
-		{% set oTile = gameview.map.getTile( x, y ) %}
+		{% set oTile = gameview.worldmap.getTile( x, y ) %}
 		{{ printo(oTile, { gameview: gameview } ) }}
 	</div>
 	{% if city != null %}

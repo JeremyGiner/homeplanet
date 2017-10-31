@@ -26,22 +26,28 @@
 
 {% block location_widget %}
 	<input id="{{ id }}" name="{{ full_name }}" type="hidden" value="{{ value }}">
-	<button 
-		class="btn btn-secondary form-control" 
-		type="button" 
-		{%- if disabled %} 
-			disabled="disabled"
-		{% else %}
-			onclick="$('#{{ id }}_modal').modal('show')"
-		{% endif -%}
-	>{{ value }}</button>
+	<div class="input-group">
+		<div class="input-group-addon">
+			<span class="fa fa-map-marker"></span>
+		</div>
+		<button 
+			id="{{ id }}_button"
+			class="btn btn-secondary form-control" 
+			type="button" 
+			{%- if disabled %} 
+				disabled="disabled"
+			{% else %}
+				onclick="$('#{{ id }}_modal').modal('show')"
+			{% endif -%}
+		>{{ form.vars.data != null ? value : empty_data }}</button>
+	</div>
 	{% embed 'bootstrap/modal.html.twig' 
 		with {id: id~'_modal', iTargetInputId: id}
 	 %}
 	{% block modal_body %}
 		<div class="row">
 		<div class="col-6" style="padding-right:0;">
-			{% embed 'homeplanet/element/map_zoom1.html.twig' with {location: data}%}
+			{% embed 'homeplanet/element/map_zoom1.html.twig' with worldmap_view %}
 			{% block map_cell %}
 					<div class="map-cell" 
 						onclick="
@@ -67,16 +73,19 @@
 					$(event.target).attr('data-valid') !== undefined 
 					&& $(event.target).attr('data-valid') == 'false'
 				) return false;
+				
+				$('#{{ id }} .map-cell-highlight').removeClass('map-cell-highlight');
+				$(event.target).addClass('map-cell-highlight');
+				
 				$('#{{ iTargetInputId }}').val( $(event.target).attr('data-location') );
-				$('#{{ iTargetInputId }}+button').html( $(event.target).attr('data-location') );
+				$('#{{ iTargetInputId }}_button').html( $(event.target).attr('data-location') );
 				$('#{{ id }}').modal('hide');
 			"
-		>
-			{% embed 'homeplanet/element/map_zoom0.html.twig' with {
+		>	
+			{% include 'homeplanet/element/map_zoom0.html.twig' with {
 				map_mod: true,
 				validator: validator is defined? validator : null 
-			} %}
-			{% endembed %}
+			}|merge(worldmap_view) only %}
 		</div>
 		</div>
 	{% endblock %}

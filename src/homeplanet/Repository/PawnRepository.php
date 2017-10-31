@@ -30,7 +30,7 @@ WHERE entity._oPlayer = :player
 	 * @param int $iRight
 	 * @return Pawn[]
 	 */
-	public function getPawnAr_byArea( $iBot, $iTop, $iLeft, $iRight ) {
+	public function findByArea( $iBot, $iTop, $iLeft, $iRight, $iPlayerId ) {
 	
 		$oQuery = $this->_em->createQuery('
 SELECT pawn, pos
@@ -38,15 +38,16 @@ FROM homeplanet\Entity\Pawn pawn
 JOIN pawn._aPosition pos
 WHERE pos._x BETWEEN :left AND :right
 	AND pos._y BETWEEN :bot AND :top
+	AND pawn._oPlayer = :player_id
 		');
+		
 		$oQuery->setParameters( array(
-				'bot' => $iBot,
-				'top' => $iTop,
-				'left' => $iLeft,
-				'right' => $iRight,
+			'bot' => $iBot,
+			'top' => $iTop,
+			'left' => $iLeft,
+			'right' => $iRight,
+			'player_id' => $iPlayerId,
 		))
-			->useQueryCache(true)
-			->useResultCache(true)
 		;
 		return $oQuery->getResult();
 	}

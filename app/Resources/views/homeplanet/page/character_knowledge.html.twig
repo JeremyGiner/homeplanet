@@ -1,0 +1,30 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+
+{% block page_content %}
+
+<div class="card">
+<div class="card-header">
+	Knowledge
+</div>
+<div class="card-block">
+	{% for category in categoryAr if knowledgeAr[ category.id ] is defined %}
+	
+	<ul class="list-group">
+		<li><h2>{{ category.label }}</h2></li>
+		{% for knowledge in knowledgeAr[ category.id ] %}
+		<li class="list-group-item">
+			{% if unlockedAr[ knowledge.id ] is defined %}
+				{{ knowledge.label }}
+			{% else %}
+				???
+			{% endif %}
+		</li>
+		{% endfor %}
+	</ul>
+	{% endfor %}
+</div>
+</div>
+
+
+{% endblock %}

@@ -17,8 +17,7 @@ class ExpressionRepository extends EntityRepository {
 SELECT expression._iId
 FROM homeplanet\Entity\Player player
 JOIN player._oCharacter character
-JOIN character._aKnowledge knowledge WITH knowledge._sType = \'expression\'
-JOIN homeplanet\Entity\Expression expression WITH expression._iId = knowledge._iReference
+JOIN character._aExpression expression
 WHERE player._iId = :id
 		');
 		$oQuery->setParameters( [

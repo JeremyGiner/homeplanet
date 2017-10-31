@@ -27,7 +27,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Tests\ButtonTest;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use homeplanet\Form\LocationType;
 use homeplanet\Form\EntityTypeChoiceType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Doctrine\ORM\EntityRepository;

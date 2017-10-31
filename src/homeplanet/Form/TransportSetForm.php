@@ -29,7 +29,6 @@ class TransportSetForm extends MultistepType {
 		parent::configureOptions($oResolver);
 		
 		$oResolver->setDefaults([
-			'gameview' => null,
 			'game' => null,
 			'validation_groups' => function (FormInterface $form) {
 				//TODO
@@ -38,7 +37,7 @@ class TransportSetForm extends MultistepType {
 					return new GroupSequence( ['Default','step1'] );
 				return ['Default','step1','step2'];
 			}
-		]);
+		])->setRequired(['game', 'default_location']);
 	}
 	
 	function _buildFormByStep(
@@ -59,7 +58,8 @@ class TransportSetForm extends MultistepType {
 				$oBuilder
 					->add('location_begin', LocationType::class,[
 						'label' => 'Start',
-						'gameview' => $aOption['gameview'],
+						'game' => $aOption['game'],
+						'empty_data' => $aOption['default_location'],
 						'validator' => $oTransporter->getTileValidator(),
 					])
 					->add('production_type', EntityType::class, [
@@ -108,7 +108,8 @@ class TransportSetForm extends MultistepType {
 					->add('location_end', LocationType::class,[
 						'label' => 'Destination',
 						'data' => $oData->getLocationBegin(),
-						'gameview' => $aOption['gameview'],
+						'game' => $aOption['game'],
+						'empty_data' => $aOption['default_location'],
 						'validator' => new ValidatorInArray( $aValidTile )
 							/*
 						'validator' => new TileValidatorRange(

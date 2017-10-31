@@ -9,9 +9,9 @@ use homeplanet\Entity\attribute\Population;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="knowledge")
+ * @ORM\Table(name="knowledgecategory")
  */
-class Knowledge {
+class KnowledgeCategory {
 	
 	/**
 	 * @ORM\Id
@@ -24,13 +24,6 @@ class Knowledge {
 	 * @ORM\Column(type="string", name="label")
 	 */
 	protected $_sLabel;
-	
-	/**
-	 * @ORM\OneToOne(targetEntity="\homeplanet\Entity\KnowledgeCategory")
-	 * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
-	 * @var KnowledgeCategory
-	 */
-	protected $_oCategory;
 	
 	
 //_____________________________________________________________________________
@@ -49,13 +42,5 @@ class Knowledge {
 	public function getLabel() {
 		return $this->_sLabel;
 	}
-	
-	public function getCategory() {
-		return $this->_oCategory;
-	}
-	
-	
-//_____________________________________________________________________________
-//	Modifier
 
 }

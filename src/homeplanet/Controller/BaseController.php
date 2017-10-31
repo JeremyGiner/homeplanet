@@ -106,8 +106,6 @@ class BaseController extends Controller {
 			($oLocation->getRegionX()+1)*13	//Right
 		);
 		
-			
-		
 		// Index by location
 		$a = [];
 		foreach ( $aCity as $oCity ) {
@@ -117,18 +115,18 @@ class BaseController extends Controller {
 		
 		$oGameSate = $oGame->getState();
 			
-		return [
+		return array_merge( [
 				'player' => $oGame->getPlayer(),
-				'location' => $oLocation,
+				//'location' => $oLocation,
 				'zoom' => 0,
 				'game' => $oGame,
-				'map' => $oGame->getWorldmap(),
-				'entityAr' => $oGame->getPawnAr_byLocation($oLocation),
+				//'worldmap' => $oGame->getWorldmap(),
+				//'pawnAr' => $oGame->getPawnRepo(),
 				'overcrowd' => $aOvercrowd,
-				'city' => $aCity,
+				'cityAr' => $aCity,
 				'year' => $oGameSate->getYear(),
 				'month' => $oGameSate->getMonth(),
-		];
+		], $oGame->getWorldmapView( $oLocation ) );
 	}
 	
 	// TODO : create class

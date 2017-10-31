@@ -25,6 +25,7 @@ use homeplanet\Entity\Expression;
 use homeplanet\Repository\ExpressionRepository;
 use homeplanet\Entity\Deck;
 use homeplanet\Repository\DeckRepository;
+use AppBundle\Tool\ArrayTool;
 
 class Game {
 	/**
@@ -51,12 +52,6 @@ class Game {
 	 */
 	protected $_oWorldmap;
 	
-	/**
-	 * Indexed by location (serialized) then by id
-	 * @var Entity[][]
-	 */
-	protected $_aPawnByLoc;
-	
 	static private $_oInstance = null;
 	
 //_____________________________________________________________________________
@@ -77,12 +72,6 @@ class Game {
 		//$this->_oGameState = $this->_oEntityManager->getRepository('homeplanet\Entity\GameState')->find(1);
 		
 		$this->_oWorldmap = new Worldmap( $this ); 
-		
-		$this->_aPawnByLoc = [];
-		$a = $this->getPawnRepo()->getPawnAr_byArea( $iCenterY-6, $iCenterY+6, $iCenterX-6, $iCenterX+6 );
-		foreach( $a as $oEntity )
-			foreach( $oEntity->getLocationAr() as $oLocation )
-				$this->_aPawnByLoc[ (string)$oLocation ][ $oEntity->getId() ] = $oEntity;
 		
 		$oQuery = $this->_oEntityManager->createQuery('
 SELECT pawntype,prodtype
@@ -155,12 +144,52 @@ JOIN pawntype._aProdType prodtype
 		return $this->_oWorldmap;
 	}
 	
-	public function getCity_byLocation( Location $oLoc ) {
-		$a = $this->getPawnAr_byLocation( $oLoc );
-		foreach( $a as $o ) {
-			if ( $o->getType()->getId() == 1 ) return $o;
+	public function getWorldmapView( Location $oLocation ) {
+		
+		$aPawn = $this->getPawnRepo()->findByArea(
+			$oLocation->getRegionY()*13,     //Bottom
+			($oLocation->getRegionY()+1)*13, //Top
+			$oLocation->getRegionX()*13,     //Left
+			($oLocation->getRegionX()+1)*13, //Right
+			$this->getPlayer()->getId()
+		);
+		
+		// Index by location
+		//$aPawn = ArrayTool::STindexBy($aPawn, 'location');
+		$aTmp = [];
+		foreach( $aPawn as $oPawn ) 
+		foreach( $oPawn->getLocationAr() as $oPawnLocation ) {
+			$sLocation = (string)$oPawnLocation;
+			if( ! isset( $aTmp[ $sLocation ] ) ) 
+				$aTmp[ $sLocation ] = [];
+			
+			$aTmp[ $sLocation ][] = $oPawn;
 		}
-		return null;
+		$aPawn = $aTmp;
+		
+		// Get cities
+		$aCity = $this->getCityRepo()->findByArea(
+			$oLocation->getRegionY()*13,     //Bottom
+			($oLocation->getRegionY()+1)*13, //Top
+			$oLocation->getRegionX()*13,     //Left
+			($oLocation->getRegionX()+1)*13  //Right
+		);
+		
+		// Index by location
+		//TODO : make indexBy compatible with stringable object
+		//$aCity = ArrayTool::STindexBy($aCity, 'location');	
+		$a = [];
+		foreach ( $aCity as $oCity ) {
+			$a[ (string)$oCity->getLocation() ] = $oCity;
+		}
+		$aCity = $a;
+		
+		return [
+			'location' => $oLocation,
+			'worldmap' => $this->getWorldmap(),
+			'pawnAr' => $aPawn,
+			'cityAr' => $aCity,
+		];
 	}
 	
 	public function getContextPlayer() {
