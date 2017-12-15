@@ -64,7 +64,7 @@ class Character {
 	 *     joinColumns={@ORM\JoinColumn(name="character_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="knowledge_id", referencedColumnName="id")}
 	 * )
-	 * @var Collection
+	 * @var ArrayCollection
 	 */
 	protected $_aKnowledge;
 	
@@ -75,7 +75,7 @@ class Character {
 	 *     joinColumns={@ORM\JoinColumn(name="character_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="target_id", referencedColumnName="id")}
 	 * )
-	 * @var Collection
+	 * @var ArrayCollection
 	 */
 	protected $_aAcquaintance;
 	
@@ -86,7 +86,7 @@ class Character {
 	 *     joinColumns={@ORM\JoinColumn(name="character_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="expression_id", referencedColumnName="id")}
 	 * )
-	 * @var Collection
+	 * @var ArrayCollection
 	 */
 	protected $_aExpression;
 	
@@ -163,6 +163,13 @@ class Character {
 	
 	public function getExpressionAr() {
 		return $this->_aExpression->toArray();
+	}
+	
+	public function hasExpression( Expression $oExpression ) {
+		
+		if( $oExpression->getId() <= 3 ) return true;
+		
+		return $this->_aExpression->indexOf( $oExpression ) !== false;
 	}
 	
 	

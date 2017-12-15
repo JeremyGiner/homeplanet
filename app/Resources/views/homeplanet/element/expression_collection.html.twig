@@ -1,0 +1,30 @@
+<div class="row">
+
+{% for expression in expressionAr %}
+<div class="col-3">
+	<div class="row">
+	<div class="col-12">
+		{{ printo(expression) }}
+	</div>
+	<div class="col-12">
+		{% if expressionOwnershipAr[ expression.id ] is defined %}
+			<span class="fa fa-lock mr-2 float-left"></span>
+		{% else %}
+			
+			{% block action %}{% endblock %}
+			
+		{% endif %}
+	</div>
+	</div>
+</div>
+{% endfor %}
+
+</div>
+<nav>
+{% include 'bootstrap/pagination.html.twig' with {
+	route_params: {},
+	route: app.request.attributes.get('_route'),
+	page_current: paginator.page,
+	page_max: paginator.pageMax,
+} only %}
+</nav>

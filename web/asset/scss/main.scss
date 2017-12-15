@@ -102,6 +102,17 @@ a.list-group-item {
 }
 
 /*_____________________________________________________________________________
+ * Utils */
+
+.active>.hidden-active {
+	display: none;
+}
+
+:not(.active)>.hidden-inactive {
+	display: none;
+}
+
+/*_____________________________________________________________________________
  * Theme */
 
 $conver-aspect-0: purple;	// persuade

@@ -16,6 +16,12 @@
 	<div class="card">
 	<div class="card-header">
 		Deck
+		<div class="float-right">
+			<a class="btn btn-success" href="{{ url('deck_create') }}" >
+				<span class="fa fa-plus mr-1"></span>
+				Create
+			</a>
+		</div>
 	</div>
 	<div class="card-block">
 		{% for deck in deckAr %}

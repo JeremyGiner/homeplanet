@@ -62,8 +62,10 @@ class Game {
 		$this->_oUser = $oContextUser;
 		$this->_oEntityManager = $oEntityManager;
 		
-		$this->_oPlayer = $this->_oEntityManager->getRepository(Player::class)
-			->findOneBy(['_oUser' => $this->_oUser->getId()]);
+		
+		//$this->_oPlayer = $this->_oEntityManager->getRepository(Player::class)
+		//	->findOneBy(['_oUser' => $this->_oUser->getId()]);
+		$this->_oPlayer = $this->_oUser->getPlayer();
 		
 		// Preload
 		$this->_oEntityManager->getRepository(Ressource::class)->findAll();

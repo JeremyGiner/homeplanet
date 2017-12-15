@@ -7,7 +7,7 @@ console.log('OKOK');
 //_____________________________________________________________________________
 
 Number.prototype.padLeft = function (n,str) {
-    return (this < 0 ? '-' : '') + 
+	return (this < 0 ? '-' : '') + 
 		Array(
 				n-String(Math.abs(this)).length+1
 		).join(str||'0') + 
@@ -47,6 +47,42 @@ $.fn.ajaxUpdate = function( sUrl, oParam ) {
 
 //_____________________________________________________________________________
 
+//custom script for deck_create
+//TODO: factorize
+/*
+$(function(){
+	$(document).on('click', function ( event ) {
+	//$('[data-action="deck-select-expression"]').click(function(){
+		console.log(event.target);
+		
+		
+		
+		$this = $action_element;
+		
+		var input_name = $this.data('param-input');
+		var value = $this.data('param-value');
+		
+		$('select[name="'+input_name+'"]>option[value="'+value+'"]').prop('selected', $this.hasClass('active') );
+	
+		Twig.render({ ref: 'expression-button' });
+	});
+});
+*/
+$(function(){
+	$(document).on('click', function ( event ) {
+	//$('[data-action="deck-select-expression"]').click(function(){
+		var $action_element = $(event.target).closest('[data-clickaction]');
+		if( $action_element.length == 0 )
+			return;
+		
+		var func_name = $action_element.data('clickaction');
+		if( typeof window[func_name] !== "function" )
+			throw 'clickaction cannot find function "'+func_name+'"';
+		
+		window[func_name]( event, $action_element );
+		
+	});
+});
 
 //_____________________________________________________________________________
 //	Boot
@@ -114,15 +150,15 @@ $(function() {
 	
 	// Compile all the template o/
 	$("script[type='text/template']").each(function() {
-	    var id = $(this).attr("id"),
-	        data = $(this).text();
-	    
-	    Twig.twig({
-	        id: id,
-	        data: data,
-	        allowInlineIncludes: true
-	    });
-	    console.log(id+' is compiled');
+		var id = $(this).attr("id"),
+			data = $(this).text();
+		
+		Twig.twig({
+			id: id,
+			data: data,
+			allowInlineIncludes: true
+		});
+		console.log(id+' is compiled');
 	});
 	
 	//_________________________________

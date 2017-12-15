@@ -1,0 +1,117 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+{% block page_content %}
+<div class="row">
+<div class="col-12">
+	<div class="card mb-3">
+	<div class="card-header">
+		Create custom deck
+	</div>
+	<div class="card-block">
+		{{ form( form_create, { 'attr': {'autocomplete': 'off'} } ) }}
+		
+		{# Test div for Expression list #}
+		<div id="group_selected_expression"></div>
+	</div>
+	</div>
+</div>
+<div class="col-12">
+
+<div class="card">
+	<div class="card-header">
+		Expressions
+	</div>
+	<div class="card-body">
+		{% embed 'homeplanet/element/expression_collection.html.twig' with { 
+			paginator: expression_paginator,
+			player: gameview.player, 
+		} %}
+		{% block action %}
+			{% if player.character.hasExpression( expression ) %}
+			<div class="btn-group" data-toggle="buttons">
+				<label class="btn btn-secondary" type="button" 
+					data-clickaction="deck_toggle_expression" 
+					data-param-value="{{ expression.id }}"
+					data-param-input="{{ form_create.expression_ar.vars.full_name }}"
+				>
+					<input type="checkbox" name="expression_toggle_{{ expression.id }}" autocomplete="off"/>
+					<span class="hidden-active">
+						<span class="fa fa-plus"></span>
+						Add
+					</span>
+					<span class="hidden-inactive">
+						<span class="fa fa-minus"></span>
+						Remove
+					</span>
+				</label>
+			</div>
+			{% else %}
+				<button class="btn btn-secondary" type="button" disabled>
+					<span class="fa fa-lock"></span>
+				</button>
+			{% endif %}
+		{% endblock %}
+		{% endembed %}
+	</div>
+</div>
+
+</div>
+</div>
+
+<script id="expression-button" type="text/template">
+{% verbatim %}
+<button id="expression_remove_{{ id }}" class="btn btn-primary" type="button"
+	data-clickaction="deck_unselect_expression"
+	data-expression-id="{{ id }}"
+>{{ name }}</button>
+{% endverbatim %}
+</script>
+<script type="text/javascript">
+function deck_unselect_expression( click_event, $action_element ) {
+	
+	var $input = $('[name="{{ form_create.expression_ar.vars.full_name }}"]');
+	var expression_id = $action_element.data('expression-id');
+	
+	$input.find('[value="'+expression_id+'"]').prop('selected', false );
+	
+	var $button = $('#expression_remove_'+expression_id);
+	$button.remove();
+	
+	console.log($('[name="expression_toggle_'+expression_id+'"]'));
+	
+	//$('[name="expression_toggle_'+expression_id+'"]').prop( 'checked', true );
+	
+	$('[name="expression_toggle_'+expression_id+'"]').parent().button('toggle');
+	
+}
+function deck_toggle_expression( click_event, $action_element ) {
+	
+	$this = $action_element;
+	
+	var input_name = $this.data('param-input');
+	var value = $this.data('param-value');
+	
+	var select_state = $this.hasClass('active');    // true : select, false: unselect
+	
+	$input_option = $('select[name="'+input_name+'"]>option[value="'+value+'"]');
+	$input_option.prop('selected', select_state );
+	
+	if( select_state == true ) {
+		
+		$('#group_selected_expression').append(
+			Twig.twig({ ref: 'expression-button' })
+				.render({ 
+					name: $input_option.html(),
+					id: value,
+				})
+		);
+	} else {
+		var $button = $('#expression_remove_'+value);
+		$button.remove();
+	}
+	
+}
+</script>
+
+
+{% endblock %}

@@ -10,6 +10,7 @@
 		
 		{% block content %}
 			{{ form_start(form) }}
+				{{ form_errors(form) }}
 				{% for child in form %}
 					{% if child.vars.name == 'signin' %}
 					<div class="form-group">

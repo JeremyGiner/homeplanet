@@ -4,7 +4,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="homeplanet\Repository\RessourceRepository")
  * @ORM\Table(name="ressource")
  */
 class Ressource {

@@ -34,7 +34,7 @@ class Deck {
 	 *     joinColumns={@ORM\JoinColumn(name="deck_id", referencedColumnName="id")},
 	 *     inverseJoinColumns={@ORM\JoinColumn(name="expression_id", referencedColumnName="id")}
 	 * )
-	 * @var Collection
+	 * @var ArrayCollection
 	 */
 	protected $_aExpression;
 	
@@ -44,6 +44,7 @@ class Deck {
 // Constructor
 	
 	public function __construct() {
+		$this->_aExpression = new ArrayCollection();
 	}
 	
 //_____________________________________________________________________________
@@ -68,6 +69,11 @@ class Deck {
 //_____________________________________________________________________________
 // Modifier
 
+	public function setLabel( $sLabel ) {
+		$this->_sLabel = $sLabel;
+		return $this;
+	}
+	
 	public function addExpression( Expression $oExpression ) {
 		$this->_aExpression->add( $oExpression );
 		return $this;
@@ -75,6 +81,13 @@ class Deck {
 	
 	public function removeExpression( Expression $oExpression ) {
 		$this->_aExpression->removeElement($oExpression);
+		return $this;
+	}
+	
+	public function setExpressionAr( $aExpression ) {
+		$this->_aExpression->clear();
+		foreach( $aExpression as $oExpression ) 
+			$this->_aExpression->add($oExpression);
 		return $this;
 	}
 	
