@@ -91,7 +91,7 @@ class BaseController extends Controller {
 	
 	// TODO : create class
 	function _createView( Game $oGame, Location $oLocation ) {
-	
+		
 		// Get Overcrowd indexed by ressrouce id
 		$aOvercrowd = $oGame->getOvercrowdRepo()->findByCoordonate(
 			$oLocation->getX(),
@@ -105,6 +105,8 @@ class BaseController extends Controller {
 			$oLocation->getRegionX()*13, //Left
 			($oLocation->getRegionX()+1)*13	//Right
 		);
+		if( count( $aCity ) > 0 )
+		$aCity[1]->getSovereign()->getColorPrimary();
 		
 		// Index by location
 		$a = [];

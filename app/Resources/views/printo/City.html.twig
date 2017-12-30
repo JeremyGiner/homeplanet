@@ -17,26 +17,30 @@
 {% endfor %}
 
 
-<h4>
-	City {{ o.label }}
-	<small class="pull-right">
-		population : {{ o.getPopulation().getQuantity() }} 
-		({{ o.population.growth > 0 ? '+'~o.population.growth : o.population.growth }})<br>
-	</small>
-</h4>
 
 
 <div class="row">
 <div class="col-6">
+	<h4>
+		{{ o.label|default('Unnamed city') }}
+	</h4>
 	<p>
 		City description : 
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin varius, enim quis cursus ultrices, nisl metus vehicula felis, in pharetra metus mi nec elit. In consequat massa ligula, vitae euismod lectus suscipit nec. Pellentesque iaculis lacinia eros at finibus. Phasellus leo metus, rhoncus auctor rhoncus at, sollicitudin vitae magna.
 	</p>
 </div>
 <div class="col-6">
+	<div>
+	Population : {{ o.getPopulation().getQuantity() }} 
+	({{ o.population.growth > 0 ? '+'~o.population.growth : o.population.growth }})
+	</div>
+	<div>
 	{% if o.sovereign != null %}
-		Ruler : {{ printo(o.sovereign,['link']) }}
+		Sovereign : {{ printo(o.sovereign,['link']) }}
+	{% else %}
+		Sovereign : <small class="text-muted">This city have no ruler ... for now.</small>
 	{% endif %}
+	</div>
 	<ul class="list-group">
 	{% for influence in o.influenceAr %}
 		<li class="list-group-item">

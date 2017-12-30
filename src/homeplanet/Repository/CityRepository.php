@@ -32,7 +32,7 @@ WHERE city._x = :x
 			'y' => $o->getY(),
 		])
 			->useQueryCache(true)
-			->useResultCache(true);
+			->useResultCache(false);
 		return $oQuery->getOneOrNullResult();
 	}
 	
@@ -64,6 +64,7 @@ WHERE city._x = :x
 		$oQuery = $this->getEntityManager()->createQuery('
 SELECT city
 FROM homeplanet\Entity\City city
+JOIN city._oPopulation pop
 WHERE city._x BETWEEN :left AND :right
 	AND city._y BETWEEN :bot AND :top
 		');
@@ -74,7 +75,7 @@ WHERE city._x BETWEEN :left AND :right
 			'right' => $iRight,
 		))
 		->useQueryCache(true)
-		->useResultCache(true)
+		->useResultCache(false)
 		;
 		return $oQuery->getResult();
 	}

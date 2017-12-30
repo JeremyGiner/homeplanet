@@ -51,6 +51,12 @@
 	display: block;
 }
 
+.sprite-production {
+	width: 25%!important;
+	height: 25%!important;
+	background-color: black;
+}
+
 .sprite-city {
 	background-size: 100%;
 	background-image: url('http://vignette2.wikia.nocookie.net/thesettlersonline/images/3/38/Icon_settlers2hq.png/revision/latest?cb=20131120213525');

@@ -105,7 +105,9 @@ class City {
 	public function getLocation() {
 		return new Location($this->_x, $this->_y);
 	}
-	
+	/**
+	 * @return Sovereign
+	 */
 	public function getSovereign() {
 		return $this->_aSovereign->first();
 	}

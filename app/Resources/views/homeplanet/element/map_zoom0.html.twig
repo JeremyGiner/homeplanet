@@ -14,11 +14,11 @@
 				{# draw city #}
 				{% set city = cityAr[ x~':'~y ]|default(null) %}
 				{% if city != null %}
-					<div class="map-cell sprite sprite-city"></div>
+					<div class="map-cell sprite sprite-city" style="background-color: rgba( 128, 128, 128, {{ city.population.quantity / 10000 }})"></div>
 				{% endif %}
 				
 				{% if pawnAr[ oTile.location~'' ]|default([])|length >= 1 %}
-					<div class="map-cell sprite">P</div>
+					<div class="map-cell sprite sprite-production"></div>
 				{% endif %}
 				
 				{% if map_mod is defined %}

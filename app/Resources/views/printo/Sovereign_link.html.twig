@@ -1,5 +1,10 @@
 {% import 'homeplanet/macro/commun.twig' as commun %}
 <a href="{{ path('sovereign', {'id': o.id} ) }}">
-	{{ o.label|default('Unnamed') }}
+	<span class="sovereign-banner" style="
+		color: rgb({{ o.colorSecondary|join(',') }});
+		background-color: rgb({{ o.colorPrimary|join(',') }});
+		border-color: rgb({{ o.colorSecondary|join(',') }});
+	">S<span></span></span>
+	{{ o.character.label|default('Unnamed') }}
 	#{{ o.id }}
 </a>

@@ -132,6 +132,53 @@ a:hover, a:focus {
 }
 
 //_____________________________________
+//	Homeplanet
+
+.sovereign-banner {
+	display: inline-block;
+	position: relative;
+	width: 1em;
+	height: 1.2em;
+	z-index: 10000;
+	box-sizing: content-box;
+ 	
+	text-align: center;
+ 	
+ 	border-width: 0.2em;
+ 	border-style: solid;
+	border-top: 0;
+	
+	font-weight: bold;
+}
+.sovereign-banner>span {
+	content: ' ';
+ 	
+	display: block;
+	position: absolute;
+	bottom: -0.67em;
+	left: 0.00em;
+ 	
+	width: 0.707em;
+	height: 0.707em;
+ 	
+	z-index: -10;
+ 	
+	box-sizing: content-box;
+ 	
+	transform: rotate(45deg);
+ 	
+ 	border-width: 0.2828em;
+ 	border-style: solid;
+ 	
+	border-color: inherit;
+ 	
+	border-top: 0;
+	border-left: 0;
+ 	
+	background-color: inherit;
+}
+
+//_____________________________________
 //	Conversation
 
 .color-aspect-0 {
