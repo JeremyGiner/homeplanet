@@ -31,6 +31,7 @@ use homeplanet\Entity\KnowledgeCategory;
 use homeplanet\Entity\Knowledge;
 use homeplanet\Form\LocationType;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
  * @Route("/character")
@@ -150,6 +151,54 @@ class CharacterController extends BaseController {
 		
 		$oForm = $this->createFormBuilder()
 			->add('label', TextType::class, ['label' => 'Name'] )
+			->add('skin_color', ChoiceType::class, [
+				'label' =>'Skin color',
+				'choices' => [
+					'1' => '#FFDBAC',
+					'2' => '#F1C27D',
+					'3' => '#E0AC69',
+					'4' => '#C68642',
+					'5' => '#8D5524',
+					//TODO: fill up
+				],
+			])
+			->add('hair_color', ChoiceType::class, [
+				'label' => 'Hair color',
+				'choices' => [
+'black' => '#090806',
+'off black' => '#2C222B',
+'darkest brown' => '#3B302A',
+'mid dark brown' => '#4E433F',
+'chestnut brown' => '#504444',
+'light chestnut brown' => '#6A4E42',
+'dark golden brown' => '#554838',
+'light golden brown' => '#A98467',
+'dark honey blonde' => '#B89778',
+'bleached blonde' => '#DCD0BA',
+'light ash blonde' => '#DEBC99',
+'light ash brown' => '#977961',
+'lightest blonde' => '#E6CEA8',
+'pale golden blonde' => '#E5C8A8',
+'strawberry blonde' => '#A56B46',
+'light auburn' => '#91553D',
+'dark auburn' => '#563B30',
+'darkest grey' => '#71635A',
+'medium grey' => '#B7A69E',
+'light grey' => '#D6C4C2',
+'white blonde' => '#FFF5E1',
+'alabrum blonde' => '#CBBFB1',
+'russet red' => '#8D4A42',
+'terra cotta' => '#B6523A',
+				],
+			])
+			->add('eye_color', ChoiceType::class, [
+				'label' => 'Eye color',
+				'choices' => [
+					'brown' => '#9D723F',
+					'green' => '#9ADA76',
+					'blue' => '#7F92D7',
+				],
+			])
 			->add('submit', SubmitType::class, ['label' => 'ok' ])
 			->getForm()
 		;
@@ -174,7 +223,7 @@ class CharacterController extends BaseController {
 			
 		}
 		
-		return $this->render('page/page_form.html.twig', [
+		return $this->render('homeplanet/page/character_create.html.twig', [
 			'title' => 'Character creation',
 			'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
 			'form' => $oForm->createView(),

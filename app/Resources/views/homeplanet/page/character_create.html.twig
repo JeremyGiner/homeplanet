@@ -1,0 +1,77 @@
+{% extends 'page/index.html.twig' %}
+
+
+{% block page_content %}
+<div class="container">
+	<div class="row">
+		<div class="col-12 col-sm-8 offset-sm-2">
+		{% embed 'bootstrap/panel.html.twig' %}
+			{% block header %}
+				{{ title|default('') }}
+			{% endblock %}
+			{% block content %}
+				<div class="row">
+				<div class="col-12 col-sm-6">
+					{{ form(form) }}
+				</div>
+				<div class="col-12 col-sm-6">
+					<div id="character_view"></div>
+				</div>
+				
+			{% endblock %}
+		{% endembed %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+var draw = SVG('character_view').size('100%', '100%');
+function characterView_update( 
+	sSkinColor,
+	sEyeColor,
+	sHairColor
+) {
+	draw.clear();
+	
+	//head
+	draw.rect(100, 150).radius(50).fill( sSkinColor );
+	//eye
+	draw.circle(10).move(25,50).fill(sEyeColor);
+	draw.circle(10).move(75,50).fill(sEyeColor);
+	
+	// eyebrow
+	draw.line(20,40,35,40).stroke({color: sHairColor, width: 5, linecap: 'round'});
+	draw.line(70,40,85,40).stroke({color: sHairColor, width: 5, linecap: 'round'});
+
+}
+</script>
+<script type="text/javascript">
+var $SkinColorInput = $('[name="form[skin_color]"]');
+var sSkinColor = null;
+
+var $HairColorInput = $('[name="form[hair_color]"]');
+var sHairColor = null;
+
+var $EyeColorInput = $('[name="form[eye_color]"]');
+var sEyeColor = null;
+
+function var_update() {
+	sSkinColor = $SkinColorInput.find(":selected").val();
+	sHairColor = $HairColorInput.find(":selected").val();
+	sEyeColor = $EyeColorInput.find(":selected").val();
+}
+var_update();
+
+function toto_update() {
+	var_update();
+	characterView_update( sSkinColor, sEyeColor, sHairColor );
+}
+toto_update();
+
+$SkinColorInput.change(toto_update);
+$HairColorInput.change(toto_update);
+$EyeColorInput.change(toto_update);
+</script>
+{% endblock %}
