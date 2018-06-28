@@ -139,7 +139,6 @@ class ConversationController extends BaseController {
 			case 'meet' : $sLinkNext = $this->generateUrl('character_view',['id' => $oConversation->getCharacter1()->getId()]); break;
 		}
 		
-		
 		return $this->render(
 			'homeplanet/page/conversation_result.html.twig',
 			[

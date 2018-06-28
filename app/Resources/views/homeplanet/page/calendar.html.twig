@@ -1,0 +1,91 @@
+{% extends 'homeplanet/page/game.html.twig' %}
+
+
+{% block page_content %}
+<div class="container">
+	<div class="row">
+		<div class="col-12 col-sm-10 offset-sm-1">
+		{% embed 'bootstrap/panel.html.twig' %}
+			{% block header %}
+				Calendar
+			{% endblock %}
+			{% block content %}
+				<div class="row">
+				<div class="col-6 blockquote {{ gameview.month == 1 ? 'bg-primary' }}">
+					{# Month 1 #}
+					<span class="fa fa-sun-o"></span>
+					Lihenne
+					<p class="small mb-0">
+						Description 1
+						
+						- loose 1 level
+						- up demand housing chain
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 2 ? 'bg-primary' }}">
+					{# Month 2 #}
+					<span class="fa fa-leaf"></span>
+					Orienne
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 3 ? 'bg-primary' }}">
+					{# Month 3 #}
+					<span class="fa fa-apple"></span>
+					Amassenne
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 4 ? 'bg-primary' }}">
+					{# Month 4 #}
+					<span class="fa fa-paw"></span>
+					Genenne
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 5 ? 'bg-primary' }}">
+					{# Month 5 #}
+					<span class="fa fa-moon-o"></span>
+					Lunenne
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 6 ? 'bg-primary' }}">
+					{# Month 6 #}
+					<span class="fa fa-music"></span>
+					
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 7 ? 'bg-primary' }}">
+					{# Month 7 #}
+					<span class="fa fa-tint"></span>
+					Month 7
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<div class="col-6 {{ gameview.month == 8 ? 'bg-primary' }}">
+					{# Month 8 #}
+					<span class="fa fa-snowflake-o"></span>
+					Month 8
+					<p class="small mb-0">
+						
+					</p>
+				</div>
+				<h1 class="col-12 text-center">
+					{# Year #}
+					Year {{ gameview.year }}
+				</h1>
+				</div>
+			{% endblock %}
+		{% endembed %}
+		</div>
+	</div>
+</div>
+{% endblock %}

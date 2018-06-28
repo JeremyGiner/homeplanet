@@ -2,15 +2,16 @@
 	{% set a = {
 		'wood cutter': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/c/cd/Pinewood_Cutter_Level_3.png/revision/latest?cb=20131116153726',
 		'sawmill': 'http://vignette4.wikia.nocookie.net/thesettlersonline/images/6/63/Pinewood_Sawmill_Level_3.png/revision/latest?cb=20131116160112',
-		'quarry': 'http://vignette3.wikia.nocookie.net/thesettlersonline/images/7/73/Mason_Level_1.png/revision/latest?cb=20131116163221',
-		'farm': 'http://vignette3.wikia.nocookie.net/thesettlersonline/images/9/99/Farm_Level_3.png/revision/latest?cb=20131116202901',
+		'quarry': asset('/img/quarry.jpg'),
+		'farm': asset('/img/farm.jpg'),
 		'well': 'http://vignette3.wikia.nocookie.net/thesettlersonline/images/8/84/Wellx.png/revision/latest?cb=20120809120227',
 		'blacksmith': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/0/00/Toolmaker_Level_3.png/revision/latest?cb=20131116195552',
 		'windmill': 'http://vignette1.wikia.nocookie.net/thesettlersonline/images/b/b9/Mill_Level_5.png/revision/latest?cb=20131122201006',
 		'bakery': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/c/c8/Bakery_lv2.png/revision/latest?cb=20130327171946',
-		'mine': 'http://vignette1.wikia.nocookie.net/thesettlersonline/images/e/e6/Iron_Mine_Level_1.png/revision/latest?cb=20120809131321',
+		'mine': asset('/img/mine.jpg'),
 		'hunter cabin': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/c/c0/Hunter_Level_3.png/revision/latest?cb=20131123165057',
 		'workshop': 'http://vignette2.wikia.nocookie.net/thesettlersonline/images/f/fe/B_cannonforge-1_0-.png/revision/latest?cb=20120808142903',
+		'herb collector' : asset('/img/herb collector.jpg'),
 	} %}
 	{{ a[entitytype.getLabel()] is defined ? 
 		a[entitytype.getLabel()] : 

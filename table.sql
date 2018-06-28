@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `city` (
   UNIQUE KEY `location_x_location_y_unique` (`location_x`,`location_y`),
   KEY `location_x_location_y` (`location_x`,`location_y`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.citynamereference
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `conversation` (
   KEY `FK_conversation_character_2` (`character1_id`),
   CONSTRAINT `FK_conversation_character` FOREIGN KEY (`character0_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_conversation_character_2` FOREIGN KEY (`character1_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.deck
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS `pawn` (
   KEY `FK_entity_player` (`player_id`),
   KEY `FK_entity_entitytype` (`type_id`),
   CONSTRAINT `FK_entity_entitytype` FOREIGN KEY (`type_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawntype
@@ -361,7 +361,7 @@ CREATE TABLE IF NOT EXISTS `prod` (
   KEY `FK_prod_pawn` (`pawn_id`),
   CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodinput
@@ -376,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
   KEY `FK_prodinput_prodinputtype` (`prodinputtype_id`),
   CONSTRAINT `FK_prodinput_prod` FOREIGN KEY (`prod_id`) REFERENCES `prod` (`id`) ON DELETE CASCADE,
   CONSTRAINT `FK_prodinput_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entprodassoc_prodinput_assoc';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodinputtype

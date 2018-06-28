@@ -55,9 +55,9 @@ class GameState {
 	}
 	
 	public function getMonth() {
-		return $this->_iTurn % 14 + 1;
+		return $this->_iTurn % 8 + 1;
 	}
 	public function getYear() {
-		return floor( $this->_iTurn / 14 ) + 100;
+		return floor( $this->_iTurn / 8 ) + 100;
 	}
 }

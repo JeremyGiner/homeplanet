@@ -75,12 +75,34 @@ class OverviewController extends BaseController {
 		//_____________________________
 		// Render
 		
-		
 		return $this->render( 
 			'homeplanet/page/overview.html.twig', 
 			[
 				'user' => $this->getUser(),
 				'gameview' => $this->_createViewMin($oGame, $oLocation),
+			]
+		);
+	}
+	
+	/**
+	 * Display current user overview
+	 * @Route("/calendar", name="calendar")
+	 */
+	public function calendarAction( Request $oRequest ) {
+		
+		$this->_handleRequest( $oRequest );
+		
+		//_____________________________
+		// Render
+		
+		return $this->render(
+			'homeplanet/page/calendar.html.twig',
+			[
+				'user' => $this->getUser(),
+				'gameview' => $this->_createViewMin(
+					$this->getGame(), 
+					$this->getLocation()
+				)
 			]
 		);
 	}

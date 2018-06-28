@@ -178,6 +178,47 @@ a:hover, a:focus {
 	background-color: inherit;
 }
 
+[class*=bg-pawn-] {
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.bg-pawn-1 {    // Farm
+	background-image: 
+		url(/homeplanet/img/farm.jpg)
+	;
+}
+.bg-pawn-2 {    // Wood cutter
+	background-image: 
+		url(/homeplanet/img/wood_cutter.jpg)
+	;
+}
+.bg-pawn-3 {    // Mine
+	background-image: 
+		url(/homeplanet/img/mine.jpg)
+	;
+}
+.bg-pawn-5 {    // Quarry
+	background-image: 
+		url(/homeplanet/img/quarry.jpg)
+	;
+}
+.bg-pawn-6 {    // Hunting camp
+	background-image: 
+		url(/homeplanet/img/hunting_camp.jpg)
+	;
+}
+.bg-pawn-7 {    // Fishing boat
+	background-image: 
+		url(/homeplanet/img/fishing_boat.jpg)
+	;
+}
+.bg-pawn-8 {    // Herb collector
+	background-image: 
+		url(/homeplanet/img/herb_collector.jpg)
+	;
+}
+
 //_____________________________________
 //	Conversation
 
