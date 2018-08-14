@@ -1,0 +1,7 @@
+
+{% if o.type == 'wedding_proposal' %}
+X propose Y in marriage and Y accepted.<br/>
+X and Y are now married.
+{% else if o.type == 'child_birth' %}
+X and Y gave birth to Z.
+{% endif %}

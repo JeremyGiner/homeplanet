@@ -36,7 +36,7 @@ class Population {
 //	Cosntructor
 	
 	public function __construct( 
-			Entity $oCity, 
+			City $oCity, 
 			$iQuantity
 	) {
 		$this->_oCity = $oCity;

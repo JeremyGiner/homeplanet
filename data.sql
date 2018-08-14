@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               5.7.14 - MySQL Community Server (GPL)
+-- Server version:               5.7.19 - MySQL Community Server (GPL)
 -- Server OS:                    Win64
--- HeidiSQL Version:             9.4.0.5125
+-- HeidiSQL Version:             9.5.0.5196
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -43,16 +43,13 @@ INSERT INTO `budgetplantype` (`id`, `label`) VALUES
 	(5, 'culture');
 /*!40000 ALTER TABLE `budgetplantype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.character: ~6 rows (approximately)
+-- Dumping data for table homeplanet.character: ~0 rows (approximately)
 /*!40000 ALTER TABLE `character` DISABLE KEYS */;
-INSERT INTO `character` (`id`, `occupation`, `deck_id`, `personality`, `appearance`, `label`, `location_x`, `location_y`, `seed`) VALUES
-	(1, 'merchant', 1, 'none', 'normal', 'Sir Toto', 7, 7, NULL),
-	(2, 'merchant', 1, 'none', 'normal', 'Mr Titi', 7, 7, NULL),
-	(5, 'merchant', 1, 'none', 'normal', 'test', 7, 7, NULL),
-	(6, 'merchant', 1, 'TODO', 'TODO', 'sir tototpttoto', 0, 0, NULL),
-	(7, 'merchant', 1, 'TODO', 'TODO', 'toto', 0, 0, NULL),
-	(9, 'merchant', 1, 'TODO', 'TODO', 'test', 0, 0, NULL);
 /*!40000 ALTER TABLE `character` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.characterhistory: ~0 rows (approximately)
+/*!40000 ALTER TABLE `characterhistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `characterhistory` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.characternamereference: 200 rows
 /*!40000 ALTER TABLE `characternamereference` DISABLE KEYS */;
@@ -265,6 +262,10 @@ INSERT INTO `character_acquaintance` (`character_id`, `target_id`) VALUES
 	(6, 1),
 	(6, 2);
 /*!40000 ALTER TABLE `character_acquaintance` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.character_characterhistory: ~0 rows (approximately)
+/*!40000 ALTER TABLE `character_characterhistory` DISABLE KEYS */;
+/*!40000 ALTER TABLE `character_characterhistory` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.character_expression: ~0 rows (approximately)
 /*!40000 ALTER TABLE `character_expression` DISABLE KEYS */;
@@ -883,11 +884,11 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 	(600, 'Ziguinchor');
 /*!40000 ALTER TABLE `citynamereference` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.conversation: ~2 rows (approximately)
+-- Dumping data for table homeplanet.conversation: ~0 rows (approximately)
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.deck: ~1 rows (approximately)
+-- Dumping data for table homeplanet.deck: ~0 rows (approximately)
 /*!40000 ALTER TABLE `deck` DISABLE KEYS */;
 INSERT INTO `deck` (`id`, `label`) VALUES
 	(1, 'Commun tongue');
@@ -926,7 +927,7 @@ INSERT INTO `expression` (`id`, `label`, `description`, `requirement`, `effect`,
 -- Dumping data for table homeplanet.gamestate: 1 rows
 /*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
 INSERT INTO `gamestate` (`id`, `turn`, `label`) VALUES
-	(1, 8, 'Avalon');
+	(1, 38, 'Avalon');
 /*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.influencemodifier: ~0 rows (approximately)
@@ -942,13 +943,13 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.knowledge: ~1 rows (approximately)
+-- Dumping data for table homeplanet.knowledge: ~0 rows (approximately)
 /*!40000 ALTER TABLE `knowledge` DISABLE KEYS */;
 INSERT INTO `knowledge` (`id`, `label`, `category_id`, `reference`, `expire`) VALUES
 	(1, 'history part 1', 1, NULL, NULL);
 /*!40000 ALTER TABLE `knowledge` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.knowledgecategory: ~1 rows (approximately)
+-- Dumping data for table homeplanet.knowledgecategory: ~0 rows (approximately)
 /*!40000 ALTER TABLE `knowledgecategory` DISABLE KEYS */;
 INSERT INTO `knowledgecategory` (`id`, `label`) VALUES
 	(1, 'lore');
@@ -1305,13 +1306,8 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 /*!40000 ALTER TABLE `pawn_location_assoc` DISABLE KEYS */;
 /*!40000 ALTER TABLE `pawn_location_assoc` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.player: ~4 rows (approximately)
+-- Dumping data for table homeplanet.player: ~0 rows (approximately)
 /*!40000 ALTER TABLE `player` DISABLE KEYS */;
-INSERT INTO `player` (`id`, `character_id`, `user_id`, `credit`, `income`, `contract_max`, `allegeance`) VALUES
-	(1, 1, 2, 9380, 0, 1, NULL),
-	(5, 5, 4, 100, 0, 1, NULL),
-	(7, 6, 1, 6600, 440, 5, NULL),
-	(8, 9, 5, 100, 0, 3, NULL);
 /*!40000 ALTER TABLE `player` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.population: ~0 rows (approximately)

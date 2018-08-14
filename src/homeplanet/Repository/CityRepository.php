@@ -35,7 +35,7 @@ WHERE city._x = :x
 			->useResultCache(false);
 		return $oQuery->getOneOrNullResult();
 	}
-	
+	/*
 	public function findByCoord( $x, $y ) {
 		$oQuery = $this->getEntityManager()->createQuery('
 SELECT city
@@ -49,9 +49,9 @@ WHERE city._x = :x
 		])
 			->useQueryCache(true)
 			->useResultCache(true);
-		return $oQuery->getFirstResult();
+		return $oQuery->getOneOrNullResult();
 	}
-	
+	*/
 	/**
 	 * 
 	 * @param int $iBot

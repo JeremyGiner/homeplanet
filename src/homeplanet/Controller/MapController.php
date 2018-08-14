@@ -3,25 +3,6 @@ namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\VarDumper\VarDumper;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\HttpFoundation\Session\Session;
-use homeplanet\Entity\attribute\Location;
-use homeplanet\Game;
-use homeplanet\Entity\PawnFactory;
-use homeplanet\Form\TradeRouteCreationForm;
-use homeplanet\Entity\MerchantFactory;
-use homeplanet\Entity\Ressource;
-use homeplanet\Entity\attribute\ProductionType;
-use Doctrine\ORM\EntityRepository;
 use homeplanet\tool\TileValidatorResolver;
 
 /**

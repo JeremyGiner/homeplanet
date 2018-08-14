@@ -324,27 +324,6 @@ WHERE pos._x = :pos_x
 	}
 	
 //_____________________________________________________________________________
-//	Process
-	
-	public function process() {
-		
-		/*
-		$i = (new \DateTime())->getTimestamp() - $this->_oGameState->getTimeOrigin()->getTimestamp();
-		$iTurn = floor(( $i / 60 ) / 10);
-		var_dump($iTurn);
-		return;*/
-		
-		// Update prod
-		// Update flux
-		// Update cities pop growth
-		$oQuery = $this->_oEntityManager
-			->getConnection()
-			->executeUpdate('CALL turn()');
-		
-		$this->_oEntityManager->flush();
-	}
-	
-//_____________________________________________________________________________
 //	Sub-routine
 
 	function _updateHarvester( Production $oProduction ) {

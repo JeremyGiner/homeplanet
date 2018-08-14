@@ -1,0 +1,4 @@
+get DLL (3.0.8) from https://pecl.php.net/package/memcache
+copy in .../phpX.X.X/ext
+add "extension=php_memcache.dll" to php.ini
+restart server

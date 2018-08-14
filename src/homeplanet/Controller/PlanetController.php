@@ -83,12 +83,6 @@ class PlanetController extends BaseController {
 			var_dump($oData);
 		}
 		
-		//_____________________________
-		// Process
-		if( $oRequest->get('game_run') != null ) {
-			$oGame->process();
-		}
-		
 		//test
 		//$oGame->getWorldmap()->loadSector(0, 0);
 		
@@ -149,7 +143,7 @@ class PlanetController extends BaseController {
 		}
 		return $this->redirect( $this->generateUrl('play') );
 	}
-
+	
 	/**
 	 * @Route("/test_conversation", name="test_conversation")
 	 */

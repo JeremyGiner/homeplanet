@@ -4,7 +4,6 @@ namespace homeplanet\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use homeplanet\Entity\attribute\Location;
-use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
 
 /**

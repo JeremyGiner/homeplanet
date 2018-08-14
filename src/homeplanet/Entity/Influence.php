@@ -2,17 +2,6 @@
 namespace homeplanet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\attribute\Production;
-use homeplanet\Entity\attribute\ProductionInput;
-use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Entity\attribute\ProductionInputType;
-use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\User;
-use homeplanet\Entity\attribute\Population;
-use Doctrine\Common\Collections\Doctrine\Common\Collections;
-use homeplanet\Entity\attribute\EntityLocation;
 
 /**
  * @ORM\Entity

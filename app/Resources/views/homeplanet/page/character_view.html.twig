@@ -8,7 +8,10 @@
 	{{ character.label }}
 </div>
 <div class="card-block">
-	
+	{{ printo(character.body) }}
+	{% for history in character.historyAr %}
+	   {{ printo(history) }}
+	{% endfor %}
 </div>
 </div>
 

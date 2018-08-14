@@ -1,0 +1,77 @@
+player action :
+    - suggest wedding
+    - suggest work
+    - disown character
+    - swtich player's character with a family member
+    - character bookmark
+
+view :
+    - display player's family
+    - display character bookmark
+    
+family character adopt
+    - add player action
+    
+family view 
+    - create DB relation
+    - display youngest to oldest male then oldest to youngest female
+    
+character decision plan
+    - create motivation score for each possible decision
+    - add lifegoal : pleasue | power | care for X | knowledge | craft masterwork | revenge on event X
+    
+character view
+    - display age
+    - display death
+    - link to family view
+
+character death
+    - handle death of old age
+    
+character action move
+    - character decision : move 
+        when porperity < to some other place and high chance if no ties
+    ? move mate as well
+    ? change workplace
+    - player action : suggest move
+
+? work stats modifier
+
+character action 
+    ? steal
+    ? change name
+    ? give knowledge to
+    ? have fun
+    
+character advance location
+    ???
+
+character personnality
+    ? sin / vertue
+    ? leading | problem solving | craftmanship | focus | imagination | negociation
+    ? cultural identity
+    - add phylosophy[-1;1] : 
+        pleasure 
+        violence 
+        art 
+        law/order 
+        cooperation 
+        loyalty
+        deceiption
+        individualism
+        stoicism
+        competition
+        ? learning 
+        ? trust
+        ? nature
+        ? gratitude
+    - emotionnal predisposition : anger | lust | anxiety | joy
+    ? knowledge 
+    ? relationship 
+    
+character body stats
+    ? size
+    ? array of drawing function
+    ? accuity
+    ? physical strenght
+    

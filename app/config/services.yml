@@ -4,11 +4,25 @@ parameters:
 #    parameter_name: value
 
 services:
+#______________________________________
+# TODO : remove ?
     app.phpdoc_type_guesser:
         class: AppBundle\Form\TypeGuesser\PHPDocTypeGuesser
         tags:
             - { name: form.type_guesser }
         arguments: ["@doctrine"]
+#______________________________________
+# command
+    homeplanet.command.game_process:
+        class: homeplanet\command\GameProcess
+        tags: 
+            - { name: console.command }
+    homeplanet.command.character_init:
+        class: homeplanet\command\CharacterInit
+        tags: 
+            - { name: console.command }
+#______________________________________
+# twig 
     app.twig.tool:
         class: AppBundle\Twig\Tool
         tags:

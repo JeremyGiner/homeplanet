@@ -9,7 +9,6 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 
 class SerializerDefaultDoctrine extends Serializer {
-	
 	public function __construct( EntityManager $em ) {
 		parent::__construct(
 			[

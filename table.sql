@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               5.7.14 - MySQL Community Server (GPL)
+-- Server version:               5.7.19 - MySQL Community Server (GPL)
 -- Server OS:                    Win64
--- HeidiSQL Version:             9.4.0.5125
+-- HeidiSQL Version:             9.5.0.5196
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `attribute` (
   PRIMARY KEY (`id`),
   KEY `type_id` (`type_id`),
   CONSTRAINT `FK_attribute_attributetype` FOREIGN KEY (`type_id`) REFERENCES `attributetype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.attributetype
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `attributetype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.budgetplan
@@ -48,25 +48,48 @@ CREATE TABLE IF NOT EXISTS `budgetplantype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.character
 CREATE TABLE IF NOT EXISTS `character` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL DEFAULT 'generate_character_name',
   `occupation` varchar(50) NOT NULL,
   `deck_id` int(10) unsigned NOT NULL DEFAULT '1',
   `personality` varchar(50) NOT NULL,
+  `body` text,
   `appearance` varchar(50) NOT NULL,
-  `label` varchar(50) NOT NULL DEFAULT 'generate_character_name',
   `location_x` int(11) NOT NULL,
   `location_y` int(11) NOT NULL,
   `seed` varchar(50) DEFAULT NULL,
+  `state` text,
+  `lifegoal` varchar(50) DEFAULT NULL,
+  `mate_id` int(10) unsigned DEFAULT NULL,
+  `genre` set('male','female') NOT NULL,
+  `pawn_id` int(10) unsigned DEFAULT NULL,
+  `created` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `location_x_location_y` (`location_x`,`location_y`),
   KEY `deck_id` (`deck_id`),
-  CONSTRAINT `FK_character_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+  KEY `lifegoal` (`lifegoal`),
+  KEY `mate_id` (`mate_id`),
+  KEY `created` (`created`),
+  KEY `pawn_id` (`pawn_id`),
+  CONSTRAINT `FK_character_character` FOREIGN KEY (`mate_id`) REFERENCES `character` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_character_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_character_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.characterhistory
+CREATE TABLE IF NOT EXISTS `characterhistory` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(50) NOT NULL,
+  `param` text NOT NULL,
+  `created` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.characternamereference
@@ -75,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `characternamereference` (
   `fname` varchar(50) NOT NULL,
   `lname` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=201 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.character_acquaintance
@@ -84,6 +107,17 @@ CREATE TABLE IF NOT EXISTS `character_acquaintance` (
   `target_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`character_id`,`target_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.character_characterhistory
+CREATE TABLE IF NOT EXISTS `character_characterhistory` (
+  `character_id` int(10) unsigned NOT NULL,
+  `characterhistory_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`character_id`,`characterhistory_id`),
+  KEY `FK_character_characterhistory_characterhistory` (`characterhistory_id`),
+  CONSTRAINT `FK_character_characterhistory_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_character_characterhistory_characterhistory` FOREIGN KEY (`characterhistory_id`) REFERENCES `characterhistory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.character_expression
@@ -126,7 +160,7 @@ CREATE TABLE IF NOT EXISTS `citynamereference` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=601 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.conversation
@@ -149,7 +183,7 @@ CREATE TABLE IF NOT EXISTS `deck` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.deck_expression
@@ -188,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `expression` (
   `generation_key` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `generation_key` (`generation_key`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.gamestate
@@ -197,7 +231,7 @@ CREATE TABLE IF NOT EXISTS `gamestate` (
   `turn` int(10) unsigned NOT NULL DEFAULT '0',
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.influencemodifier
@@ -224,7 +258,7 @@ CREATE TABLE IF NOT EXISTS `influencetype` (
   `label` varchar(50) NOT NULL,
   `value` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.knowledge
@@ -237,7 +271,7 @@ CREATE TABLE IF NOT EXISTS `knowledge` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `FK_knowledge_knowledgecategory` FOREIGN KEY (`category_id`) REFERENCES `knowledgecategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.knowledgecategory
@@ -245,7 +279,7 @@ CREATE TABLE IF NOT EXISTS `knowledgecategory` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawn
@@ -273,7 +307,7 @@ CREATE TABLE IF NOT EXISTS `pawntype` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `FK_pawntype_pawntypecategory` FOREIGN KEY (`category_id`) REFERENCES `pawntypecategory` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2002 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawntypecategory
@@ -281,7 +315,7 @@ CREATE TABLE IF NOT EXISTS `pawntypecategory` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `label` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.pawntype_attribute
@@ -333,7 +367,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   CONSTRAINT `FK_player_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_sovereign` FOREIGN KEY (`allegeance`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.population
@@ -388,7 +422,7 @@ CREATE TABLE IF NOT EXISTS `prodinputtype` (
   PRIMARY KEY (`id`),
   KEY `FK_prodinputtype_ressource` (`ressource_id`),
   CONSTRAINT `FK_prodinputtype_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=41411 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodtype
@@ -400,7 +434,7 @@ CREATE TABLE IF NOT EXISTS `prodtype` (
   PRIMARY KEY (`id`),
   KEY `FK_prodtype_ressource` (`ressource_id`),
   CONSTRAINT `FK_prodtype_ressource` FOREIGN KEY (`ressource_id`) REFERENCES `ressource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4142 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.prodtype_prodinputtype_assoc
@@ -436,7 +470,7 @@ CREATE TABLE IF NOT EXISTS `relationshiptype` (
   `description` text NOT NULL,
   `value` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.rescategory
@@ -445,7 +479,7 @@ CREATE TABLE IF NOT EXISTS `rescategory` (
   `label` varchar(250) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `label` (`label`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.ressource
@@ -458,7 +492,7 @@ CREATE TABLE IF NOT EXISTS `ressource` (
   PRIMARY KEY (`id`),
   KEY `natural` (`natural`),
   KEY `baseprice` (`baseprice`)
-) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.ressource_rescategory
@@ -491,7 +525,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password_shadow` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='toto@gmail.com\r\npass';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='toto@gmail.com\r\npass';
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet._view_note

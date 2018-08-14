@@ -68,8 +68,10 @@ class CharacterController extends BaseController {
 		;
 		
 		if( $oForm->isSubmitted() && $oForm->isValid() ) {
-			//TODO
+			// TODO
 		}
+		
+		// TODO : preload characters referenced by this character history
 		
 		// Render
 		return $this->render('homeplanet/page/character_view.html.twig', [

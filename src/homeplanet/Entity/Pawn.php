@@ -11,7 +11,6 @@ use homeplanet\Entity\attribute\ProductionInputType;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Population;
-use Doctrine\Common\Collections\Doctrine\Common\Collections;
 use homeplanet\Entity\attribute\PawnLocation;
 
 /**
@@ -50,6 +49,16 @@ class Pawn {
 	 * @ORM\Column(type="integer", name="grade")
 	 */
 	protected $_iGrade;
+	
+	/**
+	 * @ORM\OneToMany(
+	 *     targetEntity="homeplanet\Entity\Character",
+	 *     mappedBy="_oWorkplace",
+	 *     cascade={"persist"}
+	 * )
+	 * @var ArrayCollection
+	 */
+	protected $_aWorker;
 	
 //_____________________________________
 //	Attribute

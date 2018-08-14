@@ -44,7 +44,7 @@ class Demand {
 //	Cosntructor
 	
 	public function __construct( 
-			Entity $oCity, 
+			City $oCity, 
 			Ressource $oRessource, 
 			$fPercent 
 	) {
