@@ -7,6 +7,7 @@ use homeplanet\Serializer\Normalizer\DoctrineEntityNormalizer;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use homeplanet\Serializer\Normalizer\CollectionDenormalizer;
 
 class SerializerDefaultDoctrine extends Serializer {
 	public function __construct( EntityManager $em ) {
@@ -14,6 +15,7 @@ class SerializerDefaultDoctrine extends Serializer {
 			[
 				new DoctrineEntityNormalizer( $em ),
 				new ObjectNormalizer(null,null,null, new ReflectionExtractor()),
+				new CollectionDenormalizer(),
 			],[
 				new JsonEncoder(),
 			]

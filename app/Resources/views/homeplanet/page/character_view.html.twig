@@ -10,7 +10,11 @@
 <div class="card-block">
 	{{ printo(character.body) }}
 	{% for history in character.historyAr %}
-	   {{ printo(history) }}
+	<ul class="list-group">
+		<li class="list-group-item">
+    	{{ printo(history) }}
+		</li>
+	</ul>
 	{% endfor %}
 </div>
 </div>

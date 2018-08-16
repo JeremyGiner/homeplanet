@@ -2,6 +2,7 @@
 namespace homeplanet\Serializer\Normalizer;
 
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
@@ -99,10 +100,13 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 	function isEntity($class) {
 		if (is_object($class)) {
 			$class = ($class instanceof Proxy)
-			? get_parent_class($class)
-			: get_class($class);
+				? get_parent_class($class)
+				: get_class($class)
+			;
 		}
-	
+		if( !is_string($class) )
+			return false;
+		
 		return ! $this->_oEntityManager->getMetadataFactory()->isTransient($class);
 	}
 }

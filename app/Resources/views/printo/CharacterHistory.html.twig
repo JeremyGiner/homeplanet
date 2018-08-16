@@ -1,7 +1,7 @@
-
+<p class="text-right mb-0 text-muted">{{ printo( o.creationDate ) }}</p>
 {% if o.type == 'wedding_proposal' %}
-X propose Y in marriage and Y accepted.<br/>
-X and Y are now married.
-{% else if o.type == 'child_birth' %}
-X and Y gave birth to Z.
+{{ printo( o.param('proposer'), ['link']) }} propose {{ printo( o.param('proposed'), ['link']) }} in marriage and Y accepted.<br/>
+&rarr; They are now married.
+{% elseif o.type == 'child_birth' %}
+{{ printo( o.param('father'), ['link']) }} and {{ printo( o.param('mother'), ['link']) }} gave birth to {{ printo( o.param('child'), ['link']) }}.
 {% endif %}

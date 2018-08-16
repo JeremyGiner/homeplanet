@@ -3,6 +3,7 @@ namespace homeplanet\Entity;
 
 use homeplanet\Entity\Character;
 use Doctrine\ORM\Mapping as ORM;
+use homeplanet\Entity\attribute\TurnDate;
 
 /**
  * @ORM\Table(name="`characterhistory`")
@@ -23,7 +24,7 @@ class CharacterHistory {
 	protected $_sType;
 	
 	/**
-	 * @ORM\Column(type="array", name="param")
+	 * @ORM\Column(type="symfony_serialized", name="param")
 	 */
 	protected $_aParam;
 	
@@ -67,6 +68,10 @@ class CharacterHistory {
 		if( ! isset( $this->_aParam[ $sKey ] ) )
 			throw new \Exception('Key ['.$sKey.'] is not set as param');
 		return $this->_aParam[ $sKey ];
+	}
+	
+	public function getCreationDate() {
+		return new TurnDate($this->_iCreated);
 	}
 }
 

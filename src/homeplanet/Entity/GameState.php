@@ -3,6 +3,7 @@ namespace homeplanet\Entity;
 
 use homeplanet\Game;
 use Doctrine\ORM\Mapping as ORM;
+use homeplanet\Entity\attribute\TurnDate;
 /**
  * @ORM\Entity
  * @ORM\Table(name="gamestate")
@@ -55,9 +56,9 @@ class GameState {
 	}
 	
 	public function getMonth() {
-		return $this->_iTurn % 8 + 1;
+		return (new TurnDate($this->_iTurn))->getMonth();
 	}
 	public function getYear() {
-		return floor( $this->_iTurn / 8 ) + 100;
+		return (new TurnDate($this->_iTurn))->getYear();
 	}
 }

@@ -92,11 +92,11 @@ HAVING MAX(history._iCreated) <= :recent'
 					$oCharacter->getMate(),
 					$oChild
 				],
-				'birth',
+				CharacterHistory::CHILD_BIRTH,
 				[
-					'mother' => $oCharacter->getId(),
-					'father' => $oCharacter->getMate()->getId(),
-					'child' => $oChild->getId(),
+					'mother' => $oCharacter,
+					'father' => $oCharacter->getMate(),
+					'child' => $oChild,
 				],
 				$this->_iTurn
 			));

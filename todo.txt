@@ -8,7 +8,14 @@ player action :
 view :
     - display player's family
     - display character bookmark
-    
+
+world timeline
+	- add view timeline
+	- add link on every ingame date
+
+character name
+	- give gender
+
 family character adopt
     - add player action
     

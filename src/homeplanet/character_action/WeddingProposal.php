@@ -25,10 +25,10 @@ class WeddingProposal extends CharacterAction {
 				$this->_oCharacter, 
 				$this->_oTarget, 
 			], 
-			WeddingProposal::class, 
+			CharacterHistory::WEDDING_PROPOSAL, 
 			[
-				'proposer' => $this->_oCharacter->getId(), 
-				'proposed' => $this->_oTarget->getId(),
+				'proposer' => $this->_oCharacter, 
+				'proposed' => $this->_oTarget,
 				'accepted' => true,
 			], 
 			$this->_iTurn 

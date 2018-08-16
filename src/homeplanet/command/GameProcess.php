@@ -11,9 +11,9 @@ class GameProcess extends ContainerAwareCommand {
 	
 	public function configure() {
 		$this
-		->setName('homeplanet:game-process')
-		->setDescription('Process game')
-		->setHelp('no argument allowed')
+			->setName('homeplanet:game-process')
+			->setDescription('Process game')
+			->setHelp('no argument allowed')
 		;
 	}
 	

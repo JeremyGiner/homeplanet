@@ -57,6 +57,7 @@ class CharacterController extends BaseController {
 	public function viewAction( $id, Request $oRequest ) {
 		$this->_handleRequest( $oRequest );
 		
+		// @var Character $oCharacter 
 		$oCharacter = $this->getGame()->getCharacterRepo()->find( $id );
 		
 		if( $oCharacter == null ) throw $this->createNotFoundException('No character found');
@@ -212,7 +213,7 @@ class CharacterController extends BaseController {
 			$aData = $oForm->getData();
 			
 			$gem = $this->getGame()->getEntityManager();
-			$oCharacter = new Character( $gem, $aData['label'] );
+			$oCharacter = new Character( $gem, $aData['label'], 'male' );
 			$gem->persist( $oCharacter );
 			
 			$oPlayer = new Player( $this->getUser() );

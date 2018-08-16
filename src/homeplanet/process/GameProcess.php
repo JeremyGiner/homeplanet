@@ -2,6 +2,7 @@
 namespace homeplanet\process;
 
 use Doctrine\ORM\EntityManager;
+use homeplanet\Entity\CharacterHistory;
 
 class GameProcess {
 	

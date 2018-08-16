@@ -3,7 +3,14 @@
 parameters:
 #    parameter_name: value
 
+
+
 services:
+
+#    service_name:
+#        class: AppBundle\Directory\ClassName
+#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+ 
 #______________________________________
 # TODO : remove ?
     app.phpdoc_type_guesser:
@@ -36,6 +43,10 @@ services:
         tags:
             - { name: twig.extension }
 
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+#______________________________________
+# Doctrine
+    homeplanet.dbal.type:
+        class: homeplanet\EventListener\DBALTypeSymfonySerializedSetterOnLoadClass
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata  }
+         
