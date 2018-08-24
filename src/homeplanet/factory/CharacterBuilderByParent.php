@@ -67,6 +67,8 @@ class CharacterBuilderByParent {
 			Character::LIFEGOAL_FAMILY_CREATE, 
 		]);
 		
+		$oCharacter->setHouse( $this->_oParent0->getHouse() );
+		
 		return $oCharacter;
 	}
 }

@@ -9,6 +9,8 @@ use homeplanet\character_action\WeddingProposal;
 use homeplanet\character_action\WorkProposal;
 use homeplanet\Entity\CharacterHistory;
 use homeplanet\factory\CharacterBuilderByParent;
+use homeplanet\validator\character\CharacterMarryValidator;
+
 /**
  * php console/bin homeplanet:character-process
  *
@@ -43,23 +45,26 @@ class CharacterProcess {
 			// with mate 
 			// no recent child birth or wedding
 			// with genre female
+			// exclude player character
 		$oQuery = $this->_oEM->createQuery(
 'SELECT character
 FROM homeplanet\Entity\Character character
 JOIN character._aHistory history
+LEFT JOIN character._oPlayer player
 WHERE history._sType IN ( :history_type )
 AND character._iCreated BETWEEN :too_old AND :too_young
 AND character._sGenre = :genre
+AND player._iId IS NULL
 GROUP BY character
 HAVING MAX(history._iCreated) <= :recent'
 			)
 			->setParameters( [
-				'too_young' => $this->_iTurn-self::AGE_ABLE_MIN,
-				'too_old' => $this->_iTurn-self::AGE_ABLE_MAX,
+				'too_young' => $this->_iTurn - self::AGE_ABLE_MIN,
+				'too_old' => $this->_iTurn - self::AGE_ABLE_MAX,
 				'recent' => $this->_iTurn-3,
 				'genre' => 'female',
 				'history_type' => [ 
-					WeddingProposal::class, 
+					CharacterHistory::WEDDING_PROPOSAL, 
 					CharacterHistory::CHILD_BIRTH, 
 				],
 			] )
@@ -100,6 +105,8 @@ HAVING MAX(history._iCreated) <= :recent'
 				],
 				$this->_iTurn
 			));
+			
+			echo $oChild->getLabel().' is born'."\n";
 		}
 	}
 	
@@ -193,23 +200,18 @@ AND character._iCreated BETWEEN :too_old AND :too_young'
 			// around same age
 			// same location
 			// get first
-		$oQuery = $this->_oEM->createQuery(
-'SELECT character
-FROM homeplanet\Entity\Character character
-WHERE character._oMate IS NULL
-AND character._iCreated BETWEEN :too_old AND :too_young
-AND character._x = :x AND character._y = :y
-AND character._iId != :current_character_id
-AND character._sGenre = :genre'
-			)
+		$oQueryBuilder = $this->_oEM->createQueryBuilder()
+			->select('character')
+			->from('homeplanet\Entity\Character', 'character')
+			->andWhere('character._x = :x')->andWhere('character._y = :y')
 			->setParameters( [
-				'too_young' => $oCharacter->getCreated()+5,
-				'too_old' => $oCharacter->getCreated()-5,
 				'x' => $oCharacter->getLocationX(),
 				'y' => $oCharacter->getLocationY(),
-				'current_character_id' => $oCharacter->getId(),
-				'genre' => $oCharacter->getOppositeGenre(),
 			])
+		;
+		CharacterMarryValidator::STmodify($oQueryBuilder, 'character', $oCharacter );
+		
+		$oQueryBuilder->getQuery()
 			->useQueryCache(true)
 			->useResultCache(false)
 			->setMaxResults(1)

@@ -1,6 +1,5 @@
 {% extends 'homeplanet/page/game.html.twig' %}
 
-
 {% block page_content %}
 
 <div class="card">
@@ -8,14 +7,50 @@
 	{{ character.label }}
 </div>
 <div class="card-block">
-	{{ printo(character.body) }}
-	{% for history in character.historyAr %}
-	<ul class="list-group">
-		<li class="list-group-item">
-    	{{ printo(history) }}
-		</li>
-	</ul>
-	{% endfor %}
+<div class="container">
+	<div class="row">
+	<div class="col-sm">
+		{{ printo(character.body) }}
+	</div>
+	<div class="col-sm">
+		<dl class="row">
+			<dt class="col-sm-3">Live&nbsp;at</dt>
+			<dd class="col-sm-9">{{ printo( character.location ) }}</dd>
+			<dt class="col-sm-3">Age</dt>
+			<dd class="col-sm-9">
+				{{ gameview.turn - character.dateCreated }} 
+				<span class="text-muted">({{ character.lifestageLabel|capitalize }})</span>
+			</dd>
+			<dt class="col-sm-3">Genre</dt>
+			<dd class="col-sm-9">{{ character.genre == 'male' ? '&#9794;' : '&#9792;' }}</dd>
+			{% if character.mate != null %}
+			<dt class="col-sm-3">Spouse</dt>
+			<dd class="col-sm-9">{{ printo( character.mate, ['link'] ) }}</dd>
+			{% endif %}
+			{% if character.house != null %}
+			<dt class="col-sm-3">House</dt>
+			<dd class="col-sm-9">
+				{% if character.player != null %}
+				Ruler of 
+				{% endif %}
+				{{ printo( character.house, ['link'] ) }}
+			</dd>
+			{% endif %}
+		</dl>
+	</div>
+	<div class="col-sm-12">
+		{{ form(form) }}
+	</div>
+	<div class="col-12">
+		{% for history in character.historyAr %}
+		<ul class="list-group">
+			<li class="list-group-item">
+	    	{{ printo(history) }}
+			</li>
+		</ul>
+		{% endfor %}
+	</div>
+</div>
 </div>
 </div>
 

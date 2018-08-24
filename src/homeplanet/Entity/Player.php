@@ -3,15 +3,7 @@ namespace homeplanet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\attribute\Production;
-use homeplanet\Entity\attribute\ProductionInput;
-use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Entity\attribute\ProductionInputType;
-use Doctrine\ORM\EntityManager;
 use AppBundle\Entity\User;
-use homeplanet\Entity\attribute\Population;
-use Doctrine\Common\Collections\Doctrine\Common\Collections;
 
 /**
  * @ORM\Entity
@@ -68,17 +60,24 @@ class Player {
 	 */
 	protected $_oCharacter;
 	
+	/**
+	 * @ORM\OneToOne(targetEntity="House")
+	 * @ORM\JoinColumn(name="house_id", referencedColumnName="id")
+	 * @var House
+	 */
+	protected $_oHouse;
 	
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( User $oUser ) {
+	public function __construct( User $oUser, House $oHouse ) {
 		
 		$this->_oUser = $oUser;
 		$this->_iCredit = 100;
 		$this->_iIncome = 0;
 		$this->_iCart = 1;
 		$this->_iContractMax = 3;
+		$this->_oHouse = $oHouse;
 	}
 	
 //_____________________________________________________________________________
@@ -122,6 +121,10 @@ class Player {
 	
 	public function getCharacter() {
 		return $this->_oCharacter;
+	}
+	
+	public function getHouse() {
+		return $this->_oHouse;
 	}
 	
 //_____________________________________________________________________________

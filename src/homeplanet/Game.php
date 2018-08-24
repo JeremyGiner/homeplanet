@@ -26,6 +26,8 @@ use homeplanet\Repository\ExpressionRepository;
 use homeplanet\Entity\Deck;
 use homeplanet\Repository\DeckRepository;
 use AppBundle\Tool\ArrayTool;
+use Doctrine\ORM\EntityRepository;
+use homeplanet\Entity\House;
 
 class Game {
 	/**
@@ -138,6 +140,13 @@ JOIN pawntype._aProdType prodtype
 		return $this->_oEntityManager->getRepository(Expression::class);
 	}
 	
+	/**
+	 * @return EntityRepository
+	 */
+	public function getHouseRepo() {
+		return $this->_oEntityManager->getRepository(House::class);
+	}
+	
 	public function getEntityManager() {
 		return $this->_oEntityManager;
 	}
@@ -201,7 +210,10 @@ JOIN pawntype._aProdType prodtype
 	public function getUser( $iId ) {
 		return $this->_oEntityManager->getRepository(User::class)->find($iId);
 	}
-	
+	/**
+	 * @param integer $iUserId
+	 * @return \homeplanet\Entity\Player
+	 */
 	public function getPlayer( $iUserId = null ) {
 		if( $iUserId === null )
 			return $this->_oPlayer;

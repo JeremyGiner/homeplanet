@@ -3,5 +3,7 @@
 {{ printo( o.param('proposer'), ['link']) }} propose {{ printo( o.param('proposed'), ['link']) }} in marriage and Y accepted.<br/>
 &rarr; They are now married.
 {% elseif o.type == 'child_birth' %}
-{{ printo( o.param('father'), ['link']) }} and {{ printo( o.param('mother'), ['link']) }} gave birth to {{ printo( o.param('child'), ['link']) }}.
+{{ printo( o.param('father'), ['link']) }} 
+and {{ printo( o.param('mother'), ['link']) }} 
+gave birth to {{ printo( o.param('child'), ['link']) }}.
 {% endif %}

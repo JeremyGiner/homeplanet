@@ -1,0 +1,8 @@
+<div class="d-flex justify-content-center">
+{% for oCharacter in o.getMaleSortedByAgeInc() %}
+	{{ printo(oCharacter, {_suffix: 'portrait'}) }}
+{% endfor %}
+{% for oCharacter in o.getFemaleSortedByAgeDesc() %}
+	{{ printo(oCharacter, {_suffix: 'portrait'}) }}
+{% endfor %}
+</div>

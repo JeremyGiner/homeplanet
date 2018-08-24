@@ -9,6 +9,7 @@ use homeplanet\Entity\attribute\Location;
 use homeplanet\Game;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use homeplanet\Entity\Player;
 
 class BaseController extends Controller {
 	
@@ -26,6 +27,13 @@ class BaseController extends Controller {
 	
 	public function getGame() {
 		return $this->_oGame;
+	}
+	
+	/**
+	 * @return Player
+	 */
+	public function getPlayer() {
+		return $this->getUser()->getPlayer();
 	}
 	
 	public function getLocation() {
@@ -126,6 +134,7 @@ class BaseController extends Controller {
 				//'pawnAr' => $oGame->getPawnRepo(),
 				'overcrowd' => $aOvercrowd,
 				'cityAr' => $aCity,
+				'turn' => $oGameSate->getTurn(),
 				'year' => $oGameSate->getYear(),
 				'month' => $oGameSate->getMonth(),
 		], $oGame->getWorldmapView( $oLocation ) );
@@ -139,6 +148,7 @@ class BaseController extends Controller {
 		return [
 				'player' => $oGame->getPlayer(),
 				'location' => $oLocation,
+				'turn' => $oGameSate->getTurn(),
 				'year' => $oGameSate->getYear(),
 				'month' => $oGameSate->getMonth(),
 		];

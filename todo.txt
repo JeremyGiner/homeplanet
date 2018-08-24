@@ -1,34 +1,49 @@
+
+Character
+	- body color resolve using gradient or something
+
+House
+	- add date creation
+
+AI player
+	? creation contidition, rich character?
+	
 player action :
-    - suggest wedding
-    - suggest work
-    - disown character
-    - swtich player's character with a family member
     - character bookmark
 
+player house
+	- at player creation build a house (Pawn)
+	- player action move house (Pawn)
+	- player action character adopt
+		- add form on character view
+		? conversation
+	- player action disown character
+	- player action switch player's character with a family member
+	- player action execute character action using his character
+		- wedding proposal (change target work)
+		- ??
+	- display house members display youngest to oldest male then oldest to youngest female
+
 view :
-    - display player's family
     - display character bookmark
 
-world timeline
-	- add view timeline
-	- add link on every ingame date
+character job
+	- player action suggest work
+	- add detail to relation between pawn and character 
+	? character action steal or become theif
 
-character name
-	- give gender
-
-family character adopt
-    - add player action
-    
-family view 
-    - create DB relation
-    - display youngest to oldest male then oldest to youngest female
-    
+character relationship
+	- character action lower relationship with X
+	- character action socialize
+	? type of relationship (competition|dominance|familiarity|affection|trust|deceit|indebtness|acquaintance)
+	
 character decision plan
+	- cahracte relationship
     - create motivation score for each possible decision
     - add lifegoal : pleasue | power | care for X | knowledge | craft masterwork | revenge on event X
     
 character view
-    - display age
+    - display age and life stage (baby 1m, child 2m-4m, young adult 4m-1y, adult 1y-3y, old adult 4y-6y
     - display death
     - link to family view
 
@@ -49,6 +64,7 @@ character action
     ? change name
     ? give knowledge to
     ? have fun
+    ? socialize
     
 character advance location
     ???
@@ -75,10 +91,21 @@ character personnality
     - emotionnal predisposition : anger | lust | anxiety | joy
     ? knowledge 
     ? relationship 
+    ? enjoy (art|sport|food|sex|humor|violence)
     
 character body stats
     ? size
     ? array of drawing function
     ? accuity
     ? physical strenght
+ 
+character name
+	- give gender
+
+world timeline
+	- add view timeline
+	- add link on every ingame date
+	
+update bootstrap
+	- change xxx-default to xxx-secondary
     

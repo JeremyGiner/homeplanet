@@ -123,6 +123,11 @@ class ConversationController extends BaseController {
 				$em->remove( $oConversation );
 				$em->flush();
 			break;
+			case 'adopt' :
+				// TODO
+				// get house 
+				// add target to house
+			break;
 		}
 		
 		// Get type

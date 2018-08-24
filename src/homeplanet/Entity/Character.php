@@ -7,6 +7,8 @@ use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\part\CharacterBody;
 use homeplanet\Entity\part\CharacterState;
 use Doctrine\ORM\EntityManager;
+use homeplanet\Game;
+use homeplanet\validator\character\CharacterAbleValidator;
 
 /**
  * @ORM\Table(name="`character`")
@@ -155,6 +157,23 @@ class Character {
 	 */
 	protected $_sGenre;
 	
+	/**
+	 * @ORM\OneToOne(
+	 *     targetEntity="\homeplanet\Entity\Player",
+	 *     mappedBy="_oCharacter",
+	 *     cascade={"persist"}
+	 * )
+	 * @var Player
+	 */
+	protected $_oPlayer;
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="homeplanet\Entity\House")
+	 * @ORM\JoinColumn(name="house_id", referencedColumnName="id")
+	 * @var House
+	 */
+	protected $_oHouse;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
@@ -162,7 +181,8 @@ class Character {
 		EntityManager $em, 
 		$sName, 
 		$sGenre,
-		CharacterBody $oBody = null
+		CharacterBody $oBody = null,
+		House $oHouse = null
 	) {
 		if( $sName != null ) $this->_sLabel = $sName;
 		$this->_sOccupation = 'merchant';
@@ -176,6 +196,7 @@ class Character {
 		$this->_oBody = ( $oBody == null ) ? new CharacterBody() : $oBody;
 		$this->_oWorkplace = null;
 		$this->_sGenre = $sGenre;
+		$this->_oHouse = $oHouse;
 	}
 	
 	static public function generate( 
@@ -271,7 +292,7 @@ class Character {
 		return $this->_oBody;
 	}
 	
-	public function getCreated() {
+	public function getDateCreated() {
 		return $this->_iCreated;
 	}
 	
@@ -296,6 +317,31 @@ class Character {
 	
 	public function getMate() {
 		return $this->_oMate;
+	}
+	
+	public function getLocation() {
+		return new Location( $this->_x, $this->_y );
+	}
+	
+	public function getHouse() {
+		return $this->_oHouse;
+	}
+	
+	public function getPlayer() {
+		return $this->_oPlayer;
+	}
+	
+	public function getLifestageLabel() {
+		$iAge = Game::getInstance()->getState()->getTurn() - $this->getDateCreated();
+		if( $iAge == 1 )
+			return 'baby';
+		if( $iAge < CharacterAbleValidator::AGE_ABLE_MIN  )
+			return 'child';
+		
+		if( $iAge > CharacterAbleValidator::AGE_ABLE_MAX )
+			return 'old adult';
+			
+		return 'adult';
 	}
 	
 //_____________________________________________________________________________
@@ -342,6 +388,11 @@ class Character {
 	
 	public function setLifegoal( $aLifegoal ) {
 		$this->_aLifegoal = $aLifegoal;
+		return $this;
+	}
+	
+	public function setHouse( House $oHouse = null ) {
+		$this->_oHouse = $oHouse;
 		return $this;
 	}
 	

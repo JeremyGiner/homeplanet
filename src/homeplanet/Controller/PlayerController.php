@@ -10,7 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use homeplanet\Entity\Character;
 
 /**
- *
+ * @Route("/player")
  */
 class PlayerController extends BaseController {
 	
@@ -20,7 +20,7 @@ class PlayerController extends BaseController {
 	
 	
 	/**
-	 * @Route("/player/list", name="player_list")
+	 * @Route("/list", name="player_list")
 	 */
 	public function listAction( Request $oRequest ) {
 

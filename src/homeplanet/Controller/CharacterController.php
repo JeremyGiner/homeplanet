@@ -7,31 +7,22 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use homeplanet\Entity\Character;
 use homeplanet\Entity\Conversation;
-use homeplanet\modifier\conversation\Imitate;
 use homeplanet\Entity\Expression;
-use homeplanet\validator\ValidatorAnd;
-use homeplanet\validator\PointCost;
-use homeplanet\modifier\conversation\ChangeLead;
-use homeplanet\modifier\conversation\AddPoint;
-use homeplanet\modifier\conversation\GivePoint;
-use homeplanet\validator\conversation\OpponentPointRequire;
-use homeplanet\modifier\conversation\AddDebate;
 use homeplanet\tool\conversation\NpcBrain;
-use AppBundle\Tool\CartesianProduct;
-use AppBundle\Tool\Combine;
 use AppBundle\Tool\ArrayTool;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use homeplanet\Entity\Player;
-use homeplanet\validator\conversation\TailRequire;
-use homeplanet\modifier\conversation\AddTail;
 use homeplanet\Entity\KnowledgeCategory;
 use homeplanet\Entity\Knowledge;
 use homeplanet\Form\LocationType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use homeplanet\validator\character\CharacterMarryValidator;
+use Symfony\Component\Form\Button;
+use homeplanet\Entity\House;
+use homeplanet\Entity\CharacterHistory;
 
 /**
  * @Route("/character")
@@ -57,27 +48,74 @@ class CharacterController extends BaseController {
 	public function viewAction( $id, Request $oRequest ) {
 		$this->_handleRequest( $oRequest );
 		
-		// @var Character $oCharacter 
+		/**
+		 * 
+		 * @var Character $oCharacter
+		 */
 		$oCharacter = $this->getGame()->getCharacterRepo()->find( $id );
-		
 		if( $oCharacter == null ) throw $this->createNotFoundException('No character found');
+		
+		
+		$oPlayerCharacter = $this->getPlayer()->getCharacter();
 		
 		// Form debate
 		$oForm = $this->createFormBuilder()
-			->add('submit',SubmitType::class, ['label' => 'TEST'])
 			->getForm()
 		;
 		
+		if( CharacterMarryValidator::STvalidate($this->getGame()->getState()->getTurn(),[$oPlayerCharacter, $oCharacter]) )
+			$oForm->add('debate_marry', SubmitType::class, ['label' => 'Marry' ]);
+		
+		if( $oCharacter->getHouse() == $oPlayerCharacter->getHouse() && $oCharacter != $oPlayerCharacter )
+			$oForm->add('disown', SubmitType::class, ['label' => 'Disown', 'attr' => [ 'class' => 'btn-danger' ] ]);
+		
+		if( $oCharacter->getHouse() == null )
+			$oForm->add('debate_adopt', SubmitType::class, ['label' => 'Adopt' ]);
+			
+		$oForm->handleRequest( $oRequest );
 		if( $oForm->isSubmitted() && $oForm->isValid() ) {
 			// TODO
+			
+			/**
+			 * @var Button $oButton
+			 */
+			$oButton = $oForm->getClickedButton();
+			
+			if( $oButton->isDisabled() )
+				throw new \Exception('Action no longer available');
+			
+			// TODO : start debate
+			switch( $oButton->getName() ) {
+				case 'debate_adopt' : 
+					
+					$oHouse = $this->getPlayer()->getHouse();
+					$oCharacter->setHouse($oHouse);
+					
+					// TODO: create character history
+					
+					$this->getGame()->getEntityManager()->flush();
+					
+					return $this->redirect( $this->generateUrl('house_view',['id' => $oHouse->getId() ]));
+					
+				default :
+					throw new \Exception('Not implemented yet'); //TODO
+			}
 		}
 		
 		// TODO : preload characters referenced by this character history
-		
+		/*
+		foreach( $oCharacter->getHistoryAr() as $oHistory ) {
+			if($oHistory->getType() == CharacterHistory::CHILD_BIRTH )
+			var_dump( $oHistory->getParam('mother') );
+		}
+		exit();
+		*/
 		// Render
+		//TODO : display house
 		return $this->render('homeplanet/page/character_view.html.twig', [
 				'gameview' => $this->_createViewMin($this->_oGame, $this->_oLocation),
 				'character' => $oCharacter,
+				'form' => $oForm->createView(),
 		]);
 	}
 	
@@ -153,6 +191,7 @@ class CharacterController extends BaseController {
 		$this->_handleRequest( $oRequest );
 		
 		$oForm = $this->createFormBuilder()
+			->add('house_label', TextType::class, ['label' => 'House name'] )
 			->add('label', TextType::class, ['label' => 'Name'] )
 			->add('skin_color', ChoiceType::class, [
 				'label' =>'Skin color',
@@ -213,10 +252,16 @@ class CharacterController extends BaseController {
 			$aData = $oForm->getData();
 			
 			$gem = $this->getGame()->getEntityManager();
-			$oCharacter = new Character( $gem, $aData['label'], 'male' );
-			$gem->persist( $oCharacter );
 			
-			$oPlayer = new Player( $this->getUser() );
+			
+			$oHouse = new House( $aData['house_label'] );
+			$gem->persist( $oHouse );
+			
+			$oCharacter = new Character( $gem, $aData['label'], 'male', null, $oHouse );
+			$gem->persist( $oCharacter );
+			$gem->flush($oCharacter);
+			
+			$oPlayer = new Player( $this->getUser(), $oHouse );
 			$oPlayer->setCharacter( $oCharacter );
 			$gem->persist( $oPlayer );
 			

@@ -1,0 +1,9 @@
+<a id="{{ param.wrapper.id|default }}" class="text-center d-inlineblock {{ param.wrapper.class|default }}" href="{{ url('character_view',{id: o.id}) }}">
+
+{{ printo(o.body) }}
+
+<div class="badge badge-default">
+	{{ o.label }}
+</div>
+
+</a>

@@ -85,7 +85,7 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 		
 		if( !isset($data['class']) )
 			return false;
-		
+			
 		return $this->isEntity($data['class']);
 	}
 	
@@ -98,13 +98,17 @@ class DoctrineEntityNormalizer implements NormalizerInterface, DenormalizerInter
 	 * @return boolean
 	 */
 	function isEntity($class) {
-		if (is_object($class)) {
+		if( is_string($class) ) {
+			$class = is_subclass_of($class, Proxy::class)
+				? get_parent_class($class)
+				: $class
+			;
+		} elseif (is_object($class)) {
 			$class = ($class instanceof Proxy)
 				? get_parent_class($class)
 				: get_class($class)
 			;
-		}
-		if( !is_string($class) )
+		} else 
 			return false;
 		
 		return ! $this->_oEntityManager->getMetadataFactory()->isTransient($class);

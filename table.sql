@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS `budgetplantype` (
 -- Dumping structure for table homeplanet.character
 CREATE TABLE IF NOT EXISTS `character` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `house_id` int(10) unsigned DEFAULT NULL,
   `label` varchar(50) NOT NULL DEFAULT 'generate_character_name',
   `occupation` varchar(50) NOT NULL,
   `deck_id` int(10) unsigned NOT NULL DEFAULT '1',
@@ -76,8 +77,10 @@ CREATE TABLE IF NOT EXISTS `character` (
   KEY `mate_id` (`mate_id`),
   KEY `created` (`created`),
   KEY `pawn_id` (`pawn_id`),
+  KEY `house_id` (`house_id`),
   CONSTRAINT `FK_character_character` FOREIGN KEY (`mate_id`) REFERENCES `character` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_character_deck` FOREIGN KEY (`deck_id`) REFERENCES `deck` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_character_house` FOREIGN KEY (`house_id`) REFERENCES `house` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `FK_character_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -234,6 +237,14 @@ CREATE TABLE IF NOT EXISTS `gamestate` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
+-- Dumping structure for table homeplanet.house
+CREATE TABLE IF NOT EXISTS `house` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
 -- Dumping structure for table homeplanet.influencemodifier
 CREATE TABLE IF NOT EXISTS `influencemodifier` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -353,6 +364,7 @@ CREATE TABLE IF NOT EXISTS `pawn_location_assoc` (
 -- Dumping structure for table homeplanet.player
 CREATE TABLE IF NOT EXISTS `player` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `house_id` int(10) unsigned NOT NULL,
   `character_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
   `credit` int(10) unsigned NOT NULL DEFAULT '0',
@@ -364,7 +376,7 @@ CREATE TABLE IF NOT EXISTS `player` (
   KEY `FK_player_sovereign` (`allegeance`),
   KEY `FK_player_character` (`character_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `FK_player_character` FOREIGN KEY (`character_id`) REFERENCES `character` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `charactergroup_id` (`house_id`),
   CONSTRAINT `FK_player_sovereign` FOREIGN KEY (`allegeance`) REFERENCES `sovereign` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_player_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
