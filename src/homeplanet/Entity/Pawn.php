@@ -94,14 +94,6 @@ class Pawn {
 		$this->_aDemand = new ArrayCollection();
 		
 		$this->_iGrade = 1;
-		/*
-		foreach ( $this->_oType->getAttributeDefault( $this, 'production' ) as $oProd )
-			$this->_aProduction->add( $oProd );
-		
-		
-		$this->_oAttributeDef = [
-			[  ]	
-		];*/
 	}
 	
 //_____________________________________________________________________________

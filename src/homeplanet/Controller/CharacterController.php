@@ -3,7 +3,6 @@ namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use homeplanet\Entity\Character;
 use homeplanet\Entity\Conversation;
@@ -11,7 +10,6 @@ use homeplanet\Entity\Expression;
 use homeplanet\tool\conversation\NpcBrain;
 use AppBundle\Tool\ArrayTool;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
 use homeplanet\Entity\Player;
 use homeplanet\Entity\KnowledgeCategory;
@@ -20,9 +18,7 @@ use homeplanet\Form\LocationType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use homeplanet\validator\character\CharacterMarryValidator;
-use Symfony\Component\Form\Button;
 use homeplanet\Entity\House;
-use homeplanet\Entity\CharacterHistory;
 
 /**
  * @Route("/character")
@@ -52,7 +48,7 @@ class CharacterController extends BaseController {
 		 * 
 		 * @var Character $oCharacter
 		 */
-		$oCharacter = $this->getGame()->getCharacterRepo()->find( $id );
+		$oCharacter = $this->getCharacterRepo()->find( $id );
 		if( $oCharacter == null ) throw $this->createNotFoundException('No character found');
 		
 		
@@ -148,7 +144,7 @@ class CharacterController extends BaseController {
 			$em = $this->getGame()->getEntityManager();
 			
 			// Get character met
-			$oCharacter = $this->getGame()->getCharacterRepo()->getRandom( 
+			$oCharacter = $this->getCharacterRepo()->getRandom( 
 				$oFormMeet->getData()['location'], 
 				$this->getGame()->getPlayer()->getCharacter()->getId() 
 			);

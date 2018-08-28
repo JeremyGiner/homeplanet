@@ -2,46 +2,20 @@
 namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\Common\Persistence\ObjectManager;
 use AppBundle\Entity\User;
-use homeplanet\Entity\attribute\Location;
 use homeplanet\Entity\Pawn;
 use homeplanet\Game;
-use homeplanet\Entity\PawnFactory;
-use homeplanet\tool\Perlin;
-use homeplanet\Entity\TradeRouteFactory;
-use homeplanet\Entity\Ressource;
-use homeplanet\Entity\Player;
-use homeplanet\Form\BuildingBuy;
-use homeplanet\Form\BuildingBuyForm;
-use homeplanet\Form\TradeRouteCreationForm;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Tests\ButtonTest;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use homeplanet\tool\TileValidatorResolver;
 use homeplanet\Entity\Conversation;
 use homeplanet\Form\ConversationExpressionChoiceForm;
 use homeplanet\Form\ConversationExpressionChoice;
-use homeplanet\validator\ValidatorAnd;
-use homeplanet\validator\PointCost;
-use homeplanet\Entity\Expression;
-use homeplanet\modifier\conversation\AddPoint;
-use homeplanet\Entity\part\ConversationState;
 use homeplanet\Entity\part\ConversationContext;
 use AppBundle\Tool\ArrayTool;
-use homeplanet\modifier\conversation\GivePoint;
-use homeplanet\modifier\conversation\Counter;
 
 /**
  *
@@ -52,55 +26,6 @@ class PlanetController extends BaseController {
 //_____________________________________________________________________________
 //	Action	
 	
-	/**
-	 * @Route("/play", name="play")
-	 */
-	public function playAction( Request $oRequest ) {
-		
-		$this->_handleRequest( $oRequest );
-		
-		$oEntityManager = $this->getDoctrine()->getManager();
-		
-		$oUser = $this->getUser();
-		
-		// Get location
-		$oLocation = $this->_oLocation;
-		
-		// Check game
-		$oGame = $this->_oGame;
-		
-		//_____________________________
-		// Delete entity
-		
-		$oFormEntityDelete = $this->createFormBuilder(null,[])
-			->add('entity_id',HiddenType::class,['data' => null ])
-			->add('submit',SubmitType::class,['label'=>'Delete'])
-			->getForm();
-		$oFormEntityDelete->handleRequest( $oRequest );
-		if( $oFormEntityDelete->isSubmitted() && $oFormEntityDelete->isValid() ) {
-		
-			$oData = $oFormEntityDelete->getData();
-			var_dump($oData);
-		}
-		
-		//test
-		//$oGame->getWorldmap()->loadSector(0, 0);
-		
-		// Render game
-		//$oGameViewFactory = $this->_gameViewFactory_get( $oGame, $oContext );
-		
-		return $this->render( 
-			'page/play.html.twig', 
-			[
-				'date' => \date('d/m/Y H:i:s'),
-				'user' => $this->getUser(),
-				'form_entity_delete_ar' => $this->_getFormViewEntityDeleteAr($oGame, $oUser),//$oFormEntityDelete->createView(),
-				'gameview' => $this->_createView($oGame, $oLocation),
-				'city' => $oGame->getCityRepo()->getFull($oLocation),
-				'pawnAr' => $oGame->getPawnRepo()->getPawnAr_byPlayer( $oGame->getPlayer() ),
-			]
-		);
-	}
 	
 //_____________________________________________________________________________
 
@@ -339,7 +264,7 @@ class PlanetController extends BaseController {
 	 */
 	function _getFormEntityDeleteAr( Game $oGame, User $oUser ) {
 		$a = [];
-		foreach( $oGame->getPawnRepo()->getPawnAr_byPlayer($oGame->getPlayer()) as $oEntity ) {
+		foreach( $this->getPawnRepo()->getPawnAr_byPlayer($oGame->getPlayer()) as $oEntity ) {
 			$a[$oEntity->getId()] = $this->_getFormEntityDelete( $oEntity->getId() );
 		}
 		return $a;

@@ -96,15 +96,18 @@ class Tile {
 	public function getCity() {
 		return $this->_oWorldmap
 			->getGame()
-			->getCityRepo()
+			->getEntityManager()
+			->getRepository(City::class)
 			->findByLocation($this->_oLocation);
 	}
 	
 	public function getOvercrowd( $iRessourceId ) {
 		return $this->_oWorldmap
 			->getGame()
-			->getOvercrowdRepo()
-			->get($iRessourceId, $this->_oLocation->getX(), $this->_oLocation->getY());
+			->getEntityManager()
+			->getRepository(Overcrowd::class)
+			->get($iRessourceId, $this->_oLocation->getX(), $this->_oLocation->getY())
+		;
 	}
 	
 	public function getRessNatQuantityAr() {

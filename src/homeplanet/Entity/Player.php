@@ -135,6 +135,11 @@ class Player {
 		return $this;
 	}
 	
+	public function addCredit( $i ) {
+		$this->_iCredit += $i;
+		return $this;
+	}
+	
 	public function setCart( $i ) {
 		$this->_iCart = $i;		
 		return $this;

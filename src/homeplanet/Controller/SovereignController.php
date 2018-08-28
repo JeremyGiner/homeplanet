@@ -2,40 +2,13 @@
 namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Doctrine\Common\Persistence\ObjectManager;
-use AppBundle\Entity\User;
-use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\Pawn;
-use homeplanet\Game;
-use homeplanet\Entity\PawnFactory;
-use homeplanet\tool\Perlin;
-use homeplanet\Entity\TradeRouteFactory;
-use homeplanet\Entity\Ressource;
-use homeplanet\Entity\Player;
 use homeplanet\Form\Buy;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Tests\ButtonTest;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use homeplanet\Form\EntityTypeChoiceType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
-use homeplanet\Entity\attribute\ProductionType;
 use homeplanet\Entity\Sovereign;
 use homeplanet\Entity\Relationship;
 use homeplanet\Entity\RelationshipType;
 use homeplanet\Entity\RelationshipModifier;
-use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 
 /**
  *

@@ -7,9 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use homeplanet\Entity\Deck;
 use homeplanet\Form\DeckForm;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use AppBundle\Tool\DoctrinePaginator;
-use homeplanet\Entity\Expression;
 use AppBundle\Tool\ArrayTool;
 
 /**
@@ -34,8 +32,8 @@ class DeckController extends BaseController {
 		
 		$oGame = $this->getGame();
 		
-		$aExpression = $oGame->getExpressionRepo()->findAll();
-		$aDeck = $oGame->getDeckRepo()->findAllCommun();
+		$aExpression = $this->getExpressionRepo()->findAll();
+		$aDeck = $this->getDeckRepo()->findAllCommun();
 		
 		$oCharacter = $this->getGame()->getPlayer()->getCharacter();
 		
@@ -72,7 +70,7 @@ class DeckController extends BaseController {
 		$iPage = $oRequest->get('page',1);
 		$iPage = max( 1, $iPage );
 		
-		$oQuery = $this->getGame()->getExpressionRepo()
+		$oQuery = $this->getExpressionRepo()
 			->createQueryBuilder('expression');
 		
 		
@@ -272,7 +270,7 @@ class DeckController extends BaseController {
 		
 		//_____________________________
 		
-		$oExpressionRepo = $this->getGame()->getExpressionRepo();
+		$oExpressionRepo = $this->getExpressionRepo();
 		
 		//$aExpression = $oExpressionRepo->findAll();
 		$oPaginator = new DoctrinePaginator(

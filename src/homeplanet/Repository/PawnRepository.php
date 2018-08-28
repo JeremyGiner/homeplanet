@@ -22,6 +22,18 @@ WHERE entity._oPlayer = :player
 		return $oQuery->getResult();
 	}
 	
+	public function getPawnAr_byPlayer_indexedByLocation( Player $oPlayer ) {
+		$a = [];
+		foreach( $this->getPawnAr_byPlayer($oPlayer) as $oEntity ) {
+			foreach( $oEntity->getLocationAr() as $oLocation ) {
+				$sLocation = (string)$oLocation;
+				$a[$sLocation] = isset($a[$sLocation])?$a[$sLocation]:[];
+				$a[$sLocation][] = $oEntity;
+			}
+		}
+		return $a;
+	}
+	
 	/**
 	 * 
 	 * @param int $iBot

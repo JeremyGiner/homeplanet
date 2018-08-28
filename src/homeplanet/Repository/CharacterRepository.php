@@ -9,6 +9,9 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Query;
 
 class CharacterRepository extends EntityRepository {
+
+	
+//_____________________________________________________________________________
 	
 	
 	public function getAcquaintance( $iCharacterId ) {

@@ -10,6 +10,22 @@ use homeplanet\Game;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use homeplanet\Entity\Player;
+use homeplanet\Repository\CityRepository;
+use homeplanet\Repository\PawnRepository;
+use homeplanet\Repository\ProductionRepository;
+use homeplanet\Repository\CharacterRepository;
+use homeplanet\Repository\DeckRepository;
+use homeplanet\Repository\ExpressionRepository;
+use Doctrine\ORM\EntityRepository;
+use homeplanet\Entity\Expression;
+use homeplanet\Entity\House;
+use homeplanet\Entity\Deck;
+use homeplanet\Entity\Character;
+use homeplanet\Entity\attribute\Production;
+use homeplanet\Entity\Pawn;
+use homeplanet\Entity\City;
+use homeplanet\Entity\Overcrowd;
+use homeplanet\Repository\OvercrowdRepository;
 
 class BaseController extends Controller {
 	
@@ -38,6 +54,63 @@ class BaseController extends Controller {
 	
 	public function getLocation() {
 		return $this->_oLocation;
+	}
+	
+	public function getGameEntityManager() {
+		return $this->getGame()->getEntityManager();
+	}
+	
+	
+	/**
+	 * @return CityRepository
+	 */
+	public function getCityRepo() {
+		return $this->getGameEntityManager()->getRepository(City::class);
+	}
+	
+	/**
+	 * @return PawnRepository
+	 */
+	public function getPawnRepo() {
+		return $this->getGameEntityManager()->getRepository(Pawn::class);
+	}
+	
+	/**
+	 * @return ProductionRepository
+	 */
+	public function getProductionRepo() {
+		return $this->getGameEntityManager()->getRepository(Production::class);
+	}
+	/**
+	 * @return CharacterRepository
+	 */
+	public function getCharacterRepo() {
+		return $this->getGameEntityManager()->getRepository(Character::class);
+	}
+	/**
+	 * @return DeckRepository
+	 */
+	public function getDeckRepo() {
+		return $this->getGameEntityManager()->getRepository(Deck::class);
+	}
+	/**
+	 * @return ExpressionRepository
+	 */
+	public function getExpressionRepo() {
+		return $this->getGameEntityManager()->getRepository(Expression::class);
+	}
+	
+	/**
+	 * @return EntityRepository
+	 */
+	public function getHouseRepo() {
+		return $this->getGameEntityManager()->getRepository(House::class);
+	}
+	/**
+	 * @return OvercrowdRepository
+	 */
+	public function getOvercrowdRepo() {
+		return $this->getGameEntityManager()->getRepository(Overcrowd::class);
 	}
 	
 
@@ -101,13 +174,13 @@ class BaseController extends Controller {
 	function _createView( Game $oGame, Location $oLocation ) {
 		
 		// Get Overcrowd indexed by ressrouce id
-		$aOvercrowd = $oGame->getOvercrowdRepo()->findByCoordonate(
+		$aOvercrowd = $this->getOvercrowdRepo()->findByCoordonate(
 			$oLocation->getX(),
 			$oLocation->getY()
 		);
 		
 		// Get cities
-		$aCity = $oGame->getCityRepo()->findByArea(
+		$aCity = $this->getCityRepo()->findByArea(
 			$oLocation->getRegionY()*13, //Bottom
 			($oLocation->getRegionY()+1)*13, //Top
 			$oLocation->getRegionX()*13, //Left

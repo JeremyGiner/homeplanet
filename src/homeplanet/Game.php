@@ -93,58 +93,13 @@ JOIN pawntype._aProdType prodtype
 	static public function getInstance() {
 		return self::$_oInstance;
 	}
-	
-	/**
-	 * @return CityRepository
-	 */
-	public function getCityRepo() {
-		return $this->_oEntityManager->getRepository(City::class);
-	}
-	
-	/**
-	 * @return PawnRepository
-	 */
-	public function getPawnRepo() {
-		return $this->_oEntityManager->getRepository(Pawn::class);
-	}
+
 	/**
 	 * 
 	 * @return GameState
 	 */
 	public function getState() {
 		return $this->_oEntityManager->find( GameState::class, 1 );
-	}
-	
-	/**
-	 * @return ProductionRepository
-	 */
-	public function getProductionRepo() {
-		return $this->_oEntityManager->getRepository(Production::class);
-	}
-	/**
-	 * @return CharacterRepository
-	 */
-	public function getCharacterRepo() {
-		return $this->_oEntityManager->getRepository(Character::class);
-	}
-	/**
-	 * @return DeckRepository
-	 */
-	public function getDeckRepo() {
-		return $this->_oEntityManager->getRepository(Deck::class);
-	}
-	/**
-	 * @return ExpressionRepository
-	 */
-	public function getExpressionRepo() {
-		return $this->_oEntityManager->getRepository(Expression::class);
-	}
-	
-	/**
-	 * @return EntityRepository
-	 */
-	public function getHouseRepo() {
-		return $this->_oEntityManager->getRepository(House::class);
 	}
 	
 	public function getEntityManager() {
@@ -157,7 +112,7 @@ JOIN pawntype._aProdType prodtype
 	
 	public function getWorldmapView( Location $oLocation ) {
 		
-		$aPawn = $this->getPawnRepo()->findByArea(
+		$aPawn = $this->getEntityManager()->getRepository(Pawn::class)->findByArea(
 			$oLocation->getRegionY()*13,     //Bottom
 			($oLocation->getRegionY()+1)*13, //Top
 			$oLocation->getRegionX()*13,     //Left
@@ -179,12 +134,16 @@ JOIN pawntype._aProdType prodtype
 		$aPawn = $aTmp;
 		
 		// Get cities
-		$aCity = $this->getCityRepo()->findByArea(
-			$oLocation->getRegionY()*13,     //Bottom
-			($oLocation->getRegionY()+1)*13, //Top
-			$oLocation->getRegionX()*13,     //Left
-			($oLocation->getRegionX()+1)*13  //Right
-		);
+		$aCity = $this
+			->getEntityManager()
+			->getRepository(City::class)
+			->findByArea(
+				$oLocation->getRegionY()*13,     //Bottom
+				($oLocation->getRegionY()+1)*13, //Top
+				$oLocation->getRegionX()*13,     //Left
+				($oLocation->getRegionX()+1)*13  //Right
+			)
+		;
 		
 		// Index by location
 		//TODO : make indexBy compatible with stringable object
@@ -270,15 +229,6 @@ WHERE pos._x = :pos_x
 		return isset($this->_aPawnByLoc[ $sLoc ]) ?
 			$this->_aPawnByLoc[ $sLoc ]:
 			[];
-	}
-	
-	
-	
-	/**
-	 * @return OvercrowdRepository
-	 */
-	public function getOvercrowdRepo() {
-		return $this->_oEntityManager->getRepository(Overcrowd::class);
 	}
 	
 	/**

@@ -64,7 +64,7 @@ class ConversationController extends BaseController {
 		
 		$oFormExpression->handleRequest( $oRequest );
 		if( $oFormExpression->isSubmitted() && $oFormExpression->isValid() ) {
-			$repo = $this->getGame()->getExpressionRepo();
+			$repo = $this->getExpressionRepo();
 			$aDeck1 = array_map( function( $id ) use ( $repo ) { return $repo->find($id); } , $oConversation->getState()->getDeck1() );
 			$aDeck1 = ArrayTool::STindexBy($aDeck1, 'id',true);
 			$oConversation->processExpression(

@@ -2,45 +2,29 @@
 namespace homeplanet\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Session\Session;
-use AppBundle\Entity\User;
 use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\Pawn;
-use homeplanet\Game;
 use homeplanet\Entity\PawnFactory;
 use homeplanet\Entity\attribute\Production;
 use homeplanet\Form\TradeRouteFactory;
 use homeplanet\Form\TradeRouteCreationForm;
-use homeplanet\Entity\Player;
 use homeplanet\Form\Buy;
 use homeplanet\Form\BuildingBuy;
 use homeplanet\Form\BuildingBuyForm;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Form;
 use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Form\MultistepType;
 use homeplanet\Form\MultistepFormHandler;
 use Symfony\Component\Serializer\Serializer;
 use homeplanet\Serializer\Normalizer\DoctrineEntityNormalizer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
-use homeplanet\Entity\PawnType;
 use AppBundle\Tool\ArrayTool;
 use homeplanet\Entity\City;
 use homeplanet\Form\TransportSet;
 use homeplanet\Form\TransportSetForm;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use homeplanet\Serializer\SerializerDefaultDoctrine;
 
 /**
@@ -63,18 +47,14 @@ class AssetController extends BaseController {
 		$oPawnManager = $this->getDoctrine()->getManager();
 		
 		$oUser = $this->getUser();
-		
 		// Get location
 		$oLocation = $this->getLocation();
-		
 		// Check game
 		$oGame = $this->getGame();
-		
-		
 		$oPlayer = $oGame->getPlayer();
 		
 		//_____________________________
-		// 
+		// Form buy contract
 		
 		$oFormContract = $this->createFormBuilder( 
 			new Buy( $oPlayer, $oPlayer->getContractPrice() ), [
@@ -91,10 +71,10 @@ class AssetController extends BaseController {
 		
 		if( $oFormContract->isSubmitted() && $oFormContract->isValid() ) {
 			
-			$oPlayer->increaseContractMax();
 			$oPlayer->setCredit( 
 				$oFormContract->getData()->getPlayerCreditNew()
 			);
+			$oPlayer->increaseContractMax();
 			
 			$oGame->getEntityManager()->flush();
 			
@@ -104,73 +84,16 @@ class AssetController extends BaseController {
 		//_____________________________
 		// Render
 		
-		$aPawnByLocation = $this->_oGame->getPawnAr_byPlayer_indexLocation($oPlayer);
-		
-		// Get ressource flux by location
-		//TODO: remove code repetition
-		$aFluxByLocation = [];
-		foreach( $oGame->getPawnRepo()->getPawnAr_byPlayer($oPlayer) as $oPawn ) {
-			foreach ( $oPawn->getProductionAr() as $oProd ) {
-				
-				foreach( $oProd->getProdInputAr() as $oProdInput ) {
-					
-					$sLocation = (string)$oProdInput->getLocation();
-					
-					// init location
-					if( !isset($aFluxByLocation[$sLocation]) )
-						$aFluxByLocation[$sLocation] = [];
-					
-					$oRessource = $oProdInput->getType()->getRessource();
-					
-					if( $oRessource->isNatural() )
-						continue;
-					
-					// Get ressrouce id
-					$iRessId = $oRessource->getId();
-					
-					// Filter credit (sell/buy)
-					if( $iRessId == 1 )
-						continue;
-					
-					// Init flux at location
-					if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) )
-						$aFluxByLocation[$sLocation][$iRessId] = 0;
-					
-					// Substract prod input value
-					$aFluxByLocation[$sLocation][$iRessId] -= $oProdInput->getQuantity();
-				}
-				
-				$sLocation = (string)$oProd->getLocation();
-				
-				// init location
-				if( !isset($aFluxByLocation[$sLocation]) )
-					$aFluxByLocation[$sLocation] = [];
-				
-				// Get ressrouce id
-				$iRessId = $oProd->getType()->getRessource()->getId();
-				
-				// Filter credit (sell/buy)
-				if( $iRessId == 1 )
-					continue;
-				
-				// Init flux at location
-				if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) ) 
-					$aFluxByLocation[$sLocation][$iRessId] = 0;
-				
-				// Add prod value
-				$aFluxByLocation[$sLocation][$iRessId] += $oProd->getQuantity();
-			}
-		}
-
-		// Filter flux at 0
-		foreach ( $aFluxByLocation as $sLocation => $aFlux )
-		foreach ( $aFlux as $iRessId => $iValue ) {
-			if( $aFluxByLocation[$sLocation][$iRessId] == 0 )
-				unset($aFluxByLocation[$sLocation][$iRessId]);
-		}
+		// TODO : 
+		// - get Player's Pawn
+		// - index by location
+		// - get flux
+		$aPawnByLocation = $this->getPawnRepo()->getPawnAr_byPlayer_indexedByLocation( $oPlayer );
+		$aFluxByLocation = $this->_getFluxByLocation();
 		
 		$aLocation = [];
 		$aCoordonate = [];
+		
 		foreach ( $aPawnByLocation as $sLocation => $aPawn ) {
 			$oLocation = Location::getFromString($sLocation);
 			$aLocation[ $sLocation ] = $oLocation;
@@ -200,7 +123,7 @@ class AssetController extends BaseController {
 		$aCity = ArrayTool::STindexBy($aCity, 'location.string');
 		
 		// Load overcrowd
-		$aOvercrowd = $oGame->getOvercrowdRepo()->findByCoordonateAr($a);
+		$aOvercrowd = $this->getOvercrowdRepo()->findByCoordonateAr($a);
 		
 		return $this->render( 
 			'homeplanet/page/asset.html.twig', 
@@ -227,7 +150,7 @@ class AssetController extends BaseController {
 		$oGame = $this->getGame();
 		
 		/* @var $oPawn Pawn */
-		$oPawn = $oGame->getPawnRepo()->find( $id );
+		$oPawn = $this->getPawnRepo()->find( $id );
 	
 		if( $oPawn == null )
 			return $this->redirect( $this->generateUrl('asset') );
@@ -279,7 +202,7 @@ class AssetController extends BaseController {
 				
 				$oGame->getEntityManager()->flush();
 				
-				$oGame->getProductionRepo()->updateProduction();
+				$this->getProductionRepo()->updateProduction();
 				
 				$this->addFlash('success', 'Production successfully changed.');
 				
@@ -368,8 +291,8 @@ class AssetController extends BaseController {
 					
 					//$this->_oGame->updateProductionRatio($oProd);
 					
-					$this->_oGame->getEntityManager()->flush();
-					$this->_oGame->getProductionRepo()->updateProduction();
+					$this->getGameEntityManager()->flush();
+					$this->getProductionRepo()->updateProduction();
 					
 			
 					return $this->redirect( $oRequest->getUri() );
@@ -415,7 +338,7 @@ class AssetController extends BaseController {
 			
 			$oGame->getEntityManager()->flush();
 			
-			$oGame->getProductionRepo()->updateProduction();
+			$this->getProductionRepo()->updateProduction();
 			
 			return $this->redirect( $oRequest->getUri() );
 		}
@@ -438,7 +361,7 @@ class AssetController extends BaseController {
 		
 		if( $oFormSell->isSubmitted() && $oFormSell->isValid() ) {
 			$em = $oGame->getEntityManager();
-			$oProdRepo = $oGame->getProductionRepo();
+			$oProdRepo = $this->getProductionRepo();
 			
 			// 
 			foreach ( $oPawn->getProductionAr() as $oProd ) {
@@ -537,7 +460,7 @@ class AssetController extends BaseController {
 			$oPawn = $a['entity'];
 			$oGame->addPawn( $a['entity'], $a['addOn'] );
 			
-			$oGame->getProductionRepo()->updateProduction();
+			$this->getProductionRepo()->updateProduction();
 			
 			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}
@@ -626,7 +549,7 @@ class AssetController extends BaseController {
 		$oForm = $this->createForm(TradeRouteCreationForm::class,$oData,[
 			'game' => $this->_oGame,
 			'step' => $oStepHandler->getStep(),
-			'repo' => $oGame->getPawnRepo(),
+			'repo' => $this->getPawnRepo(),
 		]+$a);
 		
 		$oForm->handleRequest( $oRequest );
@@ -670,4 +593,72 @@ class AssetController extends BaseController {
 //_____________________________________________________________________________
 //	Sub-routine
 	
+	private function _getFluxByLocation() {
+		
+		// Get ressource flux by location
+		//TODO: remove code repetition
+		$aFluxByLocation = [];
+		foreach( $this->getPawnRepo()->getPawnAr_byPlayer($this->getPlayer()) as $oPawn ) {
+			foreach ( $oPawn->getProductionAr() as $oProd ) {
+				
+				// For each prod INPUT
+				foreach( $oProd->getProdInputAr() as $oProdInput ) {
+					
+					$sLocation = (string)$oProdInput->getLocation();
+					
+					// init location
+					if( !isset($aFluxByLocation[$sLocation]) )
+						$aFluxByLocation[$sLocation] = [];
+						
+					$oRessource = $oProdInput->getType()->getRessource();
+					
+					if( $oRessource->isNatural() )
+						continue;
+							
+					// Get ressrouce id
+					$iRessId = $oRessource->getId();
+							
+					// Filter credit (sell/buy)
+					if( $iRessId == 1 )
+						continue;
+								
+					// Init flux at location
+					if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) )
+						$aFluxByLocation[$sLocation][$iRessId] = 0;
+									
+					// Substract prod input value
+					$aFluxByLocation[$sLocation][$iRessId] -= $oProdInput->getQuantity();
+				}
+				
+				// For each prod OUTPUT
+				$sLocation = (string)$oProd->getLocation();
+				
+				// init location
+				if( !isset($aFluxByLocation[$sLocation]) )
+					$aFluxByLocation[$sLocation] = [];
+					
+				// Get ressrouce id
+				$iRessId = $oProd->getType()->getRessource()->getId();
+					
+				// Filter credit (sell/buy)
+				if( $iRessId == 1 )
+					continue;
+						
+				// Init flux at location
+				if( !isset( $aFluxByLocation[$sLocation][$iRessId] ) )
+					$aFluxByLocation[$sLocation][$iRessId] = 0;
+							
+				// Add prod value
+				$aFluxByLocation[$sLocation][$iRessId] += $oProd->getQuantity();
+			}
+		}
+		
+		// Filter flux at 0
+		foreach ( $aFluxByLocation as $sLocation => $aFlux )
+			foreach ( $aFlux as $iRessId => $iValue ) 
+				if( $aFluxByLocation[$sLocation][$iRessId] == 0 )
+					unset($aFluxByLocation[$sLocation][$iRessId]);
+			
+		return $aFluxByLocation;
+	}
 }

@@ -31,6 +31,12 @@ character job
 	- player action suggest work
 	- add detail to relation between pawn and character 
 	? character action steal or become theif
+	
+advance character job
+	- create ressource type mechanical labor | intellectual labor | job specific skillz
+	- on hire create pawn as character's contract
+	- calc grade depending on payement / motivation / max skills
+	- update input to production type
 
 character relationship
 	- character action lower relationship with X
@@ -41,14 +47,10 @@ character decision plan
 	- cahracte relationship
     - create motivation score for each possible decision
     - add lifegoal : pleasue | power | care for X | knowledge | craft masterwork | revenge on event X
-    
-character view
-    - display age and life stage (baby 1m, child 2m-4m, young adult 4m-1y, adult 1y-3y, old adult 4y-6y
-    - display death
-    - link to family view
 
 character death
     - handle death of old age
+    - display death
     
 character action move
     - character decision : move 

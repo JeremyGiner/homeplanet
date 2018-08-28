@@ -26,7 +26,7 @@ class HouseController extends BaseController {
 		
 		$oHouse = $id == '' ? 
 			$oPlayer->getHouse() :
-			$this->getGame()->getHouseRepo()->find( $id )
+			$this->getHouseRepo()->find( $id )
 		;
 		
 		// @var House $oHouse
