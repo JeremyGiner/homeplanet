@@ -5,13 +5,7 @@ namespace homeplanet\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use homeplanet\Game;
-use homeplanet\Entity\attribute\Location;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use homeplanet\Form\PawnTypeChoiceType;
-use homeplanet\Form\BuildingBuy;
 use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\PawnType;
 
@@ -20,7 +14,7 @@ class BuildingBuyForm extends AbstractType {
 	function configureOptions( OptionsResolver $oResolver ) {
 		$oResolver->setDefaults([
 			'data_class' => BuildingBuy::class,
-		])->setRequired(['game','default_location']);
+		])->setRequired(['game']);
 	}
 	
 	function getName() {
@@ -38,10 +32,10 @@ class BuildingBuyForm extends AbstractType {
 		$iCredit = $oData->getPlayer()->getCredit();
 		
 		$oBuilder
-			->add('location', LocationType::class, [ 
+			->add('tile', TileType::class, [ 
 				'label' => 'Location', 
 				'game' => $aOption['game'],
-				'empty_data' => $aOption['default_location'],
+				'empty_data' => $oData->getTile(),
 			])
 			->add('pawntype',PawnTypeChoiceType::class,[
 				//'mapped' => false,

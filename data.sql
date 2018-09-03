@@ -969,6 +969,7 @@ INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`,
 	(6, 1, 'hunting camp', 100, 1, 'Produce meat'),
 	(7, 1, 'fishing boat', 100, 1, 'Produce fish and crustacean'),
 	(8, 1, 'herb collector', 1000000000, 1, NULL),
+	(10, 1, 'contract : manual labor', 0, 0, NULL),
 	(30, 1, 'restaurant', 100, 1, 'Produce delicacy and sell food'),
 	(100, 2, 'sawmill', 100, 1, 'Produce wood plank'),
 	(101, 2, 'windmill', 100, 1, 'Produce floor'),
@@ -1141,10 +1142,6 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(2001, 3013),
 	(2000, 3014),
 	(2001, 3014),
-	(2000, 3033),
-	(2001, 3033),
-	(2000, 3034),
-	(2001, 3034),
 	(2000, 3100),
 	(2001, 3100),
 	(2000, 3101),
@@ -1189,6 +1186,7 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(2001, 3140),
 	(2000, 3141),
 	(2001, 3141),
+	(10, 3500),
 	(1000, 4002),
 	(1001, 4002),
 	(1002, 4002),
@@ -1228,12 +1226,6 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1000, 4014),
 	(1001, 4014),
 	(1002, 4014),
-	(1000, 4033),
-	(1001, 4033),
-	(1002, 4033),
-	(1000, 4034),
-	(1001, 4034),
-	(1002, 4034),
 	(1000, 4100),
 	(1001, 4100),
 	(1002, 4100),
@@ -1322,16 +1314,14 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 /*!40000 ALTER TABLE `prodinput` DISABLE KEYS */;
 /*!40000 ALTER TABLE `prodinput` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.prodinputtype: ~192 rows (approximately)
+-- Dumping data for table homeplanet.prodinputtype: ~173 rows (approximately)
 /*!40000 ALTER TABLE `prodinputtype` DISABLE KEYS */;
 INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'wood to plank'),
 	(3, 12, 1, NULL),
-	(4, 34, 1, 'forest'),
 	(5, 2, 1, 'wheat to floor'),
 	(6, 3, 1, 'floor to bread'),
 	(7, 4, 1, 'transport: wood'),
-	(8, 44, 1, 'iron deposit to ore'),
 	(9, 8, 1, 'iron ore to bar'),
 	(101, 5, 1, 'transport: plank'),
 	(102, 2, 1, 'transport: wheat'),
@@ -1345,28 +1335,14 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(300, 1, 1, 'buy: wood'),
 	(301, 1, 1, 'buy: wood plank'),
 	(302, 1, 1, 'buy: wheat'),
-	(330, 33, 1, 'field to wheat'),
 	(333, 9, 1, 'iron bar to tool'),
-	(810, 33, 1, 'field to vegetable'),
-	(10020, 33, 1, 'produce: wheat'),
 	(10030, 2, 1, 'produce: floor'),
-	(10040, 34, 1, 'produce: wood'),
 	(10050, 4, 1, 'produce: wood plank'),
-	(10060, 33, 1, 'produce: wool'),
 	(10070, 6, 1, 'produce: cloth'),
-	(10080, 44, 1, 'produce: iron ore'),
 	(10090, 8, 1, 'produce: iron bar'),
-	(10100, 45, 1, 'produce: gold ore'),
 	(10110, 10, 1, 'produce: gold bar'),
-	(10120, 37, 1, 'produce: stone'),
 	(10130, 4, 1, 'produce: paper'),
-	(10140, 34, 1, 'produce: medecinal herb'),
 	(11000, 3, 1, 'produce: bread'),
-	(11010, 34, 1, 'produce: meat'),
-	(11020, 35, 1, 'produce: fish'),
-	(11030, 33, 1, 'produce: fruit'),
-	(11040, 33, 1, 'produce: vegetable'),
-	(11050, 35, 1, 'produce: crustaceans'),
 	(11100, 4, 1, 'produce: tool'),
 	(11101, 9, 1, 'produce: tool'),
 	(11110, 7, 1, 'produce: outfit'),
@@ -1374,9 +1350,7 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(11130, 5, 1, 'produce: housing'),
 	(11131, 12, 1, 'produce: housing'),
 	(11150, 5, 1, 'produce: furniture'),
-	(11160, 33, 1, 'produce: horse'),
 	(11200, 101, 1, 'produce: soap'),
-	(11210, 33, 1, 'produce: honey'),
 	(11220, 13, 1, 'produce: book'),
 	(11230, 4, 1, 'produce: toy'),
 	(11231, 9, 1, 'produce: toy'),
@@ -1402,13 +1376,6 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(20120, 12, 1, 'sell: stone'),
 	(20130, 13, 1, 'sell: paper'),
 	(20140, 14, 1, 'sell: medecinal herb'),
-	(20330, 33, 1, 'sell: field'),
-	(20340, 34, 1, 'sell: forest'),
-	(20350, 35, 1, 'sell: fish deposit'),
-	(20360, 36, 1, 'sell: crustacean deposit'),
-	(20370, 37, 1, 'sell: stone deposit'),
-	(20440, 44, 1, 'sell: iron deposit'),
-	(20450, 45, 1, 'sell: gold deposit'),
 	(21000, 100, 1, 'sell: bread'),
 	(21010, 101, 1, 'sell: meat'),
 	(21020, 102, 1, 'sell: fish'),
@@ -1431,49 +1398,49 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(21330, 133, 1, 'sell: watch'),
 	(21400, 140, 1, 'sell: crate'),
 	(21410, 141, 1, 'sell: weapon'),
-	(30010, 1, 1, 'buy: Credit(sell/buy)'),
-	(30020, 1, 1, 'buy: wheat'),
-	(30030, 1, 1, 'buy: floor'),
-	(30040, 1, 1, 'buy: wood'),
-	(30050, 1, 1, 'buy: wood plank'),
-	(30060, 1, 1, 'buy: wool'),
-	(30070, 1, 1, 'buy: cloth'),
-	(30080, 1, 1, 'buy: iron ore'),
-	(30090, 1, 1, 'buy: iron bar'),
-	(30100, 1, 1, 'buy: gold ore'),
-	(30110, 1, 1, 'buy: gold bar'),
-	(30120, 1, 1, 'buy: stone'),
-	(30130, 1, 1, 'buy: paper'),
-	(30140, 1, 1, 'buy: medecinal herb'),
-	(30330, 1, 1, 'buy: field'),
-	(30340, 1, 1, 'buy: forest'),
-	(30350, 1, 1, 'buy: fish deposit'),
-	(30360, 1, 1, 'buy: crustacean deposit'),
-	(30370, 1, 1, 'buy: stone deposit'),
-	(30440, 1, 1, 'buy: iron deposit'),
-	(30450, 1, 1, 'buy: gold deposit'),
-	(31000, 1, 1, 'buy: bread'),
-	(31010, 1, 1, 'buy: meat'),
-	(31020, 1, 1, 'buy: fish'),
-	(31030, 1, 1, 'buy: fruit'),
-	(31040, 1, 1, 'buy: vegetable'),
-	(31050, 1, 1, 'buy: crustaceans'),
-	(31100, 1, 1, 'buy: tool'),
-	(31110, 1, 1, 'buy: outfit'),
-	(31120, 1, 1, 'buy: medicine'),
-	(31130, 1, 1, 'buy: housing'),
-	(31150, 1, 1, 'buy: furniture'),
-	(31160, 1, 1, 'buy: horse'),
-	(31200, 1, 1, 'buy: soap'),
-	(31210, 1, 1, 'buy: honey'),
-	(31220, 1, 1, 'buy: book'),
-	(31230, 1, 1, 'buy: toy'),
-	(31300, 1, 1, 'buy: delicacy'),
-	(31310, 1, 1, 'buy: painting'),
-	(31320, 1, 1, 'buy: jewelry'),
-	(31330, 1, 1, 'buy: watch'),
-	(31400, 1, 1, 'buy: crate'),
-	(31410, 1, 1, 'buy: weapon'),
+	(30010, 1, NULL, 'buy: Credit(sell/buy)'),
+	(30020, 1, NULL, 'buy: wheat'),
+	(30030, 1, NULL, 'buy: floor'),
+	(30040, 1, NULL, 'buy: wood'),
+	(30050, 1, NULL, 'buy: wood plank'),
+	(30060, 1, NULL, 'buy: wool'),
+	(30070, 1, NULL, 'buy: cloth'),
+	(30080, 1, NULL, 'buy: iron ore'),
+	(30090, 1, NULL, 'buy: iron bar'),
+	(30100, 1, NULL, 'buy: gold ore'),
+	(30110, 1, NULL, 'buy: gold bar'),
+	(30120, 1, NULL, 'buy: stone'),
+	(30130, 1, NULL, 'buy: paper'),
+	(30140, 1, NULL, 'buy: medecinal herb'),
+	(30330, 1, NULL, 'buy: field'),
+	(30340, 1, NULL, 'buy: forest'),
+	(30350, 1, NULL, 'buy: fish deposit'),
+	(30360, 1, NULL, 'buy: crustacean deposit'),
+	(30370, 1, NULL, 'buy: stone deposit'),
+	(30440, 1, NULL, 'buy: iron deposit'),
+	(30450, 1, NULL, 'buy: gold deposit'),
+	(31000, 1, NULL, 'buy: bread'),
+	(31010, 1, NULL, 'buy: meat'),
+	(31020, 1, NULL, 'buy: fish'),
+	(31030, 1, NULL, 'buy: fruit'),
+	(31040, 1, NULL, 'buy: vegetable'),
+	(31050, 1, NULL, 'buy: crustaceans'),
+	(31100, 1, NULL, 'buy: tool'),
+	(31110, 1, NULL, 'buy: outfit'),
+	(31120, 1, NULL, 'buy: medicine'),
+	(31130, 1, NULL, 'buy: housing'),
+	(31150, 1, NULL, 'buy: furniture'),
+	(31160, 1, NULL, 'buy: horse'),
+	(31200, 1, NULL, 'buy: soap'),
+	(31210, 1, NULL, 'buy: honey'),
+	(31220, 1, NULL, 'buy: book'),
+	(31230, 1, NULL, 'buy: toy'),
+	(31300, 1, NULL, 'buy: delicacy'),
+	(31310, 1, NULL, 'buy: painting'),
+	(31320, 1, NULL, 'buy: jewelry'),
+	(31330, 1, NULL, 'buy: watch'),
+	(31400, 1, NULL, 'buy: crate'),
+	(31410, 1, NULL, 'buy: weapon'),
 	(40010, 1, 1, 'transport: Credit(sell/buy)'),
 	(40020, 2, 1, 'transport: wheat'),
 	(40030, 3, 1, 'transport: floor'),
@@ -1488,13 +1455,6 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(40120, 12, 1, 'transport: stone'),
 	(40130, 13, 1, 'transport: paper'),
 	(40140, 14, 1, 'transport: medecinal herb'),
-	(40330, 33, 1, 'transport: field'),
-	(40340, 34, 1, 'transport: forest'),
-	(40350, 35, 1, 'transport: fish deposit'),
-	(40360, 36, 1, 'transport: crustacean deposit'),
-	(40370, 37, 1, 'transport: stone deposit'),
-	(40440, 44, 1, 'transport: iron deposit'),
-	(40450, 45, 1, 'transport: gold deposit'),
 	(41000, 100, 1, 'transport: bread'),
 	(41010, 101, 1, 'transport: meat'),
 	(41020, 102, 1, 'transport: fish'),
@@ -1516,7 +1476,8 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(41320, 132, 1, 'transport: jewelry'),
 	(41330, 133, 1, 'transport: watch'),
 	(41400, 140, 1, 'transport: crate'),
-	(41410, 141, 1, 'transport: weapon');
+	(41410, 141, 1, 'transport: weapon'),
+	(50000, 500, 1, 'require : manual labor');
 /*!40000 ALTER TABLE `prodinputtype` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.prodtype: ~169 rows (approximately)
@@ -1630,8 +1591,6 @@ INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(3012, 12, 1, 'buy: stone'),
 	(3013, 13, 1, 'buy: paper'),
 	(3014, 14, 1, 'buy: medecinal herb'),
-	(3033, 33, 1, 'buy: field'),
-	(3034, 34, 1, 'buy: forest'),
 	(3100, 100, 1, 'buy: bread'),
 	(3101, 101, 1, 'buy: meat'),
 	(3102, 102, 1, 'buy: fish'),
@@ -1654,6 +1613,7 @@ INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(3133, 133, 1, 'buy: watch'),
 	(3140, 140, 1, 'buy: crate'),
 	(3141, 141, 1, 'buy: weapon'),
+	(3500, 500, 1, 'buy: manual labor'),
 	(4002, 2, 1, 'transport: wheat'),
 	(4003, 3, 1, 'transport: floor'),
 	(4004, 4, 1, 'transport: wood'),
@@ -1667,8 +1627,6 @@ INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(4012, 12, 1, 'transport: stone'),
 	(4013, 13, 1, 'transport: paper'),
 	(4014, 14, 1, 'transport: medecinal herb'),
-	(4033, 33, 1, 'transport: field'),
-	(4034, 34, 1, 'transport: forest'),
 	(4100, 100, 1, 'transport: bread'),
 	(4101, 101, 1, 'transport: meat'),
 	(4102, 102, 1, 'transport: fish'),
@@ -1693,28 +1651,16 @@ INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(4141, 141, 1, 'transport: weapon');
 /*!40000 ALTER TABLE `prodtype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.prodtype_prodinputtype_assoc: ~152 rows (approximately)
+-- Dumping data for table homeplanet.prodtype_prodinputtype_assoc: ~141 rows (approximately)
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` DISABLE KEYS */;
 INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) VALUES
-	(1002, 10020),
 	(1003, 10030),
-	(1004, 10040),
 	(1005, 10050),
-	(1006, 10060),
 	(1007, 10070),
-	(1008, 10080),
 	(1009, 10090),
-	(1010, 10100),
 	(1011, 10110),
-	(1012, 10120),
 	(1013, 10130),
-	(1014, 10140),
 	(1100, 11000),
-	(1101, 11010),
-	(1102, 11020),
-	(1103, 11030),
-	(1104, 11040),
-	(1105, 11050),
 	(1110, 11100),
 	(1110, 11101),
 	(1111, 11110),
@@ -1722,9 +1668,7 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(1113, 11130),
 	(1113, 11131),
 	(1115, 11150),
-	(1116, 11160),
 	(1120, 11200),
-	(1121, 11210),
 	(1122, 11220),
 	(1123, 11230),
 	(1123, 11231),
@@ -1750,8 +1694,6 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(2012, 20120),
 	(2013, 20130),
 	(2014, 20140),
-	(2033, 20330),
-	(2034, 20340),
 	(2100, 21000),
 	(2101, 21010),
 	(2102, 21020),
@@ -1787,8 +1729,6 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(3012, 30120),
 	(3013, 30130),
 	(3014, 30140),
-	(3033, 30330),
-	(3034, 30340),
 	(3100, 31000),
 	(3101, 31010),
 	(3102, 31020),
@@ -1824,8 +1764,6 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(4012, 40120),
 	(4013, 40130),
 	(4014, 40140),
-	(4033, 40330),
-	(4034, 40340),
 	(4100, 41000),
 	(4101, 41010),
 	(4102, 41020),
@@ -1847,7 +1785,15 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(4132, 41320),
 	(4133, 41330),
 	(4140, 41400),
-	(4141, 41410);
+	(4141, 41410),
+	(1002, 50000),
+	(1008, 50000),
+	(1012, 50000),
+	(1101, 50000),
+	(1102, 50000),
+	(1103, 50000),
+	(1104, 50000),
+	(1105, 50000);
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.relationshipmodifier: ~0 rows (approximately)
@@ -1876,7 +1822,7 @@ INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(13, 'tradable');
 /*!40000 ALTER TABLE `rescategory` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.ressource: ~43 rows (approximately)
+-- Dumping data for table homeplanet.ressource: ~39 rows (approximately)
 /*!40000 ALTER TABLE `ressource` DISABLE KEYS */;
 INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) VALUES
 	(1, 'Credit(sell/buy)', 1, 0, NULL),
@@ -1893,13 +1839,6 @@ INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) V
 	(12, 'stone', 1, 0, NULL),
 	(13, 'paper', 1, 0, NULL),
 	(14, 'medecinal herb', 1, 0, NULL),
-	(33, 'field', 0, 1, NULL),
-	(34, 'forest', 0, 1, NULL),
-	(35, 'fish deposit', 0, 1, NULL),
-	(36, 'crustacean deposit', 0, 1, NULL),
-	(37, 'stone deposit', 0, 1, NULL),
-	(44, 'iron deposit', 0, 1, NULL),
-	(45, 'gold deposit', 0, 1, NULL),
 	(100, 'bread', 4, 0, NULL),
 	(101, 'meat', 1, 0, NULL),
 	(102, 'fish', 1, 0, NULL),
@@ -1921,7 +1860,8 @@ INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) V
 	(132, 'jewelry', 1, 0, NULL),
 	(133, 'watch', 1, 0, NULL),
 	(140, 'crate', 1, 0, NULL),
-	(141, 'weapon', 1, 0, NULL);
+	(141, 'weapon', 1, 0, NULL),
+	(500, 'manual labor', 0, 0, NULL);
 /*!40000 ALTER TABLE `ressource` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.ressource_rescategory: ~63 rows (approximately)
@@ -1940,12 +1880,6 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 12),
 	(13, 13),
 	(13, 14),
-	(12, 33),
-	(12, 34),
-	(12, 35),
-	(12, 37),
-	(12, 44),
-	(12, 45),
 	(5, 100),
 	(13, 100),
 	(5, 101),
@@ -1996,6 +1930,24 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 /*!40000 ALTER TABLE `sovereign` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sovereign` ENABLE KEYS */;
 
+-- Dumping data for table homeplanet.tilecapacityrequirement: ~2 rows (approximately)
+/*!40000 ALTER TABLE `tilecapacityrequirement` DISABLE KEYS */;
+INSERT INTO `tilecapacityrequirement` (`id`, `pawntype_id`, `type_id`, `quantity`) VALUES
+	(1, 1, 33, 1),
+	(2, 7, 35, 1);
+/*!40000 ALTER TABLE `tilecapacityrequirement` ENABLE KEYS */;
+
+-- Dumping data for table homeplanet.tilecapacitytype: ~7 rows (approximately)
+/*!40000 ALTER TABLE `tilecapacitytype` DISABLE KEYS */;
+INSERT INTO `tilecapacitytype` (`id`, `label`) VALUES
+	(33, 'field'),
+	(34, 'forest'),
+	(35, 'fish deposit'),
+	(36, 'crustacean deposit'),
+	(37, 'stone deposit'),
+	(44, 'iron deposit'),
+	(45, 'gold deposit');
+/*!40000 ALTER TABLE `tilecapacitytype` ENABLE KEYS */;
 -- Dumping data for table homeplanet.user: ~4 rows (approximately)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`id`, `email`, `password_shadow`) VALUES
@@ -2005,7 +1957,7 @@ INSERT INTO `user` (`id`, `email`, `password_shadow`) VALUES
 	(5, 'toto.test@gmail.com', '$2y$12$k818k0aIOQBKLW1ykK7.tuN6eiZ1fj0/Z29EkUEV8b.541kPoaOnG');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
--- Dumping data for table homeplanet._view_note: 9 rows
+-- Dumping data for table homeplanet._view_note: 11 rows
 /*!40000 ALTER TABLE `_view_note` DISABLE KEYS */;
 INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('sold', 'SELECT \r\n	seller.id AS seller_id,\r\n	buyer.id AS buyer_id,\r\n	prodinputtype.ressource_id AS ressource_id,\r\n	FLOOR( prodinputtype.quantity\r\n	* prod.percent_max ) AS quantity\r\nFROM player\r\nJOIN pawn AS seller ON seller.player_id = player.id\r\nJOIN prod ON prod.pawn_id = seller.id\r\nJOIN prodtype \r\n	ON prodtype.id = prod.prodtype_id \r\n	AND prodtype.ressource_id = 1/*Credit*/\r\nJOIN prodinput ON prodinput.prod_id = prod.id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nJOIN city as buyer \r\n	ON buyer.location_x = prod.location_x \r\n	AND buyer.location_y = prod.location_y\r\nJOIN demand \r\n	ON demand.city_id = buyer.id\r\n	AND demand.ressource_id = prodinputtype.ressource_id'),
@@ -2016,7 +1968,9 @@ INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('influence', '	SELECT \r\n		influencemodifier.city_id,\r\n		influencemodifier.sovereign_id,\r\n		influencemodifier.type_id,\r\n		influencemodifier.value\r\n	FROM influencemodifier\r\nUNION\r\n	SELECT\r\n		influence_relationship.city_id,\r\n		influence_relationship.sovereign_id,\r\n		4, #provider\r\n		influence_relationship.value\r\n	FROM influence_relationship'),
 	('city_sovereign', 'SELECT \r\n	`t`.`city_id` AS `city_id`,\r\n	MIN(`t`.`sovereign_id`) AS `sovereign_id`,\r\n	`t`.`sum_value` AS `sum_value` \r\nFROM `gigablaster`.`influence_sum` `t` \r\nJOIN (\r\n	SELECT \r\n		`influence_sum`.`city_id` AS `city_id`,\r\n		MAX(`influence_sum`.`sum_value`) AS `max_value` \r\n	FROM `gigablaster`.`influence_sum` \r\n	GROUP BY `influence_sum`.`city_id`\r\n) `tmax` \r\n	ON `tmax`.`city_id` = `t`.`city_id`\r\n	AND `t`.`sum_value` = `tmax`.`max_value`\r\nGROUP BY `t`.`city_id`'),
 	('prod_sum', 'SELECT \r\n	pawn.player_id,\r\n	prod.location_x AS location_x,\r\n	prod.location_y AS location_y,\r\n	prodtype.ressource_id AS ressource_id, \r\n	FLOOR(SUM((prodtype.quantity * prod.percent_max ))) AS quantity\r\nFROM prod\r\nJOIN prodtype ON prodtype.id = prod.prodtype_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nGROUP BY prod.location_x,prod.location_y,prodtype.ressource_id,pawn.player_id'),
-	('prodinput_sum', 'SELECT \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id,\r\n	SUM(prodinputtype.quantity * prod.grade) as quantity\r\nFROM prodinput\r\nJOIN prod ON prod.id = prodinput.prod_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nGROUP BY \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id');
+	('prodinput_sum', 'SELECT \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id,\r\n	SUM(prodinputtype.quantity * prod.grade) as quantity\r\nFROM prodinput\r\nJOIN prod ON prod.id = prodinput.prod_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nGROUP BY \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id'),
+	('prodinput_dynamicquantity', 'SELECT \r\n	prodinput.id AS prodinput_id,\r\n	IF( ISNULL(demand.price_modifier),NULL,(demand.price_modifier * ressource.baseprice)) AS quantity \r\nFROM prodinput \r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id \r\n	AND prodinputtype.ressource_id = 1 \r\n	AND prodinputtype.quantity IS NULL\r\nLEFT JOIN city ON city.location_x = prodinput.location_x AND city.location_y = prodinput.location_y\r\nLEFT JOIN demand ON demand.city_id = city.id AND demand.ressource_id = prodinputtype.ressource_id\r\nLEFT JOIN ressource ON ressource.id = demand.ressource_id'),
+	('tilecapacityovercrowd', 'SELECT \r\n	pawn_location_assoc.location_x, \r\n	pawn_location_assoc.location_y, \r\n	tilecapacityrequirement.type_id,\r\n	SUM(tilecapacityrequirement.quantity) as quantity\r\nFROM pawn \r\nJOIN pawn_location_assoc ON pawn_location_assoc.pawn_id = pawn.id\r\nJOIN pawntype ON pawntype.id = pawn.type_id\r\nJOIN tilecapacityrequirement ON tilecapacityrequirement.pawntype_id = pawntype.id\r\nGROUP BY pawn_location_assoc.location_x,pawn_location_assoc.location_y, tilecapacityrequirement.type_id');
 /*!40000 ALTER TABLE `_view_note` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

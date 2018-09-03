@@ -6,6 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use homeplanet\Entity\Player;
 use homeplanet\Entity\attribute\Location;
 use Symfony\Component\Validator\GroupSequenceProviderInterface;
+use homeplanet\Entity\Tile;
 
 /**
  * @Assert\GroupSequence({"BuildingBuy","after"})
@@ -20,9 +21,9 @@ class BuildingBuy {
 	
 	/**
 	 * @Assert\NotBlank(message="Invalid location")
-	 * @var PawnType
+	 * @var Tile
 	 */
-	protected $_oLocation;
+	protected $_oTile;
 	
 	/**
 	 * @var Player
@@ -32,8 +33,8 @@ class BuildingBuy {
 //_____________________________________________________________________________
 //	Constructor
 	
-	public function __construct( $oLoc, PawnType $oPawnType, Player $oPlayer ) {
-		$this->_oLocation = $oLoc;
+	public function __construct( Tile $oTile, PawnType $oPawnType, Player $oPlayer ) {
+		$this->_oTile = $oTile;
 		$this->_oPawnType = $oPawnType;
 		$this->_oPlayer = $oPlayer;
 	}
@@ -48,9 +49,12 @@ class BuildingBuy {
 	function getPlayer() {
 		return $this->_oPlayer;
 	}
+	function getTile() {
+		return $this->_oTile;
+	}
 	
 	function getLocation() {
-		return $this->_oLocation;
+		return $this->getTile()->getLocation();
 	}
 	
 	function getCost() {
@@ -64,8 +68,8 @@ class BuildingBuy {
 		$this->_oPawnType = $o;
 	}
 	
-	function setLocation( $o ) {
-		$this->_oLocation = $o;
+	function setTile( $oTile ) {
+		$this->_oTile = $oTile;
 	}
 
 //_____________________________________________________________________________
@@ -97,6 +101,26 @@ class BuildingBuy {
 	 */
 	function getRemainingContract() {
 		return $this->_oPlayer->getContractRemaining();
+	}
+	
+	/**
+	 * @Assert\IsTrue(
+	 *     message = "You cannot play this expression"
+	 * )
+	 */
+	function getRemaingTileCapacity() {
+		
+		foreach( $this->getPawnType()->getTileCapacityRequirementAr() as $oRequirement ) {
+			if( 
+				$this->getTile()
+					->getOvercrowd( $oRequirement->getType()->getId() )
+					->getQuantity()
+				<  
+				$oRequirement->getQuantity()
+			)
+				return false;
+		}
+		return true;
 	}
 	
 }

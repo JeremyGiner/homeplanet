@@ -27,12 +27,12 @@ class F {
 	public static function interpolate( $iAlpha, $iOmega, $fPercent ) {
 		return $iAlpha + ( $iOmega - $iAlpha ) * $fPercent;
 	}
-	
+	//TODO: mose to number tool
 	/**
 	 * 
 	 * @param float $value
-	 * @param float $min include
-	 * @param float $max exclude
+	 * @param float $min included
+	 * @param float $max excluded
 	 * @throws \Exception
 	 * @return number
 	 */
@@ -43,12 +43,33 @@ class F {
 			throw new \Exception('Invalid values');
 		return $value - intdiv( $value, $max ) * $max;
 	}
-	
+	/**
+	 * 
+	 * @param float $value
+	 * @param float $min included
+	 * @param float $max included
+	 * @return float
+	 */
 	public Static function clamp( $value, $min, $max ) {
 		if( $value < $min )
 			return $min;
 		if( $value > $max )
 			return $max;
 		return $value;
+	}
+	
+	/**
+	 * 
+	 * @param float $value
+	 * @param float $min included
+	 * @param float $max included
+	 * @return boolean
+	 */
+	public static function isBetween( $value, $min, $max ) {
+		if( $value < $min )
+			return false;
+		if( $value > $max )
+			return false;
+		return true;
 	}
 }

@@ -1,6 +1,27 @@
 
+WIP
+	- handle pawn cascade delete prod with triggering of prod trigger
+	- finish overcrowd system ( restrict on upgrade, test restrict on asset buy ) 
+	- character job ?
+	- remove field prod.updated
+
+BUG
+	- prod percent update, does not update collegue
+
+Code improvement
+	- map use em to be fetch, include overcrowd into tile
+
+Count down till next month
+
+Login form 
+	- redirect to page ref
+
+
 Character
 	- body color resolve using gradient or something
+	- doctrine can't see prodinput change (cascade delete by mysql)
+	- trigger can't update current table
+	TODO: create memory table as queue for prod channel waiting to be updated
 
 House
 	- add date creation
@@ -29,7 +50,6 @@ view :
 
 character job
 	- player action suggest work
-	- add detail to relation between pawn and character 
 	? character action steal or become theif
 	
 advance character job
@@ -37,6 +57,24 @@ advance character job
 	- on hire create pawn as character's contract
 	- calc grade depending on payement / motivation / max skills
 	- update input to production type
+	- move overcrowd to asset upgrade / create
+	- prod multiple output ( crate for traansport )
+	- print case no demande on buy
+	test :
+		- buy chain from sell to buy
+
+player debt
+	- player action bail out
+	- handle case too much debt
+
+? player rule
+	- add force job
+	- add guard job
+	- add player action new rule
+		- taxe / thievery
+		- eviction
+		- prevent other player from making rule
+	- add apply contract to said task
 
 character relationship
 	- character action lower relationship with X

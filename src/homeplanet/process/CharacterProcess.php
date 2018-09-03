@@ -227,8 +227,11 @@ AND character._iCreated BETWEEN :too_old AND :too_young'
 	
 	protected function _getWorkProposalActionList( Character $oCharacter ) {
 		
-		//TODO : filter worker
+		// Filter worker
+		if( $oCharacter->getContract() != null )
+			return [];
 		
+		/*
 		// List work place
 			// same location
 			// have space
@@ -254,6 +257,7 @@ HAVING pawn._iGrade < count(worker)'
 		
 		if( $oTarget != null )
 			return [ new WorkProposal( $oCharacter, $oTarget, $this->_iTurn ) ];
+		*/
 		return [];
 	}
 }

@@ -2,13 +2,14 @@
 namespace homeplanet\Entity\attribute;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use homeplanet\Entity\attribute\ProductionType;
 use homeplanet\Entity\Pawn;
-use homeplanet\Entity\Tile;
 
 /**
+ * Note : production percent is updated using MySQL proc "prod_update_single" 
+ * 
  * @ORM\Entity(repositoryClass="homeplanet\Repository\ProductionRepository")
  * @ORM\Table(name="prod")
+ * ###ORM\EntityListeners({"homeplanet\EventListener\ProductionListener"})
  */
 class Production {
 	
@@ -42,6 +43,7 @@ class Production {
 	 * @var int
 	 */
 	protected $_iLocationX;
+	
 	/**
 	 * @ORM\Column(type="integer", name="location_y")
 	 * @var int
@@ -69,12 +71,7 @@ class Production {
 	 * @var int
 	 */
 	protected $_iGrade;
-	
-	/**
-	 * @ORM\Column(type="boolean", name="updated")
-	 * @var boolean
-	 */
-	protected $_bUpdated;
+
 	
 //_____________________________________________________________________________
 //	Constructor
@@ -95,7 +92,6 @@ class Production {
 		$this->_aProdInput = new ArrayCollection();
 		
 		$this->_iGrade = ( is_null($iGrade) ) ? $oPawn->getGrade() : $iGrade;
-		$this->_bUpdated = false;
 	}
 	
 	static public function create(
@@ -186,7 +182,7 @@ class Production {
 		// True if firt input is credit
 		$first = $this->_aProdInput->first();
 		
-		if( $first === null )
+		if( $first === false )
 			return false;
 		return $first->getType()->getRessource()->getId() == 1;
 	}
@@ -194,7 +190,7 @@ class Production {
 	public function isTransporter() {
 		$first = $this->_aProdInput->first();
 		
-		if( $first === null )
+		if( $first === false )
 			return false;
 		
 		return $this->getType()->getRessource()->getId() == $first->getType()->getRessource()->getId();
@@ -204,7 +200,7 @@ class Production {
 		// True if firt input is natural deposit
 		$first = $this->_aProdInput->first();
 		
-		if( $first === null )
+		if( $first === false )
 			return false;
 		
 		return $first->getType()->getRessource()->isNatural();
@@ -224,12 +220,6 @@ class Production {
 	public function setGrade( $i ) {
 		$this->_iGrade = $i;
 		$this->_fRatioMax = 0;
-		$this->setNotUpdated();
-		return $this;
-	}
-	
-	public function setNotUpdated() {
-		$this->_bUpdated = false;
 		return $this;
 	}
 	

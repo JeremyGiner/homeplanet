@@ -24,8 +24,7 @@ use homeplanet\Entity\Character;
 use homeplanet\Entity\attribute\Production;
 use homeplanet\Entity\Pawn;
 use homeplanet\Entity\City;
-use homeplanet\Entity\Overcrowd;
-use homeplanet\Repository\OvercrowdRepository;
+use homeplanet\Entity\TileCapacityOvercrowd;
 
 class BaseController extends Controller {
 	
@@ -107,10 +106,10 @@ class BaseController extends Controller {
 		return $this->getGameEntityManager()->getRepository(House::class);
 	}
 	/**
-	 * @return OvercrowdRepository
+	 * @return TileCapacityOvercrowdRepository
 	 */
-	public function getOvercrowdRepo() {
-		return $this->getGameEntityManager()->getRepository(Overcrowd::class);
+	public function getTileCapactityOvercrowdRepo() {
+		return $this->getGameEntityManager()->getRepository(TileCapacityOvercrowd::class);
 	}
 	
 
@@ -174,7 +173,7 @@ class BaseController extends Controller {
 	function _createView( Game $oGame, Location $oLocation ) {
 		
 		// Get Overcrowd indexed by ressrouce id
-		$aOvercrowd = $this->getOvercrowdRepo()->findByCoordonate(
+		$aOvercrowd = $this->getTileCapactityOvercrowdRepo()->findByCoordonate(
 			$oLocation->getX(),
 			$oLocation->getY()
 		);

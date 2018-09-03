@@ -1,4 +1,17 @@
-<a id="{{ param.wrapper.id|default }}" class="text-center d-inlineblock {{ param.wrapper.class|default }}" href="{{ url('character_view',{id: o.id}) }}">
+
+{% set link = param.link is not defined ? 
+	false : 
+	( 
+		param.link is same as( true ) ? 
+			url('character_view',{id: o.id}) : 
+			param.link 
+	)
+%}
+{% set tag = link != false ? 'a' : 'div' %}
+<{{ tag }} 
+id="{{ param.wrapper.id|default }}" 
+class="text-center d-inlineblock {{ param.wrapper.class|default }}" 
+href="{{ link }}">
 
 {{ printo(o.body) }}
 
@@ -6,4 +19,4 @@
 	{{ o.label }}
 </div>
 
-</a>
+</{{ tag }}>

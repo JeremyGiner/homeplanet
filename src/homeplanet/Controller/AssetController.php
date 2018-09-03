@@ -38,7 +38,7 @@ class AssetController extends BaseController {
 	
 	/**
 	 * Display assets by location
-	 * @Route("", name="asset")
+	 * @Route("", name="asset_list")
 	 */
 	public function mainAction( Request $oRequest ) {
 		
@@ -57,9 +57,11 @@ class AssetController extends BaseController {
 		// Form buy contract
 		
 		$oFormContract = $this->createFormBuilder( 
-			new Buy( $oPlayer, $oPlayer->getContractPrice() ), [
-				'attr' => [ 'class' => 'float-right' ]
-			] )
+				new Buy( $oPlayer, $oPlayer->getContractPrice() ), 
+				[
+					'attr' => [ 'class' => 'float-right' ]
+				] 
+			)
 			->add('submit', SubmitType::class, [
 				'label' => 'Buy contract', 
 				'attr' => [ 'class' => 'btn-warning' ]
@@ -78,7 +80,7 @@ class AssetController extends BaseController {
 			
 			$oGame->getEntityManager()->flush();
 			
-			$this->redirect( $this->generateUrl('asset') );
+			$this->redirect( $this->generateUrl('asset_list') );
 		}
 		
 		//_____________________________
@@ -123,7 +125,7 @@ class AssetController extends BaseController {
 		$aCity = ArrayTool::STindexBy($aCity, 'location.string');
 		
 		// Load overcrowd
-		$aOvercrowd = $this->getOvercrowdRepo()->findByCoordonateAr($a);
+		$aOvercrowd = $this->getTileCapactityOvercrowdRepo()->findByCoordonateAr($a);
 		
 		return $this->render( 
 			'homeplanet/page/asset.html.twig', 
@@ -153,7 +155,7 @@ class AssetController extends BaseController {
 		$oPawn = $this->getPawnRepo()->find( $id );
 	
 		if( $oPawn == null )
-			return $this->redirect( $this->generateUrl('asset') );
+			return $this->redirect( $this->generateUrl('asset_list') );
 		
 		$bTransporter = $oPawn->getAttribute('transport') !== null;
 		
@@ -202,11 +204,8 @@ class AssetController extends BaseController {
 				
 				$oGame->getEntityManager()->flush();
 				
-				$this->getProductionRepo()->updateProduction();
-				
 				$this->addFlash('success', 'Production successfully changed.');
 				
-				//var_dump($oForm->getData()['production_type']);
 				return $this->redirect( $oRequest->getUri() );
 			}
 		
@@ -292,8 +291,6 @@ class AssetController extends BaseController {
 					//$this->_oGame->updateProductionRatio($oProd);
 					
 					$this->getGameEntityManager()->flush();
-					$this->getProductionRepo()->updateProduction();
-					
 			
 					return $this->redirect( $oRequest->getUri() );
 				}
@@ -332,13 +329,13 @@ class AssetController extends BaseController {
 			
 			// Update entity's grade and his production
 			$oPawn->upgrade();
+			
+			// Upgrade production
 			foreach ( $oPawn->getProductionAr() as $oProduction ) {
 				$oGame->updateProductionRatio($oProduction);
 			}
 			
 			$oGame->getEntityManager()->flush();
-			
-			$this->getProductionRepo()->updateProduction();
 			
 			return $this->redirect( $oRequest->getUri() );
 		}
@@ -361,24 +358,10 @@ class AssetController extends BaseController {
 		
 		if( $oFormSell->isSubmitted() && $oFormSell->isValid() ) {
 			$em = $oGame->getEntityManager();
-			$oProdRepo = $this->getProductionRepo();
-			
-			// 
-			foreach ( $oPawn->getProductionAr() as $oProd ) {
-				
-				foreach ( $oProdRepo->getSupplied($oProd) 
-						as $oSupplied 
-				) {
-					$oSupplied->setNotUpdated();
-				}
-			}
-			//
 			$em->remove( $oPawn );
 			$em->flush();
 			
-			$oProdRepo->updateProduction();
-			
-			return $this->redirect( $oRequest->getUri() );
+			return $this->redirect( $this->generateUrl('asset_list') );
 		}
 		
 		//_____________________________
@@ -420,28 +403,27 @@ class AssetController extends BaseController {
 		$oPlayer = $oGame->getPlayer();
 		
 		//_____________________________
-		// Form join Build
-			
+		// Form create pawn
+		
+		$oTileDefault = $oGame->getWorldmap()->getTileByLocation($oLocation);
+		
 		$oData = new BuildingBuy(
-			$oLocation,
+			$oTileDefault,
 			$oGame->getPawnType(2),
 			$oGame->getPlayer()
 		);
 		
 		$oFormBuild = $this->createForm(BuildingBuyForm::class, $oData, [ 
 			'game' => $oGame, 
-			'default_location' => $oLocation,
 		] );
 		
 		$oFormBuild->handleRequest( $oRequest );
 		if( $oFormBuild->isSubmitted() && $oFormBuild->isValid() ) {
 		
-			// User join room
-			//var_dump( $oFormBuild->getData() );
 			/* @var $oData BuildingBuy */
-			$oData = $oFormBuild->getData();
+			//$oData = $oFormBuild->getData();
 				
-			// Pay
+			// Update credit
 			$oData->getPlayer()->setCredit(
 					$oData->getPlayerCreditNew()
 			);
@@ -456,11 +438,11 @@ class AssetController extends BaseController {
 			);
 				
 			$a = $oFactory->create();
-			
 			$oPawn = $a['entity'];
-			$oGame->addPawn( $a['entity'], $a['addOn'] );
 			
-			$this->getProductionRepo()->updateProduction();
+			$em = $this->getGameEntityManager();
+			$em->persist( $oPawn );
+			$em->flush();
 			
 			return $this->redirect( $this->generateUrl('asset_view',['id'=>$oPawn->getId()]) );
 		}
@@ -566,7 +548,7 @@ class AssetController extends BaseController {
 				$a = $oFactory->create( $oGame );
 				$oGame->addPawn($a['entity']);
 				
-				return $this->redirect( $this->generateUrl('asset') );
+				return $this->redirect( $this->generateUrl('asset_list') );
 			}
 			
 			$oForm = $this->createForm(TradeRouteCreationForm::class,$oForm->getData(),[

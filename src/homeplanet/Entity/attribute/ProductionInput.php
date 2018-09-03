@@ -8,6 +8,7 @@ use homeplanet\Entity\attribute\ProductionInputType;
 /**
  * @ORM\Entity
  * @ORM\Table(name="prodinput")
+ * ###ORM\EntityListeners({"homeplanet\EventListener\ProductionInputListener"})
  */
 class ProductionInput {
 	
@@ -48,6 +49,11 @@ class ProductionInput {
 	 */
 	protected $_iLocationY;
 	
+	/**
+	 * @ORM\OneToOne(targetEntity="ProductionInputDynamicQuantity", mappedBy="_oProductionInput")
+	 * @var ProductionInputDynamicQuantity
+	 */
+	protected $_oDynamicQuantity;
 	
 //______________________________________________________________________________
 //	Constructor
@@ -70,14 +76,27 @@ class ProductionInput {
 	public function getLocation() {
 		return new Location( $this->_iLocationX, $this->_iLocationY );
 	}
+	
+	public function getLocationX() {
+		return $this->_iLocationX;
+	}
+	
+	public function getLocationY() {
+		return $this->_iLocationY;
+	}
+	
 	public function getProduction() {
 		return $this->_oProd;
 	}
+	
 	public function getType() {
 		return $this->_oProdInputType;
 	}
 	
 	public function getQuantity() {
+		
+		if( $this->_oDynamicQuantity != null )
+			return $this->_oDynamicQuantity->getQuantity();
 		return $this->getType()->getQuantity()
 			* $this->getProduction()->getRatioMax()
 		;

@@ -2,11 +2,9 @@
 namespace homeplanet\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\City;
-use homeplanet\Entity\Overcrowd;
+use homeplanet\Entity\TileCapacityOvercrowd;
 
-class OvercrowdRepository extends EntityRepository {
+class TileCapacityOvercrowdRepository extends EntityRepository {
 	
 	
 //_____________________________________________________________________________
@@ -16,14 +14,14 @@ class OvercrowdRepository extends EntityRepository {
 	 * @param int $ress_id
 	 * @param int $x
 	 * @param int $y
-	 * @return Overcrowd[]
+	 * @return TileCapacityOvercrowd[]
 	 */
 	public function get( $ress_id, $x, $y ) {
 		
 		return $this->find([
 			'_iLocationX' => $x,
 			'_iLocationY' => $y,
-			'_iRessourceId' => $ress_id,
+			'_iTypeId' => $ress_id,
 		]);
 		/*
 		return $this->findOneBy([
@@ -36,7 +34,7 @@ class OvercrowdRepository extends EntityRepository {
 	/**
 	 * @param int $x
 	 * @param int $y
-	 * @return Overcrowd[]
+	 * @return TileCapacityOvercrowd[]
 	 */
 	public function findByCoordonate( $x, $y ) {
 		return $this->findByCoordonateAr([[$x,$y]]);
@@ -53,11 +51,12 @@ class OvercrowdRepository extends EntityRepository {
 	/**
 	 * 
 	 * @param int[] $a format [[x,y],...]example : [[1,4],[3,-5]]
+	 * @return TileCapacityOvercrowd[]
 	 */
 	public function findByCoordonateAr( $aCoordonate ) {
 		$q = $this->createQueryBuilder('overcrownd')
 			->select('overcrowd')
-			->from(Overcrowd::class,'overcrowd')
+			->from($this->getClassName(),'overcrowd')
 		;
 		$a = [];
 		$i = 0;

@@ -405,7 +405,7 @@ CREATE TABLE IF NOT EXISTS `prod` (
   PRIMARY KEY (`id`),
   KEY `FK_prod_prodtype` (`prodtype_id`),
   KEY `FK_prod_pawn` (`pawn_id`),
-  CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `FK_prod_pawn` FOREIGN KEY (`pawn_id`) REFERENCES `pawn` (`id`),
   CONSTRAINT `FK_prod_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='entity_prod_assoc';
 
@@ -429,7 +429,7 @@ CREATE TABLE IF NOT EXISTS `prodinput` (
 CREATE TABLE IF NOT EXISTS `prodinputtype` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `ressource_id` int(10) unsigned NOT NULL,
-  `quantity` int(10) unsigned NOT NULL DEFAULT '0',
+  `quantity` int(10) unsigned DEFAULT '0',
   `comment` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK_prodinputtype_ressource` (`ressource_id`),
@@ -458,6 +458,13 @@ CREATE TABLE IF NOT EXISTS `prodtype_prodinputtype_assoc` (
   CONSTRAINT `FK_prodtype_prodinputtype_assoc_prodinputtype` FOREIGN KEY (`prodinputtype_id`) REFERENCES `prodinputtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_prodtype_prodinputtype_assoc_prodtype` FOREIGN KEY (`prodtype_id`) REFERENCES `prodtype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.prod_updatequeue
+CREATE TABLE IF NOT EXISTS `prod_updatequeue` (
+  `prod_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`prod_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 -- Dumping structure for table homeplanet.relationshipmodifier
@@ -528,6 +535,28 @@ CREATE TABLE IF NOT EXISTS `sovereign` (
   `budget` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_sovereign_city` (`capital`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.tilecapacityrequirement
+CREATE TABLE IF NOT EXISTS `tilecapacityrequirement` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `pawntype_id` int(10) unsigned NOT NULL,
+  `type_id` int(10) unsigned NOT NULL,
+  `quantity` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pawn_id` (`pawntype_id`),
+  KEY `FK_tilecapacityrequirement_tilecapacitytype` (`type_id`),
+  CONSTRAINT `FK_tilecapacityrequirement_pawntype` FOREIGN KEY (`pawntype_id`) REFERENCES `pawntype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_tilecapacityrequirement_tilecapacitytype` FOREIGN KEY (`type_id`) REFERENCES `tilecapacitytype` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Data exporting was unselected.
+-- Dumping structure for table homeplanet.tilecapacitytype
+CREATE TABLE IF NOT EXISTS `tilecapacitytype` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `label` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
@@ -606,6 +635,13 @@ CREATE TABLE `player_ext` (
 	`income` DOUBLE NOT NULL
 ) ENGINE=MyISAM;
 
+-- Dumping structure for view homeplanet.prodinput_dynamicquantity
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `prodinput_dynamicquantity` (
+	`prodinput_id` INT(10) UNSIGNED NOT NULL,
+	`quantity` DOUBLE NULL
+) ENGINE=MyISAM;
+
 -- Dumping structure for view homeplanet.prodinput_sum
 -- Creating temporary table to overcome VIEW dependency errors
 CREATE TABLE `prodinput_sum` (
@@ -641,7 +677,16 @@ CREATE TABLE `sold` (
 	`seller_id` INT(10) UNSIGNED NOT NULL,
 	`buyer_id` INT(10) UNSIGNED NOT NULL,
 	`ressource_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` DECIMAL(16,0) NOT NULL
+	`quantity` DECIMAL(16,0) NULL
+) ENGINE=MyISAM;
+
+-- Dumping structure for view homeplanet.tilecapacityovercrowd
+-- Creating temporary table to overcome VIEW dependency errors
+CREATE TABLE `tilecapacityovercrowd` (
+	`location_x` INT(10) NOT NULL,
+	`location_y` INT(10) NOT NULL,
+	`type_id` INT(10) UNSIGNED NOT NULL,
+	`quantity` DECIMAL(32,0) NULL
 ) ENGINE=MyISAM;
 
 -- Dumping structure for procedure homeplanet.city_spawn
@@ -912,6 +957,98 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Dumping structure for procedure homeplanet.prod_mark
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_mark`(
+	IN `IN_prod_id` INT
+
+
+
+)
+BEGIN
+
+INSERT IGNORE INTO prod_updatequeue(prod_id) VALUES (IN_prod_id);
+
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure homeplanet.prod_markchild
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_markchild`(
+	IN `IN_prod_id` INT
+
+
+
+)
+BEGIN
+
+INSERT IGNORE INTO prod_updatequeue(prod_id) 
+	SELECT prod.id 
+	FROM prod 
+	JOIN pawn ON pawn.id = prod.pawn_id
+	JOIN prodinput ON prodinput.prod_id = prod.id
+	JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+	
+	JOIN (
+		SELECT 
+			pawn.player_id, 
+			prod.location_x, 
+			prod.location_y,
+			prodtype.ressource_id
+		FROM prod 
+		JOIN pawn ON pawn.id = prod.pawn_id
+		JOIN prodtype ON prodtype.id = prod.prodtype_id
+		WHERE prod.id = IN_prod_id
+	) AS t
+		ON t.player_id = pawn.player_id
+		AND t.location_x = prodinput.location_x
+		AND t.location_y = prodinput.location_y
+		AND t.ressource_id = prodinputtype.ressource_id
+;
+
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure homeplanet.prod_markcollegue
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_markcollegue`(
+	IN `IN_prod_id` INT
+
+
+
+)
+BEGIN
+
+SET GLOBAL log_output = 'TABLE';
+SET GLOBAL general_log = 'ON';
+
+INSERT IGNORE INTO prod_updatequeue(prod_id) 
+SELECT prod.id
+FROM prod
+JOIN pawn ON pawn.id = prod.pawn_id
+JOIN prodinput ON prodinput.prod_id = prod.id
+JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+JOIN (
+	SELECT 
+		pawn.player_id,
+		prodinput.location_x,
+		prodinput.location_y,
+		prodinputtype.ressource_id
+	FROM prod
+	JOIN pawn ON pawn.id = prod.pawn_id
+	JOIN prodinput ON prodinput.prod_id = prod.id
+	JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
+	WHERE prod.id = IN_prod_id
+) t ON  pawn.player_id = t.player_id
+	AND prodinput.location_x = t.location_x
+	AND prodinput.location_y = t.location_y
+	AND prodinputtype.ressource_id = t.ressource_id
+;
+
+
+END//
+DELIMITER ;
+
 -- Dumping structure for procedure homeplanet.prod_percent_update
 DELIMITER //
 CREATE DEFINER=`root`@`localhost` PROCEDURE `prod_percent_update`()
@@ -1081,25 +1218,30 @@ BEGIN
 	DECLARE c INT DEFAULT 0;
 	
 	REPEAT
-	
+	/* Propagate */
 	/* Mark prods affected by this change */
-		UPDATE prod 
+		INSERT IGNORE INTO prod_updatequeue(prod_id)
+		SELECT prod.id
+		FROM prod 
+		JOIN pawn ON pawn.id = prod.pawn_id
 		JOIN prodinput ON prodinput.prod_id = prod.id
 		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
 		JOIN (
+			# Get all out of date prod
 			SELECT 
+				pawn.player_id,
 				prod.location_x,
 				prod.location_y,
 				prodtype.ressource_id as ressource_id
-			FROM prod 
+			FROM prod
+			JOIN prod_updatequeue ON prod_updatequeue.prod_id = prod.id 
+			JOIN pawn ON pawn.id = prod.pawn_id
 			JOIN prodtype ON prodtype.id = prod.prodtype_id 
-			WHERE prod.updated = 0
 		) t 
-			ON t.ressource_id = prodinputtype.ressource_id
+			ON t.player_id = pawn.player_id
+			AND t.ressource_id = prodinputtype.ressource_id
 			AND t.location_x = prodinput.location_x
 			AND t.location_y = prodinput.location_y
-		
-		SET prod.updated = 0
 		;
 	
 	UNTIL ROW_COUNT() = 0 END REPEAT;
@@ -1110,28 +1252,7 @@ BEGIN
 	
 	
 REPEAT
-	/*
-		SET @changing_prod = (
-			SELECT 
-				prod.location_x,
-				prod.location_y,
-				prodtype.ressource_id as ressource_id
-			FROM prod 
-			JOIN prodtype ON prodtype.id = prod.prodtype_id 
-			WHERE prod.updated = 0
-		);
-	*/
-	/*
-	CREATE TEMPORARY TABLE IF NOT EXISTS changing_prod AS (
-		SELECT 
-			prod.location_x,
-			prod.location_y,
-			prodtype.ressource_id as ressource_id
-		FROM prod 
-		JOIN prodtype ON prodtype.id = prod.prodtype_id 
-		WHERE prod.updated = 0
-	);
-	*/
+	
 	SET c = 0;
 /* Update prod percent depending on the availability of prodinput */
 		UPDATE prod 
@@ -1145,6 +1266,10 @@ REPEAT
 				MIN( get_prod_ratio(prodinputtype.quantity, prod.grade, prodinput_sum.quantity, IFNULL(prod_sum.quantity, 0) ) )
 				as percent
 			FROM prod
+			
+			# prod requiring an update
+			JOIN prod_updatequeue ON prod_updatequeue.prod_id = prod.id 
+			
 			JOIN pawn ON pawn.id = prod.pawn_id
 			JOIN prodtype ON prodtype.id = prod.prodtype_id
 			JOIN prodinput ON prodinput.prod_id = prod.id
@@ -1164,12 +1289,11 @@ REPEAT
 				
 			# exclude sell
 			WHERE prodtype.ressource_id != 1 
-			#TODO : exclude buy
-			
-			# Filter production already updated
-			AND prod.updated = 0
 			
 			GROUP BY prod.id
+			
+			# exclude buy ( does not have any dynamic quantity )
+			HAVING SUM( ISNULL( prodinputtype.quantity ) ) = 0
 		) AS tprod_percent ON prod.id = tprod_percent.prod_id
 		SET prod.percent_max = FLOOR(tprod_percent.percent);
 		
@@ -1185,13 +1309,16 @@ REPEAT
 				MIN( get_prod_ratio(prodinputtype.quantity, prod.grade, prodinput_sum.quantity, IFNULL(prod_sum.quantity, 0) ) )
 				as percent
 			FROM prod
-			JOIN pawn ON pawn.id = prod.pawn_id
+			
+			# prod requiring an update
+			JOIN prod_updatequeue ON prod_updatequeue.prod_id = prod.id 
 			
 			# Filter prodtype: seller
 			JOIN prodtype 
 				ON prodtype.id = prod.prodtype_id
 				AND prodtype.ressource_id = 1
-			
+				
+			JOIN pawn ON pawn.id = prod.pawn_id
 			JOIN prodinput ON prodinput.prod_id = prod.id
 			JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
 			
@@ -1215,9 +1342,6 @@ REPEAT
 			LEFT JOIN demand 
 				ON demand.city_id = city.id
 				AND demand.ressource_id = prodinputtype.ressource_id
-				
-			# Filter production already updated
-			WHERE prod.updated = 0
 			
 			GROUP BY prod.id
 	
@@ -1233,61 +1357,30 @@ Update BUY prod percent */
 		JOIN (
 			SELECT 
 				prod.id as prod_id,
-				LEAST(
-					1.0,
-					IF(
-						tcost.cost = 0,
-						1.0,
-						player.credit / tcost.cost
-					)
-				)
-				* IF(MAX(demand.price_modifier) IS NULL,0,1) as percent
+				IF(
+					SUM(ISNULL(prodinput_dynamicquantity.quantity)) > 0,
+					0,
+					1
+				) as percent
 			FROM prod
 			JOIN prodtype ON prodtype.id = prod.prodtype_id
+			
+			# prod requiring an update
+			JOIN prod_updatequeue ON prod_updatequeue.prod_id = prod.id 
 			
 			# FILTER prod of type buy
 			JOIN prodinput ON prodinput.prod_id = prod.id
 			JOIN prodinputtype 
 				ON prodinputtype.id = prodinput.prodinputtype_id
-				AND prodinputtype.ressource_id = 1 # buy only
+				AND prodinputtype.ressource_id = 1 AND prodinputtype.quantity IS NULL # buy only
 			
-			# JOIN demand
-			LEFT JOIN city 
-				ON city.location_x = prod.location_x
-				AND city.location_y = prod.location_y
-			LEFT JOIN demand 
-				ON demand.city_id = city.id
-				AND demand.ressource_id = prodtype.ressource_id
-			
-			# JOIN player
-			JOIN pawn ON prod.pawn_id = pawn.id
-			JOIN player ON player.id = pawn.player_id
-			
-			# JOIN Player total buy cost 
-			JOIN (
-				SELECT 
-					player.id as player_id,
-					IFNULL( SUM( demand.price_modifier * ressource.baseprice ), 0)  as cost
-				FROM prod
-				JOIN prodtype ON prodtype.id = prod.prodtype_id
-				JOIN pawn ON prod.pawn_id = pawn.id
-				JOIN player ON player.id = pawn.player_id
-				LEFT JOIN city 
-					ON city.location_x = prod.location_x
-					AND city.location_y = prod.location_y
-				LEFT JOIN demand 
-					ON demand.city_id = city.id
-					AND demand.ressource_id = prodtype.ressource_id
-				LEFT JOIN ressource ON ressource.id = demand.ressource_id
-				GROUP BY player.id
-			) as tcost ON tcost.player_id = player.id
-			
-			# Filter production already updated
-			WHERE prod.updated = 0
+			# JOIN dynamic quantity
+			LEFT JOIN prodinput_dynamicquantity 
+				ON prodinput_dynamicquantity.prodinput_id = prodinput.id
 			
 			GROUP BY prod.id
 		) AS tprod_percent ON prod.id = tprod_percent.prod_id
-		SET prod.percent_max = FLOOR(tprod_percent.percent);
+		SET prod.percent_max = tprod_percent.percent;
 	
 	SET c = c + ROW_COUNT();
 		
@@ -1309,13 +1402,33 @@ Disregard harvester and assume it's updated */
 		WHERE prod.updated = 0
 		;
 	SET c = c + ROW_COUNT();
+	
+/* ____________________________________________________________________________________
+Set to max prod with no input */
+	
+		UPDATE prod 
+		
+		# prod requiring an update
+		JOIN prod_updatequeue ON prod_updatequeue.prod_id = prod.id 
+		
+		# Get prod part
+		LEFT JOIN prodinput ON prodinput.prod_id = prod.id
+		
+		SET prod.updated = 1, prod.percent_max = 1
+		
+		# Filter production already updated
+		WHERE prodinput.id IS NULL
+		;
+	SET c = c + ROW_COUNT();
 		
 /* ____________________________________________________________________________________
  */
 
-UNTIL c = 0 END REPEAT;
+# TODO : handle infinte loop ( case like prod input depend on its output )
+UNTIL c = 0 END REPEAT; # repeat until the values stop changing ( reaching stable state )
 	
-	UPDATE prod SET prod.updated = 1 WHERE prod.updated = 0;
+	TRUNCATE TABLE prod_updatequeue;
+	#UPDATE prod SET prod.updated = 1 WHERE prod.updated = 0;
 	
 	CALL `income_update`();
 
@@ -1487,6 +1600,94 @@ Calc prod :
 END//
 DELIMITER ;
 
+-- Dumping structure for trigger homeplanet.prodinput_after_insert
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER';
+DELIMITER //
+CREATE TRIGGER `prodinput_after_insert` AFTER INSERT ON `prodinput` FOR EACH ROW BEGIN
+
+#TODO move to prod trigger
+CALL prod_markcollegue(NEW.prod_id);
+
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Dumping structure for trigger homeplanet.prodinput_after_update
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER';
+DELIMITER //
+CREATE TRIGGER `prodinput_after_update` AFTER UPDATE ON `prodinput` FOR EACH ROW BEGIN
+
+# TODO 
+
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Dumping structure for trigger homeplanet.prodinput_before_delete
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER';
+DELIMITER //
+CREATE TRIGGER `prodinput_before_delete` BEFORE DELETE ON `prodinput` FOR EACH ROW BEGIN
+
+# DOES NOT WORK DUE TO FOREIGN KEY ACTION NOT SUPPORTED BY TRIGGER
+
+/*
+SELECT pawn.player_id, prodinputtype.ressource_id
+INTO @player_id, @ressource_id
+FROM prod
+JOIN pawn ON pawn.id = prod.pawn_id
+JOIN prodinputtype ON prodinputtype.id = OLD.prodinputtype_id
+WHERE prod.id = OLD.prod_id;
+
+CALL prod_markcollegue(
+	@player_idd, 
+	OLD.location_x, 
+	OLD.location_y, 
+	@ressource_id
+);
+*/
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Dumping structure for trigger homeplanet.prod_after_insert
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER';
+DELIMITER //
+CREATE TRIGGER `prod_after_insert` AFTER INSERT ON `prod` FOR EACH ROW BEGIN
+
+CALL prod_mark(NEW.id);
+
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Dumping structure for trigger homeplanet.prod_after_update
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER';
+DELIMITER //
+CREATE TRIGGER `prod_after_update` AFTER UPDATE ON `prod` FOR EACH ROW BEGIN
+
+IF 
+	OLD.prodtype_id != NEW.prodtype_id 
+	OR OLD.grade != NEW.grade
+THEN
+	CALL prod_mark(NEW.id);
+END IF;
+
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
+-- Dumping structure for trigger homeplanet.prod_before_delete
+SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_ALL_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER';
+DELIMITER //
+CREATE TRIGGER `prod_before_delete` BEFORE DELETE ON `prod` FOR EACH ROW BEGIN
+
+CALL prod_markchild(OLD.id);
+CALL prod_markcollegue(OLD.id);
+
+END//
+DELIMITER ;
+SET SQL_MODE=@OLDTMP_SQL_MODE;
+
 -- Dumping structure for view homeplanet.city_distance
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `city_distance`;
@@ -1522,6 +1723,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `player_ext`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `player_ext` AS select `homeplanet`.`player`.`id` AS `player_id`,ifnull(`tcontract`.`value`,0) AS `contract`,(ifnull(`trevenue`.`value`,0) - ifnull(`tcharge`.`value`,0)) AS `income` from (((`homeplanet`.`player` left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum(`homeplanet`.`pawn`.`grade`),0) AS `value` from (`homeplanet`.`pawn` join `homeplanet`.`pawntype` on((`homeplanet`.`pawntype`.`id` = `homeplanet`.`pawn`.`type_id`))) group by `homeplanet`.`pawn`.`player_id`) `tcontract` on((`tcontract`.`player_id` = `homeplanet`.`player`.`id`))) left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum(((`homeplanet`.`demand`.`price_modifier` * `homeplanet`.`ressource`.`baseprice`) * `sold`.`quantity`)),0) AS `value` from (((`homeplanet`.`pawn` join `homeplanet`.`sold` on((`sold`.`seller_id` = `homeplanet`.`pawn`.`id`))) join `homeplanet`.`demand` on(((`homeplanet`.`demand`.`city_id` = `sold`.`buyer_id`) and (`homeplanet`.`demand`.`ressource_id` = `sold`.`ressource_id`)))) join `homeplanet`.`ressource` on((`homeplanet`.`ressource`.`id` = `sold`.`ressource_id`))) group by `homeplanet`.`pawn`.`player_id`) `trevenue` on((`trevenue`.`player_id` = `homeplanet`.`player`.`id`))) left join (select `homeplanet`.`pawn`.`player_id` AS `player_id`,ifnull(sum((`homeplanet`.`demand`.`price_modifier` * `homeplanet`.`ressource`.`baseprice`)),0) AS `value` from (((((`homeplanet`.`pawn` join `homeplanet`.`prod` on((`homeplanet`.`prod`.`pawn_id` = `homeplanet`.`pawn`.`id`))) join `homeplanet`.`prodtype` on((`homeplanet`.`prodtype`.`id` = `homeplanet`.`prod`.`prodtype_id`))) join `homeplanet`.`city` on(((`homeplanet`.`city`.`location_x` = `homeplanet`.`prod`.`location_x`) and (`homeplanet`.`city`.`location_y` = `homeplanet`.`prod`.`location_y`)))) join `homeplanet`.`demand` on(((`homeplanet`.`demand`.`city_id` = `homeplanet`.`city`.`id`) and (`homeplanet`.`demand`.`ressource_id` = `homeplanet`.`prodtype`.`ressource_id`)))) join `homeplanet`.`ressource` on((`homeplanet`.`ressource`.`id` = `homeplanet`.`demand`.`ressource_id`))) group by `homeplanet`.`pawn`.`player_id`) `tcharge` on((`tcharge`.`player_id` = `homeplanet`.`player`.`id`)));
 
+-- Dumping structure for view homeplanet.prodinput_dynamicquantity
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `prodinput_dynamicquantity`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `prodinput_dynamicquantity` AS select `prodinput`.`id` AS `prodinput_id`,if(isnull(`demand`.`price_modifier`),NULL,(`demand`.`price_modifier` * `ressource`.`baseprice`)) AS `quantity` from ((((`prodinput` join `prodinputtype` on(((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`) and (`prodinputtype`.`ressource_id` = 1) and isnull(`prodinputtype`.`quantity`)))) left join `city` on(((`city`.`location_x` = `prodinput`.`location_x`) and (`city`.`location_y` = `prodinput`.`location_y`)))) left join `demand` on(((`demand`.`city_id` = `city`.`id`) and (`demand`.`ressource_id` = `prodinputtype`.`ressource_id`)))) left join `ressource` on((`ressource`.`id` = `demand`.`ressource_id`)));
+
 -- Dumping structure for view homeplanet.prodinput_sum
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `prodinput_sum`;
@@ -1541,6 +1747,11 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `sold`;
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `sold` AS select `seller`.`id` AS `seller_id`,`buyer`.`id` AS `buyer_id`,`prodinputtype`.`ressource_id` AS `ressource_id`,floor((`prodinputtype`.`quantity` * `prod`.`percent_max`)) AS `quantity` from (((((((`player` join `pawn` `seller` on((`seller`.`player_id` = `player`.`id`))) join `prod` on((`prod`.`pawn_id` = `seller`.`id`))) join `prodtype` on(((`prodtype`.`id` = `prod`.`prodtype_id`) and (`prodtype`.`ressource_id` = 1)))) join `prodinput` on((`prodinput`.`prod_id` = `prod`.`id`))) join `prodinputtype` on((`prodinputtype`.`id` = `prodinput`.`prodinputtype_id`))) join `city` `buyer` on(((`buyer`.`location_x` = `prod`.`location_x`) and (`buyer`.`location_y` = `prod`.`location_y`)))) join `demand` on(((`demand`.`city_id` = `buyer`.`id`) and (`demand`.`ressource_id` = `prodinputtype`.`ressource_id`))));
+
+-- Dumping structure for view homeplanet.tilecapacityovercrowd
+-- Removing temporary table and create final VIEW structure
+DROP TABLE IF EXISTS `tilecapacityovercrowd`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tilecapacityovercrowd` AS select `pawn_location_assoc`.`location_x` AS `location_x`,`pawn_location_assoc`.`location_y` AS `location_y`,`tilecapacityrequirement`.`type_id` AS `type_id`,sum(`tilecapacityrequirement`.`quantity`) AS `quantity` from (((`pawn` join `pawn_location_assoc` on((`pawn_location_assoc`.`pawn_id` = `pawn`.`id`))) join `pawntype` on((`pawntype`.`id` = `pawn`.`type_id`))) join `tilecapacityrequirement` on((`tilecapacityrequirement`.`pawntype_id` = `pawntype`.`id`))) group by `pawn_location_assoc`.`location_x`,`pawn_location_assoc`.`location_y`,`tilecapacityrequirement`.`type_id`;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

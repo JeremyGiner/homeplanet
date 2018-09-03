@@ -7,7 +7,6 @@ use homeplanet\Entity\attribute\Location;
 class LocationTransformer implements DataTransformerInterface {
 	
 	public function transform( $oData ) {
-		
 		// Case : null
 		if( $oData == null )
 			return '';
@@ -16,12 +15,10 @@ class LocationTransformer implements DataTransformerInterface {
 		if( !$oData instanceof Location )
 			throw new \Exception( 'invalid data, must be '.Location::class );
 		
-		// Return string location
+		// Return location
 		return $oData;
-		return (string)$oData;
 	}
 	public function reverseTransform( $sData ) {
-		
 		// Case : null
 		if( $sData === '' )
 			return null;

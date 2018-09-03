@@ -51,14 +51,14 @@ class Pawn {
 	protected $_iGrade;
 	
 	/**
-	 * @ORM\OneToMany(
+	 * @ORM\OneToOne(
 	 *     targetEntity="homeplanet\Entity\Character",
 	 *     mappedBy="_oWorkplace",
 	 *     cascade={"persist"}
 	 * )
-	 * @var ArrayCollection
+	 * @var Character
 	 */
-	protected $_aWorker;
+	protected $_oWorker;
 	
 //_____________________________________
 //	Attribute
@@ -77,7 +77,7 @@ class Pawn {
 	 * @ORM\OneToMany(
 	 *     targetEntity="homeplanet\Entity\attribute\Production",
 	 *     mappedBy="_oPawn",
-	 *     cascade={"persist"}
+	 *     cascade={"persist","remove"}
 	 * )
 	 * @var ArrayCollection
 	 */
@@ -151,6 +151,9 @@ class Pawn {
 		return $this->_oType->getAttribute( $s );
 	}
 	
+	public function getWorker() {
+		return $this->_oWorker;
+	}
 	
 //_____________________________________________________________________________
 //	Modifier

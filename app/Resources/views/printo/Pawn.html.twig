@@ -4,6 +4,11 @@
 <div class="row {{ class is defined ? class }}">
 <div class="col-4 col-md-2 bg-pawn-{{ o.type.id }}">
 	{#<img class="img-fluid" src="{{ commun.icon_entitytype(o.type) }}">#}
+	{% if o.worker is not null %}
+		{{ printo( o.worker, { 
+			'_suffix': 'portrait', 
+		} ) }}
+	{% endif %}
 </div>
 <div class="col-8 col-md-10">
 	<h4>

@@ -88,12 +88,15 @@ class ProductionType {
 		// True if produce credit
 		return $this->getRessource()->getId() == 1;
 	}
-	
+	/**
+	 * Return true if firt produce input is credit
+	 * @return boolean
+	 */
 	public function isBuyer() {
-		// True if firt produce input is credit
+		
 		$first = $this->_aProdInputType->first();
 	
-		if( $first === null )
+		if( $first === false )
 			return false;
 		return $first->getRessource()->getId() == 1;
 	}
@@ -101,7 +104,7 @@ class ProductionType {
 	public function isTransporter() {
 		$first = $this->_aProdInputType->first();
 	
-		if( $first === null )
+		if( $first === false )
 			return false;
 	
 		return $this->getRessource()->getId() == $first->getRessource()->getId();

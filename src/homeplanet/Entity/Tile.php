@@ -100,12 +100,16 @@ class Tile {
 			->getRepository(City::class)
 			->findByLocation($this->_oLocation);
 	}
-	
+	/**
+	 * 
+	 * @param integer $iRessourceId
+	 * @return TileCapacityOvercrowd
+	 */
 	public function getOvercrowd( $iRessourceId ) {
 		return $this->_oWorldmap
 			->getGame()
 			->getEntityManager()
-			->getRepository(Overcrowd::class)
+			->getRepository(TileCapacityOvercrowd::class)
 			->get($iRessourceId, $this->_oLocation->getX(), $this->_oLocation->getY())
 		;
 	}

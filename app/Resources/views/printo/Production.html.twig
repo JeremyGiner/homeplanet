@@ -13,8 +13,16 @@
 	<div class="row">
 	<div class="col-5">
 		{% for oProdInput in o.getProdInputAr() %}
-			- {{ oProdInput.getQuantity() }} 
-			{{ printo(oProdInput.type.getRessource()) }}
+			{% if oProdInput.quantity is null %}
+				{{ printo(oProdInput.type.getRessource()) }}
+				<div class="small text-danger float-right">
+					<span class="fa fa-warning"></span>
+					Not one to buy it from.
+				</div>
+			{% else %}
+				- {{ oProdInput.getQuantity() }} 
+				{{ printo(oProdInput.type.getRessource()) }}
+			{% endif %}
 			<br>
 		{% endfor %}
 	</div>

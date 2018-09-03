@@ -1,8 +1,8 @@
 <div class="d-flex justify-content-center">
 {% for oCharacter in o.getMaleSortedByAgeInc() %}
-	{{ printo(oCharacter, {_suffix: 'portrait'}) }}
+	{{ printo(oCharacter, {_suffix: 'portrait', link: true}) }}
 {% endfor %}
 {% for oCharacter in o.getFemaleSortedByAgeDesc() %}
-	{{ printo(oCharacter, {_suffix: 'portrait'}) }}
+	{{ printo(oCharacter, {_suffix: 'portrait', link: true}) }}
 {% endfor %}
 </div>

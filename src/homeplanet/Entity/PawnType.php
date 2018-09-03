@@ -3,15 +3,9 @@ namespace homeplanet\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use homeplanet\Entity\attribute\Location;
-use homeplanet\Entity\attribute\Production;
-use homeplanet\Entity\attribute\ProductionInput;
 use homeplanet\Entity\attribute\ProductionType;
-use homeplanet\Entity\attribute\ProductionInputType;
-use Doctrine\ORM\EntityManager;
-use AppBundle\Entity\User;
-use homeplanet\Entity\attribute\homeplanet\Entity\attribute;
 use homeplanet\Entity\attribute\Transporter;
+use homeplanet\Entity\attribute\TileCapacityRequirement;
 
 /**
  * @ORM\Entity
@@ -83,6 +77,15 @@ class PawnType {
 	
 	protected $_aAttributeObject = null;
 	
+	/**
+	 * @ORM\OneToMany(
+	 *     targetEntity="homeplanet\Entity\attribute\TileCapacityRequirement",
+	 *     mappedBy="_oPawnType"
+	 * )
+	 * @var ArrayCollection
+	 */
+	protected $_aTileCapacityRequirement;
+	
 //_____________________________________________________________________________
 //	Constructor
 	
@@ -128,7 +131,14 @@ class PawnType {
 		return $this->_aProdType->toArray();
 	}
 	
-	function getCategory() {
+	public function getCategory() {
 		return $this->_oCategory;
+	}
+	
+	/**
+	 * @var TileCapacityRequirement[]
+	 */
+	public function getTileCapacityRequirementAr() {
+		return $this->_aTileCapacityRequirement->toArray();
 	}
 }
