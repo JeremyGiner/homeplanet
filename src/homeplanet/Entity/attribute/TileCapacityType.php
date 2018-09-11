@@ -37,7 +37,7 @@ class TileCapacityType {
 		return $this->_iId;
 	}
 	public function getLabel() {
-		return $this->_oRessource;
+		return $this->_sLabel;
 	}
 	
 }

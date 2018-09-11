@@ -13,7 +13,7 @@ class HouseController extends BaseController {
 //	Action	
 	
 	/**
-	 * @Route("/{id}", name="house_view")
+	 * @Route("/{id}", name="house_view", defaults={"id"=0}, requirements={"id": "\d+"})
 	 */
 	public function viewAction( $id, Request $oRequest ) {
 		
@@ -24,7 +24,7 @@ class HouseController extends BaseController {
 		$oLocation = $this->_oLocation;
 		$oPlayer = $oGame->getPlayer();
 		
-		$oHouse = $id == '' ? 
+		$oHouse = $id == 0 ? 
 			$oPlayer->getHouse() :
 			$this->getHouseRepo()->find( $id )
 		;

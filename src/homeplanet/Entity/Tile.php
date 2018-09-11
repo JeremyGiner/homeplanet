@@ -114,8 +114,27 @@ class Tile {
 		;
 	}
 	
+	public function getCapacityAr() {
+		return $this->_aRessourceSource;
+	}
+	/**
+	 * DEPRECATED USE getCapactityAr insted
+	 * @return number[]
+	 */
 	public function getRessNatQuantityAr() {
 		return $this->_aRessourceSource;
+	}
+	
+	public function getCapacityRemaining( $iId ) {
+		if( ($oOvercrowd = $this->getOvercrowd($iId)) == null )
+			return $this->getCapacity($iId);
+			return $this->getCapacity($iId) - $oOvercrowd->getQuantity();
+	}
+	
+	public function getCapacity( $iId ) {
+		if( !isset($this->_aRessourceSource[ $iId ]) )
+			return 0;
+		return $this->_aRessourceSource[ $iId ];
 	}
 	
 	public function getColorRGB() {

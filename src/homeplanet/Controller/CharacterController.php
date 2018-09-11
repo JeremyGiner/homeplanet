@@ -19,6 +19,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use homeplanet\validator\character\CharacterMarryValidator;
 use homeplanet\Entity\House;
+use homeplanet\Entity\PawnFactory;
+use homeplanet\Entity\PawnType;
 
 /**
  * @Route("/character")
@@ -45,12 +47,10 @@ class CharacterController extends BaseController {
 		$this->_handleRequest( $oRequest );
 		
 		/**
-		 * 
 		 * @var Character $oCharacter
 		 */
 		$oCharacter = $this->getCharacterRepo()->find( $id );
 		if( $oCharacter == null ) throw $this->createNotFoundException('No character found');
-		
 		
 		$oPlayerCharacter = $this->getPlayer()->getCharacter();
 		
@@ -58,6 +58,8 @@ class CharacterController extends BaseController {
 		$oForm = $this->createFormBuilder()
 			->getForm()
 		;
+		if( $oCharacter->getWorkplace() == null ) 
+			$oForm->add('debate_hire', SubmitType::class, ['label' => 'Hire' ]);
 		
 		if( CharacterMarryValidator::STvalidate($this->getGame()->getState()->getTurn(),[$oPlayerCharacter, $oCharacter]) )
 			$oForm->add('debate_marry', SubmitType::class, ['label' => 'Marry' ]);
@@ -82,6 +84,19 @@ class CharacterController extends BaseController {
 			
 			// TODO : start debate
 			switch( $oButton->getName() ) {
+				case 'debate_hire' :
+					if( $oCharacter->getWorkplace() != null ) 
+						throw new \Exception();
+					
+					$gem = $this->getGame()->getEntityManager();
+					
+					
+					$this->getPawnRepo()
+						->createContract($this->getPlayer(), $oCharacter)
+					;
+					
+					$gem->flush();
+					return $this->redirect( $this->generateUrl('character_view',['id'=>$id]) );
 				case 'debate_adopt' : 
 					
 					$oHouse = $this->getPlayer()->getHouse();

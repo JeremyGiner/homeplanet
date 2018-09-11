@@ -1,0 +1,34 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+
+{% set attr = attr|merge({
+	class: (attr.class|default('btn-default') ~ ' btn')|trim
+}) %}
+{% if label is empty -%}
+	{%- if label_format is not empty -%}
+		{% set label = label_format|replace({
+			'%name%': name,
+			'%id%': id,
+		}) %}
+	{%- else -%}
+		{% set label = name|humanize %}
+	{%- endif -%}
+{%- endif -%}
+<button type="{{ type|default('submit') }}" 
+	{{ block('button_attributes', 'form_div_layout.html.twig') }}
+>
+	<div class="d-flex align-items-center">
+	<div class="mr-3">
+		{{ label|trans({}, translation_domain) }} 
+	</div>
+		<div class="">
+		<div class="badge badge-light text-right small">
+			{{ commun.credit( credit ) }}
+		</div>
+		{% for oRequirement in capacity_requirement_ar %}
+		<div class="badge badge-light text-right small">
+			{{ printo( oRequirement, {label: false } ) }}		
+		</div>
+		{% endfor %}
+		</div>
+	</div>
+</button>

@@ -3,12 +3,12 @@ namespace homeplanet\Form;
 
 use homeplanet\Entity\PawnType;
 use Symfony\Component\Validator\Constraints as Assert;
+use homeplanet\Form\ConstraintValidator as AcmeAssert;
 use homeplanet\Entity\Player;
-use homeplanet\Entity\attribute\Location;
-use Symfony\Component\Validator\GroupSequenceProviderInterface;
 use homeplanet\Entity\Tile;
 
 /**
+ * @AcmeAssert\BuildingBuyTileCapacity
  * @Assert\GroupSequence({"BuildingBuy","after"})
  */
 class BuildingBuy {
@@ -41,7 +41,9 @@ class BuildingBuy {
 	
 //_____________________________________________________________________________
 //	Accessor
-	
+	/**
+	 * @return \homeplanet\Entity\PawnType
+	 */
 	function getPawnType() {
 		return $this->_oPawnType;
 	}
@@ -101,26 +103,6 @@ class BuildingBuy {
 	 */
 	function getRemainingContract() {
 		return $this->_oPlayer->getContractRemaining();
-	}
-	
-	/**
-	 * @Assert\IsTrue(
-	 *     message = "You cannot play this expression"
-	 * )
-	 */
-	function getRemaingTileCapacity() {
-		
-		foreach( $this->getPawnType()->getTileCapacityRequirementAr() as $oRequirement ) {
-			if( 
-				$this->getTile()
-					->getOvercrowd( $oRequirement->getType()->getId() )
-					->getQuantity()
-				<  
-				$oRequirement->getQuantity()
-			)
-				return false;
-		}
-		return true;
 	}
 	
 }

@@ -401,7 +401,6 @@ CREATE TABLE IF NOT EXISTS `prod` (
   `location_y` int(11) NOT NULL,
   `percent_max` int(11) NOT NULL DEFAULT '0',
   `grade` int(10) unsigned NOT NULL DEFAULT '1',
-  `updated` tinyint(3) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `FK_prod_prodtype` (`prodtype_id`),
   KEY `FK_prod_pawn` (`pawn_id`),
@@ -686,7 +685,7 @@ CREATE TABLE `tilecapacityovercrowd` (
 	`location_x` INT(10) NOT NULL,
 	`location_y` INT(10) NOT NULL,
 	`type_id` INT(10) UNSIGNED NOT NULL,
-	`quantity` DECIMAL(32,0) NULL
+	`quantity` DECIMAL(42,0) NULL
 ) ENGINE=MyISAM;
 
 -- Dumping structure for procedure homeplanet.city_spawn
@@ -1383,25 +1382,6 @@ Update BUY prod percent */
 		SET prod.percent_max = tprod_percent.percent;
 	
 	SET c = c + ROW_COUNT();
-		
-/* ____________________________________________________________________________________
-Disregard harvester and assume it's updated */
-	
-		UPDATE prod 
-		
-		# Get prod with natural input
-		JOIN prodinput ON prodinput.prod_id = prod.id
-		JOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id
-		JOIN ressource 
-			ON ressource.id = prodinputtype.ressource_id
-			AND ressource.`natural` = 1
-		
-		SET prod.updated = 1
-		
-		# Filter production already updated
-		WHERE prod.updated = 0
-		;
-	SET c = c + ROW_COUNT();
 	
 /* ____________________________________________________________________________________
 Set to max prod with no input */
@@ -1414,7 +1394,7 @@ Set to max prod with no input */
 		# Get prod part
 		LEFT JOIN prodinput ON prodinput.prod_id = prod.id
 		
-		SET prod.updated = 1, prod.percent_max = 1
+		SET prod.percent_max = 1
 		
 		# Filter production already updated
 		WHERE prodinput.id IS NULL
@@ -1751,7 +1731,7 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- Dumping structure for view homeplanet.tilecapacityovercrowd
 -- Removing temporary table and create final VIEW structure
 DROP TABLE IF EXISTS `tilecapacityovercrowd`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tilecapacityovercrowd` AS select `pawn_location_assoc`.`location_x` AS `location_x`,`pawn_location_assoc`.`location_y` AS `location_y`,`tilecapacityrequirement`.`type_id` AS `type_id`,sum(`tilecapacityrequirement`.`quantity`) AS `quantity` from (((`pawn` join `pawn_location_assoc` on((`pawn_location_assoc`.`pawn_id` = `pawn`.`id`))) join `pawntype` on((`pawntype`.`id` = `pawn`.`type_id`))) join `tilecapacityrequirement` on((`tilecapacityrequirement`.`pawntype_id` = `pawntype`.`id`))) group by `pawn_location_assoc`.`location_x`,`pawn_location_assoc`.`location_y`,`tilecapacityrequirement`.`type_id`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `tilecapacityovercrowd` AS select `pawn_location_assoc`.`location_x` AS `location_x`,`pawn_location_assoc`.`location_y` AS `location_y`,`tilecapacityrequirement`.`type_id` AS `type_id`,sum((`tilecapacityrequirement`.`quantity` * `pawn`.`grade`)) AS `quantity` from (((`pawn` join `pawn_location_assoc` on((`pawn_location_assoc`.`pawn_id` = `pawn`.`id`))) join `pawntype` on((`pawntype`.`id` = `pawn`.`type_id`))) join `tilecapacityrequirement` on((`tilecapacityrequirement`.`pawntype_id` = `pawntype`.`id`))) group by `pawn_location_assoc`.`location_x`,`pawn_location_assoc`.`location_y`,`tilecapacityrequirement`.`type_id`;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

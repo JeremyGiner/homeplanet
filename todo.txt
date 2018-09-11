@@ -2,8 +2,43 @@
 WIP
 	- handle pawn cascade delete prod with triggering of prod trigger
 	- finish overcrowd system ( restrict on upgrade, test restrict on asset buy ) 
-	- character job ?
-	- remove field prod.updated
+		- building buy form 
+			- display tile remaining capacity
+				- map display capacity on hover
+			- update disable on tile capacity
+		- different initial cost and upgrade cost
+		- add tile requirement in DB
+	- contract type manual/intellectual labor
+	- character debate
+		- difficulty easy if no job
+		- axes payement, dedication ( output quantity ) for each skill  
+	- add tile link to asset view
+	- disable upgrade submit if invalid
+
+Tile
+	- labeling system
+
+Client framework
+	
+	- remove all inline onclick
+	- webservice server side
+		- CRUD
+		? read json serialize entity 
+		
+	- app state 
+		- keep updated throught ajax
+		- self update on demand
+		- json to state object building by reference
+		? read only
+	? form handling
+		- update state using ajax
+		- update state directly
+	? split into component
+		- re-draw compo
+			- template resolver ( template id and templating engine )
+		? re-draw on state update 
+	- rendering using twig template
+	- check vue.js
 
 BUG
 	- prod percent update, does not update collegue
@@ -54,12 +89,11 @@ character job
 	
 advance character job
 	- create ressource type mechanical labor | intellectual labor | job specific skillz
-	- on hire create pawn as character's contract
 	- calc grade depending on payement / motivation / max skills
 	- update input to production type
 	- move overcrowd to asset upgrade / create
 	- prod multiple output ( crate for traansport )
-	- print case no demande on buy
+	- limit sell by population quantity plus bought quantity?
 	test :
 		- buy chain from sell to buy
 

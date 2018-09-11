@@ -331,6 +331,10 @@ class Character {
 		return $this->_oPlayer;
 	}
 	
+	public function getWorkplace() {
+		return $this->_oWorkplace;
+	}
+	
 	public function getLifestageLabel() {
 		$iAge = Game::getInstance()->getState()->getTurn() - $this->getDateCreated();
 		if( $iAge == 1 )

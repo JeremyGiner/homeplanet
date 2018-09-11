@@ -1,10 +1,8 @@
 <?php
 namespace homeplanet\Form;
 
-use homeplanet\Entity\PawnType;
 use Symfony\Component\Validator\Constraints as Assert;
 use homeplanet\Entity\Player;
-use homeplanet\Entity\attribute\Location;
 
 
 class Buy {

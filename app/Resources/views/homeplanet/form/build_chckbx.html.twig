@@ -19,7 +19,11 @@
 				{{ label_printo.label|trans({}, translation_domain)|capitalize }}
 			</strong>
 			<span class="{{ attr['disabled']?'text-danger' }} small pull-right">
-				Cost : {{ commun.credit( label_printo.value ) }}
+				Cost : 
+				{{ commun.credit( label_printo.value ) }}
+				{% for oCapactityRequirement in label_printo.getTileCapacityRequirementAr() %}
+					,{{ printo( oCapactityRequirement ) }}
+				{% endfor %}
 			</span>
 		</header>
 		<div class="small">

@@ -43,14 +43,6 @@ INSERT INTO `budgetplantype` (`id`, `label`) VALUES
 	(5, 'culture');
 /*!40000 ALTER TABLE `budgetplantype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.character: ~0 rows (approximately)
-/*!40000 ALTER TABLE `character` DISABLE KEYS */;
-/*!40000 ALTER TABLE `character` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.characterhistory: ~0 rows (approximately)
-/*!40000 ALTER TABLE `characterhistory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `characterhistory` ENABLE KEYS */;
-
 -- Dumping data for table homeplanet.characternamereference: 200 rows
 /*!40000 ALTER TABLE `characternamereference` DISABLE KEYS */;
 INSERT INTO `characternamereference` (`id`, `fname`, `lname`) VALUES
@@ -255,25 +247,6 @@ INSERT INTO `characternamereference` (`id`, `fname`, `lname`) VALUES
 	(199, 'JULIA', 'FAWCETT'),
 	(200, 'THORA', 'TEMPLE');
 /*!40000 ALTER TABLE `characternamereference` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.character_acquaintance: 2 rows
-/*!40000 ALTER TABLE `character_acquaintance` DISABLE KEYS */;
-INSERT INTO `character_acquaintance` (`character_id`, `target_id`) VALUES
-	(6, 1),
-	(6, 2);
-/*!40000 ALTER TABLE `character_acquaintance` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.character_characterhistory: ~0 rows (approximately)
-/*!40000 ALTER TABLE `character_characterhistory` DISABLE KEYS */;
-/*!40000 ALTER TABLE `character_characterhistory` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.character_expression: ~0 rows (approximately)
-/*!40000 ALTER TABLE `character_expression` DISABLE KEYS */;
-/*!40000 ALTER TABLE `character_expression` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.character_knowledge: ~0 rows (approximately)
-/*!40000 ALTER TABLE `character_knowledge` DISABLE KEYS */;
-/*!40000 ALTER TABLE `character_knowledge` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.city: ~0 rows (approximately)
 /*!40000 ALTER TABLE `city` DISABLE KEYS */;
@@ -888,7 +861,7 @@ INSERT INTO `citynamereference` (`id`, `label`) VALUES
 /*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.deck: ~0 rows (approximately)
+-- Dumping data for table homeplanet.deck: ~1 rows (approximately)
 /*!40000 ALTER TABLE `deck` DISABLE KEYS */;
 INSERT INTO `deck` (`id`, `label`) VALUES
 	(1, 'Commun tongue');
@@ -927,7 +900,7 @@ INSERT INTO `expression` (`id`, `label`, `description`, `requirement`, `effect`,
 -- Dumping data for table homeplanet.gamestate: 1 rows
 /*!40000 ALTER TABLE `gamestate` DISABLE KEYS */;
 INSERT INTO `gamestate` (`id`, `turn`, `label`) VALUES
-	(1, 38, 'Avalon');
+	(1, 54, 'Avalon');
 /*!40000 ALTER TABLE `gamestate` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.influencemodifier: ~0 rows (approximately)
@@ -943,23 +916,19 @@ INSERT INTO `influencetype` (`id`, `label`, `value`) VALUES
 	(4, 'provider', 1);
 /*!40000 ALTER TABLE `influencetype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.knowledge: ~0 rows (approximately)
+-- Dumping data for table homeplanet.knowledge: ~1 rows (approximately)
 /*!40000 ALTER TABLE `knowledge` DISABLE KEYS */;
 INSERT INTO `knowledge` (`id`, `label`, `category_id`, `reference`, `expire`) VALUES
 	(1, 'history part 1', 1, NULL, NULL);
 /*!40000 ALTER TABLE `knowledge` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.knowledgecategory: ~0 rows (approximately)
+-- Dumping data for table homeplanet.knowledgecategory: ~1 rows (approximately)
 /*!40000 ALTER TABLE `knowledgecategory` DISABLE KEYS */;
 INSERT INTO `knowledgecategory` (`id`, `label`) VALUES
 	(1, 'lore');
 /*!40000 ALTER TABLE `knowledgecategory` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.pawn: ~0 rows (approximately)
-/*!40000 ALTER TABLE `pawn` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pawn` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.pawntype: ~26 rows (approximately)
+-- Dumping data for table homeplanet.pawntype: ~27 rows (approximately)
 /*!40000 ALTER TABLE `pawntype` DISABLE KEYS */;
 INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`, `description`) VALUES
 	(1, 1, 'farm', 100, 1, 'Produce wheats, honey, fruits and vegetables'),
@@ -969,8 +938,6 @@ INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`,
 	(6, 1, 'hunting camp', 100, 1, 'Produce meat'),
 	(7, 1, 'fishing boat', 100, 1, 'Produce fish and crustacean'),
 	(8, 1, 'herb collector', 1000000000, 1, NULL),
-	(10, 1, 'contract : manual labor', 0, 0, NULL),
-	(30, 1, 'restaurant', 100, 1, 'Produce delicacy and sell food'),
 	(100, 2, 'sawmill', 100, 1, 'Produce wood plank'),
 	(101, 2, 'windmill', 100, 1, 'Produce floor'),
 	(103, 2, 'smelter', 100, 1, 'Smelt and refine metals'),
@@ -988,17 +955,20 @@ INSERT INTO `pawntype` (`id`, `category_id`, `label`, `value_base`, `cost_deed`,
 	(1001, 4, 'wagon', 100, 1, 'A four-wheeled vehicle pulled by draught animals.\r\nCan carry ressources further away than a cart.'),
 	(1002, 4, 'boat', 200, 1, 'A sailing vessel that carries ressources across sea and rivers.'),
 	(2000, 5, 'traveling merchant', 100, 1, 'A merchant able to sell and buy a wide variety of ressources in small quantity.\r\nIn addition he is also able to travel from town to town.'),
-	(2001, 5, 'market stall', 100, 1, 'A merchant able to sell end product.');
+	(2001, 5, 'market stall', 100, 1, 'A merchant able to sell end product.'),
+	(2002, 5, 'restaurant', 100, 1, 'Produce delicacy and sell food'),
+	(3000, 6, 'contract : manual labor', 0, 0, NULL);
 /*!40000 ALTER TABLE `pawntype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.pawntypecategory: ~5 rows (approximately)
+-- Dumping data for table homeplanet.pawntypecategory: ~6 rows (approximately)
 /*!40000 ALTER TABLE `pawntypecategory` DISABLE KEYS */;
 INSERT INTO `pawntypecategory` (`id`, `label`) VALUES
 	(1, 'tech zero'),
 	(2, 'tech one'),
 	(3, 'tech three'),
 	(4, 'transporter'),
-	(5, 'merchant');
+	(5, 'merchant'),
+	(6, 'other');
 /*!40000 ALTER TABLE `pawntypecategory` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.pawntype_attribute: ~3 rows (approximately)
@@ -1009,7 +979,7 @@ INSERT INTO `pawntype_attribute` (`pawntype_id`, `attribute_id`) VALUES
 	(1002, 4);
 /*!40000 ALTER TABLE `pawntype_attribute` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.pawntype_prodtype_assoc: ~289 rows (approximately)
+-- Dumping data for table homeplanet.pawntype_prodtype_assoc: ~280 rows (approximately)
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` DISABLE KEYS */;
 INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1, 1002),
@@ -1186,7 +1156,7 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(2001, 3140),
 	(2000, 3141),
 	(2001, 3141),
-	(10, 3500),
+	(3000, 3500),
 	(1000, 4002),
 	(1001, 4002),
 	(1002, 4002),
@@ -1294,27 +1264,11 @@ INSERT INTO `pawntype_prodtype_assoc` (`pawntype_id`, `prodtype_id`) VALUES
 	(1002, 4141);
 /*!40000 ALTER TABLE `pawntype_prodtype_assoc` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.pawn_location_assoc: ~0 rows (approximately)
-/*!40000 ALTER TABLE `pawn_location_assoc` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pawn_location_assoc` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.player: ~0 rows (approximately)
-/*!40000 ALTER TABLE `player` DISABLE KEYS */;
-/*!40000 ALTER TABLE `player` ENABLE KEYS */;
-
 -- Dumping data for table homeplanet.population: ~0 rows (approximately)
 /*!40000 ALTER TABLE `population` DISABLE KEYS */;
 /*!40000 ALTER TABLE `population` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.prod: ~0 rows (approximately)
-/*!40000 ALTER TABLE `prod` DISABLE KEYS */;
-/*!40000 ALTER TABLE `prod` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.prodinput: ~0 rows (approximately)
-/*!40000 ALTER TABLE `prodinput` DISABLE KEYS */;
-/*!40000 ALTER TABLE `prodinput` ENABLE KEYS */;
-
--- Dumping data for table homeplanet.prodinputtype: ~173 rows (approximately)
+-- Dumping data for table homeplanet.prodinputtype: ~162 rows (approximately)
 /*!40000 ALTER TABLE `prodinputtype` DISABLE KEYS */;
 INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'wood to plank'),
@@ -1477,10 +1431,11 @@ INSERT INTO `prodinputtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(41330, 133, 1, 'transport: watch'),
 	(41400, 140, 1, 'transport: crate'),
 	(41410, 141, 1, 'transport: weapon'),
-	(50000, 500, 1, 'require : manual labor');
+	(50000, 500, 1, 'require : manual labor'),
+	(50001, 500, 5, 'require : large manual labor');
 /*!40000 ALTER TABLE `prodinputtype` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.prodtype: ~169 rows (approximately)
+-- Dumping data for table homeplanet.prodtype: ~166 rows (approximately)
 /*!40000 ALTER TABLE `prodtype` DISABLE KEYS */;
 INSERT INTO `prodtype` (`id`, `ressource_id`, `quantity`, `comment`) VALUES
 	(2, 4, 1, 'pinewood cuter'),
@@ -1793,7 +1748,8 @@ INSERT INTO `prodtype_prodinputtype_assoc` (`prodtype_id`, `prodinputtype_id`) V
 	(1102, 50000),
 	(1103, 50000),
 	(1104, 50000),
-	(1105, 50000);
+	(1105, 50000),
+	(1010, 50001);
 /*!40000 ALTER TABLE `prodtype_prodinputtype_assoc` ENABLE KEYS */;
 
 -- Dumping data for table homeplanet.relationshipmodifier: ~0 rows (approximately)
@@ -1822,7 +1778,7 @@ INSERT INTO `rescategory` (`id`, `label`) VALUES
 	(13, 'tradable');
 /*!40000 ALTER TABLE `rescategory` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.ressource: ~39 rows (approximately)
+-- Dumping data for table homeplanet.ressource: ~37 rows (approximately)
 /*!40000 ALTER TABLE `ressource` DISABLE KEYS */;
 INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) VALUES
 	(1, 'Credit(sell/buy)', 1, 0, NULL),
@@ -1864,7 +1820,7 @@ INSERT INTO `ressource` (`id`, `label`, `baseprice`, `natural`, `description`) V
 	(500, 'manual labor', 0, 0, NULL);
 /*!40000 ALTER TABLE `ressource` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.ressource_rescategory: ~63 rows (approximately)
+-- Dumping data for table homeplanet.ressource_rescategory: ~57 rows (approximately)
 /*!40000 ALTER TABLE `ressource_rescategory` DISABLE KEYS */;
 INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 	(13, 2),
@@ -1930,17 +1886,10 @@ INSERT INTO `ressource_rescategory` (`rescat_id`, `res_id`) VALUES
 /*!40000 ALTER TABLE `sovereign` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sovereign` ENABLE KEYS */;
 
--- Dumping data for table homeplanet.tilecapacityrequirement: ~2 rows (approximately)
-/*!40000 ALTER TABLE `tilecapacityrequirement` DISABLE KEYS */;
-INSERT INTO `tilecapacityrequirement` (`id`, `pawntype_id`, `type_id`, `quantity`) VALUES
-	(1, 1, 33, 1),
-	(2, 7, 35, 1);
-/*!40000 ALTER TABLE `tilecapacityrequirement` ENABLE KEYS */;
-
 -- Dumping data for table homeplanet.tilecapacitytype: ~7 rows (approximately)
 /*!40000 ALTER TABLE `tilecapacitytype` DISABLE KEYS */;
 INSERT INTO `tilecapacitytype` (`id`, `label`) VALUES
-	(33, 'field'),
+	(33, 'grassland'),
 	(34, 'forest'),
 	(35, 'fish deposit'),
 	(36, 'crustacean deposit'),
@@ -1948,6 +1897,7 @@ INSERT INTO `tilecapacitytype` (`id`, `label`) VALUES
 	(44, 'iron deposit'),
 	(45, 'gold deposit');
 /*!40000 ALTER TABLE `tilecapacitytype` ENABLE KEYS */;
+
 -- Dumping data for table homeplanet.user: ~4 rows (approximately)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 INSERT INTO `user` (`id`, `email`, `password_shadow`) VALUES
@@ -1970,7 +1920,7 @@ INSERT INTO `_view_note` (`view_name`, `formated`) VALUES
 	('prod_sum', 'SELECT \r\n	pawn.player_id,\r\n	prod.location_x AS location_x,\r\n	prod.location_y AS location_y,\r\n	prodtype.ressource_id AS ressource_id, \r\n	FLOOR(SUM((prodtype.quantity * prod.percent_max ))) AS quantity\r\nFROM prod\r\nJOIN prodtype ON prodtype.id = prod.prodtype_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nGROUP BY prod.location_x,prod.location_y,prodtype.ressource_id,pawn.player_id'),
 	('prodinput_sum', 'SELECT \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id,\r\n	SUM(prodinputtype.quantity * prod.grade) as quantity\r\nFROM prodinput\r\nJOIN prod ON prod.id = prodinput.prod_id\r\nJOIN pawn ON pawn.id = prod.pawn_id\r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id\r\nGROUP BY \r\n	pawn.player_id,\r\n	prodinput.location_x,\r\n	prodinput.location_y,\r\n	prodinputtype.ressource_id'),
 	('prodinput_dynamicquantity', 'SELECT \r\n	prodinput.id AS prodinput_id,\r\n	IF( ISNULL(demand.price_modifier),NULL,(demand.price_modifier * ressource.baseprice)) AS quantity \r\nFROM prodinput \r\nJOIN prodinputtype ON prodinputtype.id = prodinput.prodinputtype_id \r\n	AND prodinputtype.ressource_id = 1 \r\n	AND prodinputtype.quantity IS NULL\r\nLEFT JOIN city ON city.location_x = prodinput.location_x AND city.location_y = prodinput.location_y\r\nLEFT JOIN demand ON demand.city_id = city.id AND demand.ressource_id = prodinputtype.ressource_id\r\nLEFT JOIN ressource ON ressource.id = demand.ressource_id'),
-	('tilecapacityovercrowd', 'SELECT \r\n	pawn_location_assoc.location_x, \r\n	pawn_location_assoc.location_y, \r\n	tilecapacityrequirement.type_id,\r\n	SUM(tilecapacityrequirement.quantity) as quantity\r\nFROM pawn \r\nJOIN pawn_location_assoc ON pawn_location_assoc.pawn_id = pawn.id\r\nJOIN pawntype ON pawntype.id = pawn.type_id\r\nJOIN tilecapacityrequirement ON tilecapacityrequirement.pawntype_id = pawntype.id\r\nGROUP BY pawn_location_assoc.location_x,pawn_location_assoc.location_y, tilecapacityrequirement.type_id');
+	('tilecapacityovercrowd', 'SELECT \r\n	pawn_location_assoc.location_x, \r\n	pawn_location_assoc.location_y, \r\n	tilecapacityrequirement.type_id,\r\n	SUM(tilecapacityrequirement.quantity * pawn.grade) as quantity\r\nFROM pawn \r\nJOIN pawn_location_assoc ON pawn_location_assoc.pawn_id = pawn.id\r\nJOIN pawntype ON pawntype.id = pawn.type_id\r\nJOIN tilecapacityrequirement ON tilecapacityrequirement.pawntype_id = pawntype.id\r\nGROUP BY pawn_location_assoc.location_x,pawn_location_assoc.location_y, tilecapacityrequirement.type_id');
 /*!40000 ALTER TABLE `_view_note` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

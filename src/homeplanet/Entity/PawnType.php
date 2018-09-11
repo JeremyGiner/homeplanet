@@ -28,7 +28,7 @@ class PawnType {
 	
 	/**
 	 * @ORM\Column(type="integer", name="value_base")
-	 * @var int
+	 * @var integer
 	 */
 	protected $_iValue;
 	

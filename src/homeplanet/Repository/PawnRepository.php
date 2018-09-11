@@ -4,6 +4,11 @@ namespace homeplanet\Repository;
 use Doctrine\ORM\EntityRepository;
 use homeplanet\Entity\Pawn;
 use homeplanet\Entity\Player;
+use homeplanet\Entity\attribute\Location;
+use homeplanet\Entity\Character;
+use homeplanet\Entity\PawnType;
+use homeplanet\Entity\attribute\Production;
+use homeplanet\Entity\attribute\ProductionInput;
 
 class PawnRepository extends EntityRepository {
 	
@@ -63,6 +68,60 @@ WHERE pos._x BETWEEN :left AND :right
 		;
 		return $oQuery->getResult();
 	}
+
 	
+//_____________________________________________________________________________
+//	Factory
+
+	public function createContract(
+		Player $oPlayer,
+		Character $oCharacter
+	) {
+		$em = $this->getEntityManager();
+		$oPawnTypeContract = $em
+			->getRepository(PawnType::class)
+			->find(3000/* contract type */)
+		; // TODO : identify otherwise
+		
+		$oPawn = new Pawn( $oPawnTypeContract );
+		$oPawn->setPlayer($oPlayer);
+		$oPawn->addProduction( $this->_createProd( 
+			$oPawn, 
+			$oCharacter->getLocation() 
+		) );
+		
+		$oCharacter->setWorkplace( $oPawn );
+		$em->persist( $oPawn );
+		
+		return $oPawn;
+	}
+	
+//_____________________________________________________________________________
+//	Sub-routine
+
+	// TODO : move to prod repo ?
+	private function _createProd( Pawn $oPawn, Location $oLocation ) {
+		
+		foreach( $oPawn->getType()->getProdTypeAr() as $oProdType ) {
+			$oProd = new Production($oPawn, $oLocation, $oProdType );
+			
+			foreach( $oProdType->getProdInputTypeAr() as $oProdInputType ) {
+				// Case: natural ressource as input -> set prod ratio
+				// Assume there is a unique prod input
+				$oProd->getProdInputAr()->add(
+					new ProductionInput(
+						$oProd,
+						$oLocation,
+						$oProdInputType
+					)
+				);
+				
+			}
+			
+			// TODO : clean up
+			// Limit to 1
+			return $oProd;
+		}
+	}
 
 }

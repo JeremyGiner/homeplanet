@@ -26,6 +26,8 @@ use homeplanet\Entity\City;
 use homeplanet\Form\TransportSet;
 use homeplanet\Form\TransportSetForm;
 use homeplanet\Serializer\SerializerDefaultDoctrine;
+use homeplanet\Form\PawnUpgradeBuyForm;
+use homeplanet\Form\data\PawnUpgradeBuy;
 
 /**
  * @Route("/asset")
@@ -307,8 +309,13 @@ class AssetController extends BaseController {
 		//_____________________________
 		//	Form upgrade asset
 		
-		$oBuyUpgrade = new Buy($oGame->getPlayer(), $oPawn->getType()->getValue());
-		$oFormUpgrade = $this->createNamedBuilder(
+		$oBuyUpgrade = new PawnUpgradeBuy(
+			$oGame->getPlayer(), 
+			$oPawn,
+			$oGame->getWorldmap()
+		);
+		
+		/*$oFormUpgrade = $this->createNamedBuilder(
 				'upgrade', 
 				FormType::class, 
 				$oBuyUpgrade
@@ -321,6 +328,8 @@ class AssetController extends BaseController {
 			])
 			->getForm()
 		;
+		*/
+		$oFormUpgrade = $this->createForm(PawnUpgradeBuyForm::class, $oBuyUpgrade);
 			
 		$oFormUpgrade->handleRequest( $oRequest );
 		

@@ -1,0 +1,6 @@
+{% import 'homeplanet/macro/commun.twig' as commun %}
+<span title="{{ o.type.label }}">
+	{{ o.quantity > 1 ? o.quantity }}
+	<span class="icon {{ commun.sprite_ressource(o.type) }}"></span> 
+	{{ param.label is defined and param.label is not same as(false) ? o.type.label|capitalize }}
+</span>
