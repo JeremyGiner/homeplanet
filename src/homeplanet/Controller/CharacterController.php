@@ -21,6 +21,7 @@ use homeplanet\validator\character\CharacterMarryValidator;
 use homeplanet\Entity\House;
 use homeplanet\Entity\PawnFactory;
 use homeplanet\Entity\PawnType;
+use homeplanet\Entity\CharacterHistory;
 
 /**
  * @Route("/character")
@@ -94,6 +95,12 @@ class CharacterController extends BaseController {
 					$this->getPawnRepo()
 						->createContract($this->getPlayer(), $oCharacter)
 					;
+					
+					$gem->persist(CharacterHistory::STcreateTypeJobNew(
+						$oCharacter, 
+						$this->getPlayer()->getHouse(), 
+						$this->getGame()->getState()->getTurn()
+					));
 					
 					$gem->flush();
 					return $this->redirect( $this->generateUrl('character_view',['id'=>$id]) );

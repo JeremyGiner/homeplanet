@@ -91,20 +91,14 @@ HAVING MAX(history._iCreated) <= :recent'
 			$this->_oEM->persist($oChild);
 			$this->_oEM->flush($oChild);
 			
-			$this->_oEM->persist(new CharacterHistory(
-				[
-					$oCharacter,
-					$oCharacter->getMate(),
-					$oChild
-				],
-				CharacterHistory::CHILD_BIRTH,
-				[
-					'mother' => $oCharacter,
-					'father' => $oCharacter->getMate(),
-					'child' => $oChild,
-				],
-				$this->_iTurn
-			));
+			$this->_oEM->persist(
+				CharacterHistory::STcreateTypeChildBirth(
+					$oCharacter, 
+					$oCharacter->getMate(), 
+					$oChild, 
+					$this->_iTurn
+				)
+			);
 			
 			echo $oChild->getLabel().' is born'."\n";
 		}

@@ -9,7 +9,6 @@ use homeplanet\Entity\Pawn;
  * 
  * @ORM\Entity(repositoryClass="homeplanet\Repository\ProductionRepository")
  * @ORM\Table(name="prod")
- * ###ORM\EntityListeners({"homeplanet\EventListener\ProductionListener"})
  */
 class Production {
 	

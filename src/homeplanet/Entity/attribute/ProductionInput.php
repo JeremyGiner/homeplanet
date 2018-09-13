@@ -8,7 +8,6 @@ use homeplanet\Entity\attribute\ProductionInputType;
 /**
  * @ORM\Entity
  * @ORM\Table(name="prodinput")
- * ###ORM\EntityListeners({"homeplanet\EventListener\ProductionInputListener"})
  */
 class ProductionInput {
 	

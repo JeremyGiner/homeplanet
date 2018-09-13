@@ -15,11 +15,9 @@ class WorkProposal extends CharacterAction {
 	}
 	
 	public function __invoke() {
-		
-		// TODO : handle case proposal is rejected
-		
-		$this->_oCharacter->setWorkplace( $this->_oTarget );
-		
+		!!!!
+		// TODO : send proposal to house
+		/*
 		return [
 			new CharacterHistory( 
 				[$this->_oCharacter], 
@@ -30,7 +28,7 @@ class WorkProposal extends CharacterAction {
 				],
 				$this->_iTurn 
 			),
-		];
+		];*/
 	}
 }
 

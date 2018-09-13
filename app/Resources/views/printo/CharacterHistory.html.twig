@@ -1,9 +1,21 @@
 <p class="text-right mb-0 text-muted">{{ printo( o.creationDate ) }}</p>
-{% if o.type == 'wedding_proposal' %}
-{{ printo( o.param('proposer'), ['link']) }} propose {{ printo( o.param('proposed'), ['link']) }} in marriage and Y accepted.<br/>
+{% if o.type == 'wedding_proposal' %}{# ___________________________________ #}
+
+{{ printo( o.param('proposer'), ['link']) }} 
+propose {{ printo( o.param('proposed'), ['link']) }} 
+in marriage and Y accepted.<br/>
 &rarr; They are now married.
-{% elseif o.type == 'child_birth' %}
+
+{% elseif o.type == 'child_birth' %}{# ___________________________________ #}
+
 {{ printo( o.param('father'), ['link']) }} 
 and {{ printo( o.param('mother'), ['link']) }} 
 gave birth to {{ printo( o.param('child'), ['link']) }}.
+
+{% elseif o.type == 'job_new' %}{# ___________________________________ #}
+
+{{ printo( o.param('character'), ['link']) }}
+is now an employe of 
+{{ printo( o.param('house'), ['link']) }}
+
 {% endif %}

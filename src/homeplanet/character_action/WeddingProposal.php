@@ -20,19 +20,13 @@ class WeddingProposal extends CharacterAction {
 		$this->_oCharacter->setMate( $this->_oTarget );
 		$this->_oTarget->setMate( $this->_oCharacter );
 		
-		return [ new CharacterHistory( 
-			[ 
+		return [ 
+			CharacterHistory::STcreateTypeWedding(
 				$this->_oCharacter, 
 				$this->_oTarget, 
-			], 
-			CharacterHistory::WEDDING_PROPOSAL, 
-			[
-				'proposer' => $this->_oCharacter, 
-				'proposed' => $this->_oTarget,
-				'accepted' => true,
-			], 
-			$this->_iTurn 
-		) ];
+				$this->_iTurn
+			),
+		];
 		
 	}
 }
