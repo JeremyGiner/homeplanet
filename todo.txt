@@ -1,5 +1,10 @@
 
 WIP
+	- sell and buy 
+		- dynamic value?
+		- limit buy quantity?
+		- display warning message on over sell
+			
 	- handle pawn cascade delete prod with triggering of prod trigger
 	- finish overcrowd system ( restrict on upgrade, test restrict on asset buy ) 
 		- building buy form 
@@ -7,13 +12,29 @@ WIP
 				- map display capacity on hover
 			- update disable on tile capacity
 		- different initial cost and upgrade cost
-		- add tile requirement in DB
 	- contract type manual/intellectual labor
 	- character debate
 		- difficulty easy if no job
 		- axes payement, dedication ( output quantity ) for each skill  
 	- add tile link to asset view
-	- disable upgrade submit if invalid
+	- population revamp
+	- gold/iron mine : ? dynamic value
+	- TEST population quantity update correctly
+	- update population using trigger 
+	- demand of value == 0 -> price x1
+	- create demand on sell/buy
+	- remove demand with value 0 and 0 sell / 0 buy
+TEST
+	- ruin
+		- check alert ruin imminent
+		- check asset sold on ruin
+		- check income and credit updated
+	- population quantity update correctly
+	
+	
+Final product
+	- subcription email
+	- access denied logs
 
 Tile
 	- labeling system
@@ -39,9 +60,12 @@ Client framework
 		? re-draw on state update 
 	- rendering using twig template
 	- check vue.js
-
-BUG
-	- prod percent update, does not update collegue
+	
+Client framework update
+	- on game turn, refresh whole page
+	- form update
+		- disable pawn upgrade submit if invalid
+		- improve TileType form 
 
 Code improvement
 	- map use em to be fetch, include overcrowd into tile
@@ -84,7 +108,6 @@ view :
     - display character bookmark
 
 character job
-	- player action suggest work
 	? character action steal or become theif
 	
 advance character job
@@ -101,8 +124,9 @@ player debt
 	- player action bail out
 	- handle case too much debt
 
-? player rule
-	- add force job
+? player policy
+	- defend player against ennemy policy
+	- add force order job
 	- add guard job
 	- add player action new rule
 		- taxe / thievery

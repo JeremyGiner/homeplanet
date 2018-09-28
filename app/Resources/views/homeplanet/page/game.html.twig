@@ -42,6 +42,23 @@
 </nav>
 </div>
 
+{# Player ruin alert #}
+{% set iTurnLeft = gameview.player.getTurnBeforeRuin %}
+{% if iTurnLeft is not null and iTurnLeft <= 10 %}
+<div class="container">
+<div class="alert alert-danger" role="alert">
+	<strong>
+		Ruin imminent : 
+	</strong>
+	Your credits are about to run out, 
+	if so, all your asset will be sold.
+	<small class="text-muted">
+		( in {{ gameview.player.getTurnBeforeRuin }} Turn )
+	</small>
+</div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block banner %}{# Nothing #}{% endblock %}

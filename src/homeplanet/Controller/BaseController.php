@@ -185,9 +185,11 @@ class BaseController extends Controller {
 			$oLocation->getRegionX()*13, //Left
 			($oLocation->getRegionX()+1)*13	//Right
 		);
+		/*
 		if( count( $aCity ) > 0 )
-		$aCity[1]->getSovereign()->getColorPrimary();
+		$aCity[0]->getSovereign()->getColorPrimary();
 		
+		*/
 		// Index by location
 		$a = [];
 		foreach ( $aCity as $oCity ) {

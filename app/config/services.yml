@@ -20,12 +20,20 @@ services:
         arguments: ["@doctrine"]
 #______________________________________
 # command
+    homeplanet.command.database_init:
+        class: homeplanet\command\DatabaseInit
+        tags: 
+            - { name: console.command }
+    homeplanet.command.database_dump:
+        class: homeplanet\command\DatabaseDump
+        tags: 
+            - { name: console.command }
     homeplanet.command.game_process:
         class: homeplanet\command\GameProcess
         tags: 
             - { name: console.command }
-    homeplanet.command.character_init:
-        class: homeplanet\command\CharacterInit
+    homeplanet.command.game_init:
+        class: homeplanet\command\GameInit
         tags: 
             - { name: console.command }
 #______________________________________

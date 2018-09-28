@@ -10,7 +10,6 @@ use homeplanet\Entity\attribute\ProductionType;
 use homeplanet\Entity\attribute\ProductionInputType;
 use Doctrine\ORM\EntityManager;
 use homeplanet\Entity\attribute\Population;
-use Doctrine\Common\Collections\Doctrine\Common\Collections;
 
 
 /**

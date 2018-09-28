@@ -127,6 +127,13 @@ class Player {
 		return $this->_oHouse;
 	}
 	
+	public function getTurnBeforeRuin() {
+		$iIncome = $this->getIncome();
+		if( $iIncome < 0 )
+			return ceil(($this->_iCredit+1) / -$iIncome);
+		return null;
+	}
+	
 //_____________________________________________________________________________
 //	Modifier
 

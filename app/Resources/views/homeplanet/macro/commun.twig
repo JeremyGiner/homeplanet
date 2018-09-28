@@ -47,7 +47,8 @@
 
 
 {% macro credit( i ) %}
-	{% set a = i|trim|reverse|split('',3) %}
+	{% set a = i|trim('-')|reverse|split('',3) %}
+	{{ i<0 ? '-' }}
 	{% for key,s in a|reverse %}
 		{{ s|reverse|number_format }}
 		<span class="icon-credit-{{ a|length-key-1 }}"></span>

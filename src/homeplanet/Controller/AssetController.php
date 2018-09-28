@@ -153,7 +153,9 @@ class AssetController extends BaseController {
 		$oUser = $this->getUser();
 		$oGame = $this->getGame();
 		
-		/* @var $oPawn Pawn */
+		/**
+		 * @var Pawn $oPawn
+		 */
 		$oPawn = $this->getPawnRepo()->find( $id );
 	
 		if( $oPawn == null )
@@ -367,6 +369,7 @@ class AssetController extends BaseController {
 		
 		if( $oFormSell->isSubmitted() && $oFormSell->isValid() ) {
 			$em = $oGame->getEntityManager();
+			$oPawn->getPlayer()->addCredit( $oPawn->getType()->getValue() );
 			$em->remove( $oPawn );
 			$em->flush();
 			
